@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
-        <Route path="/" element={<CreateDecision />} />
+        <Route path="/create-decision" element={<CreateDecision />} />
       </Routes>
     </div>
   );
