@@ -14,31 +14,37 @@ function CreateDecision() {
               La décision
             </h2>
           </li>
-          <img
-            src={rightchevron}
-            alt="Right chevron"
-            className="max-h-6 w-auto"
-          />
+          <li>
+            <img
+              src={rightchevron}
+              alt="Right chevron"
+              className="max-h-6 w-auto"
+            />
+          </li>
           <li>
             <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
               Les impacts
             </h2>
           </li>
-          <img
-            src={rightchevron}
-            alt="Right chevron"
-            className="max-h-6 w-auto"
-          />
+          <li>
+            <img
+              src={rightchevron}
+              alt="Right chevron"
+              className="max-h-6 w-auto"
+            />
+          </li>
           <li>
             <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
               Les bénéfices
             </h2>
           </li>
-          <img
-            src={rightchevron}
-            alt="Right chevron"
-            className="max-h-6 w-auto"
-          />
+          <li>
+            <img
+              src={rightchevron}
+              alt="Right chevron"
+              className="max-h-6 w-auto"
+            />
+          </li>
           <li>
             <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
               Les risques
