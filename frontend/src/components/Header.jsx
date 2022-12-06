@@ -33,10 +33,16 @@ function Header() {
             </span>
           </li>
           <li className="flex flex-col hover:underline justify-center">
-            <img src={calendarIcon} alt="Calendar" className="max-h-4 w-auto" />
-            <span className="hidden md:inline font-bold text-xs">
-              Mes décisions
-            </span>
+            <Link to="/decision">
+              <img
+                src={calendarIcon}
+                alt="Calendar"
+                className="max-h-4 w-auto"
+              />
+              <span className="hidden md:inline font-bold text-xs">
+                Mes décisions
+              </span>
+            </Link>
           </li>
           <li className="flex flex-col hover:underline justify-center">
             <img src={smileIcon} alt="Smile" className="max-h-4 w-auto" />
