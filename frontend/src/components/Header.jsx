@@ -15,16 +15,16 @@ function Header() {
       <nav>
         <ul className="flex gap-4">
           <li className="group border rounded-full h-8 w-8 flex items-center justify-center relative">
-            <Link to="/create-decision">
+            <Link to="/decisions/create">
               <img
                 src={plusIcon}
                 alt="Plus"
                 className="max-h-4 w-auto group-hover:animate-spin"
               />
+              <p className="hidden absolute top-full group-hover:block text-xs whitespace-nowrap mx-auto bg-slate-600 text-white px-2 rounded-md">
+                Créer une décision
+              </p>
             </Link>
-            <p className="hidden absolute top-full group-hover:block text-xs whitespace-nowrap mx-auto bg-slate-600 text-white px-2 rounded-md">
-              Créer une décision
-            </p>
           </li>
           <li className="flex flex-col hover:underline justify-center">
             <img src={homeIcon} alt="Home" className="max-h-4 w-auto" />
