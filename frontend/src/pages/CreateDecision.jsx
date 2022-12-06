@@ -3,7 +3,7 @@ import plusIcon from "../assets/plus.svg";
 
 function CreateDecision() {
   return (
-    <main className="w-screen bg-slate-100 flex md:justify-center md:items-start h-[60%] md:h-[90%]">
+    <main className="w-screen bg-slate-100 flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
       <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
         <span>
           <h1 className="font-bold text-2xl">Créer une décision</h1>
@@ -76,6 +76,48 @@ function CreateDecision() {
               </div>
             </div>
           </section>
+          <form className="flex flex-col gap-2 md:gap-4">
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-1">
+                <label htmlFor="decision">
+                  <h2 className="font-bold text-center">
+                    Titre de la décision
+                  </h2>
+                </label>
+                <input
+                  type="text"
+                  name="decision"
+                  id="decision"
+                  className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="deadline">
+                  <h2 className="font-bold text-center">Date limite</h2>
+                </label>
+                <input
+                  type="date"
+                  name="deadline"
+                  id="deadline"
+                  className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                />
+              </div>
+            </div>
+            <label htmlFor="description">
+              <h2 className="font-bold text-center">Description</h2>
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 h-56 md:h-96 w-full"
+            />
+            <button
+              type="submit"
+              className="bg-slate-500 text-white rounded-xl font-bold text-sm md:text-xl px-2 md:px-4 py-1 md:py-2"
+            >
+              Suivant
+            </button>
+          </form>
         </div>
       </div>
     </main>
