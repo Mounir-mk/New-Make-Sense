@@ -1,9 +1,13 @@
+import { Route, Routes } from "react-router-dom";
+import CreateDecision from "./pages/CreateDecision";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <h1 className="font-bold text-center text-3xl underline">React App</h1>
+      <Routes>
+        <Route path="/" element={<CreateDecision />} />
+      </Routes>
     </div>
   );
 }
