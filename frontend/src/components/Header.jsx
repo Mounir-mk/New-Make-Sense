@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../assets/logo_makesense.png";
 import homeIcon from "../assets/home.svg";
 import calendarIcon from "../assets/calendar.svg";
@@ -14,8 +14,11 @@ function Header() {
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
       <nav>
         <ul className="flex gap-4">
-          <li className="group border rounded-full h-8 w-8 flex items-center justify-center relative">
-            <Link to="/decisions/create">
+          <li>
+            <NavLink
+              to="/decisions/create"
+              className="group border rounded-full h-8 w-8 flex items-center justify-center relative"
+            >
               <img
                 src={plusIcon}
                 alt="Plus"
@@ -24,7 +27,7 @@ function Header() {
               <p className="hidden absolute top-full group-hover:block text-xs whitespace-nowrap mx-auto bg-slate-600 text-white px-2 rounded-md">
                 Créer une décision
               </p>
-            </Link>
+            </NavLink>
           </li>
           <li className="flex flex-col hover:underline justify-center">
             <img src={homeIcon} alt="Home" className="max-h-4 w-auto" />
@@ -32,8 +35,11 @@ function Header() {
               Parcourir les décisions
             </span>
           </li>
-          <li className="flex flex-col hover:underline justify-center">
-            <Link to="/decision">
+          <li>
+            <NavLink
+              to="/decision"
+              className="flex flex-col hover:underline justify-center"
+            >
               <img
                 src={calendarIcon}
                 alt="Calendar"
@@ -42,7 +48,7 @@ function Header() {
               <span className="hidden md:inline font-bold text-xs">
                 Mes décisions
               </span>
-            </Link>
+            </NavLink>
           </li>
           <li className="flex flex-col hover:underline justify-center">
             <img src={smileIcon} alt="Smile" className="max-h-4 w-auto" />
