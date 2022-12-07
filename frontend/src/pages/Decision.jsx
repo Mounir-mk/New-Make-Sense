@@ -144,6 +144,12 @@ export default function Decision() {
                 magni culpa.
               </details>
             </div>
+            <button
+              type="button"
+              className="absolute border-black rounded-md bg-white border-2 text-sm m-4 p-4"
+            >
+              Donner son avis
+            </button>
           </div>
         </div>
       </div>
