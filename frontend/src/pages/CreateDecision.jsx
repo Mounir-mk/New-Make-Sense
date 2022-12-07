@@ -5,8 +5,16 @@ import plusIcon from "../assets/plus.svg";
 function CreateDecision() {
   const [inputImpacted, setInputImpacted] = useState("");
   const [inputExpert, setInputExpert] = useState("");
-  const [impacted, setImpacted] = useState([]);
-  const [experts, setExperts] = useState([]);
+  const [createDecision, setCreateDecision] = useState({
+    impacted: [],
+    experts: [],
+    title: "",
+    date: "",
+    description: "",
+    impacts: "",
+    advantages: "",
+    risks: "",
+  });
   return (
     <main className="w-screen  flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
       <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
@@ -73,7 +81,10 @@ function CreateDecision() {
                   className="absolute right-0 h-full"
                   type="button"
                   onClick={() => {
-                    setImpacted([...impacted, inputImpacted]);
+                    setCreateDecision({
+                      ...createDecision,
+                      impacted: [...createDecision.impacted, inputImpacted],
+                    });
                     setInputImpacted("");
                   }}
                 >
@@ -81,7 +92,7 @@ function CreateDecision() {
                 </button>
               </div>
               <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
-                {impacted.map((impactElement) => (
+                {createDecision.impacted.map((impactElement) => (
                   <li
                     className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black"
                     key={impactElement}
@@ -109,7 +120,10 @@ function CreateDecision() {
                   className="absolute right-0 h-full"
                   type="button"
                   onClick={() => {
-                    setExperts([...experts, inputExpert]);
+                    setCreateDecision({
+                      ...createDecision,
+                      experts: [...createDecision.experts, inputExpert],
+                    });
                     setInputExpert("");
                   }}
                 >
@@ -117,7 +131,7 @@ function CreateDecision() {
                 </button>
               </div>
               <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
-                {experts.map((expertElement) => (
+                {createDecision.experts.map((expertElement) => (
                   <li
                     className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black"
                     key={expertElement}
@@ -144,6 +158,13 @@ function CreateDecision() {
                   name="decision"
                   id="decision"
                   className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                  value={createDecision.title}
+                  onChange={(event) =>
+                    setCreateDecision((old) => ({
+                      ...old,
+                      title: event.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -155,6 +176,13 @@ function CreateDecision() {
                   name="deadline"
                   id="deadline"
                   className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                  value={createDecision.date}
+                  onChange={(event) => {
+                    setCreateDecision((old) => ({
+                      ...old,
+                      date: event.target.value,
+                    }));
+                  }}
                 />
               </div>
             </div>
@@ -165,6 +193,13 @@ function CreateDecision() {
               name="description"
               id="description"
               className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 h-56 md:h-96 w-full"
+              value={createDecision.description}
+              onChange={(event) =>
+                setCreateDecision((old) => ({
+                  ...old,
+                  description: event.target.value,
+                }))
+              }
             />
             <button
               type="submit"
