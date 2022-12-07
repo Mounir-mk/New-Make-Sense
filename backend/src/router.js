@@ -23,6 +23,24 @@ const getDecisions = (req, res) => {
     });
 };
 
+const getDecision = (req, res) => {
+  const { id } = req.params;
+  database
+    .query("select * from decision where id = ?", [id])
+    .then(([result]) => {
+      if (result.length) {
+        res.json(result[0]);
+      } else {
+        res.sendStatus(404);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 router.get("/decisions", getDecisions);
+router.get("/decisions/:id", getDecision);
 
 module.exports = router;
