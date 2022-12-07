@@ -40,7 +40,25 @@ const getDecision = (req, res) => {
     });
 };
 
+const postDecision = (req, res) => {
+  const { title, deadline, content, impact, risk, advantage } = req.body;
+
+  database
+    .query(
+      "insert into decision (title, deadline, content, impact, risk, advantage) values (?,?,?,?,?,?)",
+      [title, deadline, content, impact, risk, advantage]
+    )
+    .then(([result]) => {
+      res.location(`/decisions/${result.insertId}`).sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 router.get("/decisions", getDecisions);
 router.get("/decisions/:id", getDecision);
+router.post("/decisions", postDecision);
 
 module.exports = router;
