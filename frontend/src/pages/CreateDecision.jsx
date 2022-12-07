@@ -1,17 +1,22 @@
+import { useState } from "react";
 import rightchevron from "../assets/chevron-right.svg";
 import plusIcon from "../assets/plus.svg";
 
 function CreateDecision() {
+  const [inputImpacted, setInputImpacted] = useState("");
+  const [inputExpert, setInputExpert] = useState("");
+  const [impacted, setImpacted] = useState([]);
+  const [experts, setExperts] = useState([]);
   return (
-    <main className="w-screen bg-slate-100 flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
+    <main className="w-screen  flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
       <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
         <span>
-          <h1 className="font-bold text-2xl">Créer une décision</h1>
+          <h1 className="font-bold text-2xl md:mt-16">Créer une décision</h1>
         </span>
         <ul className="flex gap-0 md:gap-4 items-center overflow-x-auto md:mb-10">
           <li>
-            <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
-              La décision
+            <h2 className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white">
+              Décision
             </h2>
           </li>
           <li>
@@ -22,8 +27,8 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
-              Les impacts
+            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+              Impacts
             </h2>
           </li>
           <li>
@@ -34,8 +39,8 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
-              Les bénéfices
+            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+              Bénéfices
             </h2>
           </li>
           <li>
@@ -46,8 +51,8 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="font-bold text-sm rounded-xl px-2 md:text-xl whitespace-nowrap bg-slate-500">
-              Les risques
+            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+              Risques
             </h2>
           </li>
         </ul>
@@ -61,11 +66,33 @@ function CreateDecision() {
                   placeholder="@Impactés"
                   name="impacted"
                   className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
+                  value={inputImpacted}
+                  onChange={(event) => setInputImpacted(event.target.value)}
                 />
-                <button className="absolute right-0 h-full" type="button">
+                <button
+                  className="absolute right-0 h-full"
+                  type="button"
+                  onClick={() => {
+                    setImpacted([...impacted, inputImpacted]);
+                    setInputImpacted("");
+                  }}
+                >
                   <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
                 </button>
               </div>
+              <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
+                {impacted.map((impactElement) => (
+                  <li
+                    className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black"
+                    key={impactElement}
+                  >
+                    {`#${
+                      impactElement.charAt(0).toUpperCase() +
+                      impactElement.slice(1)
+                    }`}
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="flex flex-col gap-1 items-center w-1/2">
               <h2 className="font-bold">Experts</h2>
@@ -75,11 +102,33 @@ function CreateDecision() {
                   placeholder="@Experts"
                   name="expert"
                   className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
+                  value={inputExpert}
+                  onChange={(event) => setInputExpert(event.target.value)}
                 />
-                <button className="absolute right-0 h-full" type="button">
+                <button
+                  className="absolute right-0 h-full"
+                  type="button"
+                  onClick={() => {
+                    setExperts([...experts, inputExpert]);
+                    setInputExpert("");
+                  }}
+                >
                   <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
                 </button>
               </div>
+              <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
+                {experts.map((expertElement) => (
+                  <li
+                    className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black"
+                    key={expertElement}
+                  >
+                    {`#${
+                      expertElement.charAt(0).toUpperCase() +
+                      expertElement.slice(1)
+                    }`}
+                  </li>
+                ))}
+              </ul>
             </div>
           </section>
           <form className="flex flex-col gap-2 md:gap-4">
@@ -119,7 +168,7 @@ function CreateDecision() {
             />
             <button
               type="submit"
-              className="bg-slate-500 text-white rounded-xl font-bold text-sm md:text-xl px-2 md:px-4 py-1 md:py-2"
+              className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
             >
               Suivant
             </button>
