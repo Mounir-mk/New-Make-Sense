@@ -15,6 +15,7 @@ function CreateDecision() {
     advantages: "",
     risks: "",
   });
+  const [step, setStep] = useState(1);
   return (
     <main className="w-screen  flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
       <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
@@ -35,7 +36,13 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+            <h2
+              className={`text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border font-bold ${
+                step >= 2
+                  ? "bg-[#9B084F] text-white"
+                  : "opacity-30 text-slate-600 border-slate-600"
+              }`}
+            >
               Impacts
             </h2>
           </li>
@@ -47,7 +54,13 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+            <h2
+              className={`text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border font-bold ${
+                step >= 3
+                  ? "bg-[#9B084F] text-white"
+                  : "opacity-30 font-bold text-slate-600 border-slate-600"
+              }`}
+            >
               Bénéfices
             </h2>
           </li>
@@ -59,7 +72,13 @@ function CreateDecision() {
             />
           </li>
           <li>
-            <h2 className="text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border opacity-30 font-bold text-slate-600 border-slate-600">
+            <h2
+              className={`text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap border font-bold ${
+                step === 4
+                  ? "bg-[#9B084F] text-white"
+                  : "opacity-30 font-bold text-slate-600 border-slate-600"
+              }`}
+            >
               Risques
             </h2>
           </li>
@@ -204,6 +223,10 @@ function CreateDecision() {
             <button
               type="submit"
               className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                setStep((old) => old + 1);
+              }}
             >
               Suivant
             </button>
