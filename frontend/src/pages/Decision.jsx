@@ -1,10 +1,5 @@
 import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
-import Louen from "../images/Louen.jpg";
-import Tracteur from "../images/Tracteur.jpg";
-import Heri from "../images/Heri.jpg";
-import Marty from "../images/Marty.jpg";
-import Rick from "../images/Rick.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 
 export default function Decision({ createDecision }) {
@@ -79,38 +74,25 @@ export default function Decision({ createDecision }) {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          <div className="flex">
-            <img
-              src={Heri}
-              alt="user"
-              className="object-fill rounded-full w-10 h-10 hover:z-10"
-            />
-            <img
-              src={Louen}
-              alt="user"
-              className="object-fill rounded-full w-10 h-10 -ml-2 hover:z-10"
-            />
-            <img
-              src={Tracteur}
-              alt="user"
-              className="object-fill rounded-full w-10 h-10 -ml-2 hover:z-10"
-            />
-          </div>
+          <ul className="flex gap-1 flex-wrap self-start">
+            {createDecision.impacted.map((oneImpacted) => (
+              <li className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black">
+                {`#${
+                  oneImpacted.charAt(0).toUpperCase() + oneImpacted.slice(1)
+                }`}
+              </li>
+            ))}
+          </ul>
         </div>
         <div id="experts">
-          <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          <div className="flex">
-            <img
-              src={Rick}
-              alt="user"
-              className="object-fill rounded-full w-10 h-10 hover:z-10"
-            />
-            <img
-              src={Marty}
-              alt="user"
-              className="object-fill rounded-full w-10 h-10 -ml-2 hover:z-10"
-            />
-          </div>
+          <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
+          <ul className="flex gap-1 flex-wrap self-start">
+            {createDecision.experts.map((expert) => (
+              <li className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black">
+                {`#${expert.charAt(0).toUpperCase() + expert.slice(1)}`}
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
     </div>
