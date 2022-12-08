@@ -126,6 +126,9 @@ CreateDecision.propTypes = {
     description: PropTypes.string,
     impacted: PropTypes.arrayOf(PropTypes.string),
     experts: PropTypes.arrayOf(PropTypes.string),
+    impacts: PropTypes.string,
+    advantages: PropTypes.string,
+    risks: PropTypes.string,
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
 };

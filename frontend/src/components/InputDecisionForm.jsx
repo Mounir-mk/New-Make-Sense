@@ -41,8 +41,8 @@ function InputDecisionForm({
         />
         {redirectButton ? (
           <Link
-            to="/"
-            className="bg-[#9B084F] text-white font-bold rounded-xl px-4 py-2 md:px-8 md:py-4 w-full mx-auto text-center"
+            to="/decision"
+            className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
           >
             Créer la décision
           </Link>
@@ -65,11 +65,14 @@ function InputDecisionForm({
 
 InputDecisionForm.propTypes = {
   createDecision: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    advantages: PropTypes.string.isRequired,
-    risks: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    date: PropTypes.string,
+    description: PropTypes.string,
+    impacted: PropTypes.arrayOf(PropTypes.string),
+    experts: PropTypes.arrayOf(PropTypes.string),
+    impacts: PropTypes.string,
+    advantages: PropTypes.string,
+    risks: PropTypes.string,
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
