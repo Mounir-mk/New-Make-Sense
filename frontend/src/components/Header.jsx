@@ -35,10 +35,10 @@ function Header() {
               Parcourir les décisions
             </span>
           </li>
-          <li>
+          <li className="flex flex-col hover:underline justify-center">
             <NavLink
               to="/decision"
-              className="flex flex-col hover:underline justify-center"
+              className="flex flex-col hover:underline justify-center items-center"
             >
               <img
                 src={calendarIcon}

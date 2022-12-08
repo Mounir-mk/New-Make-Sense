@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      content: {
+        "chevron-down": "url(./src/assets/chevron-down.svg)",
+      },
+    },
   },
   plugins: [],
 };
