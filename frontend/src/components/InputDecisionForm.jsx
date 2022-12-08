@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 function InputDecisionForm({
   createDecision,
   setCreateDecision,
   setStep,
   stepName,
+  redirectButton,
 }) {
   const changeStepName = () => {
     if (stepName === "risks") {
@@ -37,16 +39,25 @@ function InputDecisionForm({
             }))
           }
         />
-        <button
-          type="submit"
-          className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
-          onClick={(e) => {
-            e.preventDefault();
-            setStep((old) => old + 1);
-          }}
-        >
-          {stepName === "risks" ? "Créer la décision" : "Suivant"}
-        </button>
+        {redirectButton ? (
+          <Link
+            to="/"
+            className="bg-[#9B084F] text-white font-bold rounded-xl px-4 py-2 md:px-8 md:py-4 w-full mx-auto text-center"
+          >
+            Créer la décision
+          </Link>
+        ) : (
+          <button
+            type="submit"
+            className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+            onClick={(e) => {
+              e.preventDefault();
+              setStep((old) => old + 1);
+            }}
+          >
+            Suivant
+          </button>
+        )}
       </div>
     </div>
   );
@@ -63,6 +74,7 @@ InputDecisionForm.propTypes = {
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
+  redirectButton: PropTypes.bool.isRequired,
 };
 
 export default InputDecisionForm;
