@@ -10,7 +10,7 @@ import plusIcon from "../assets/plus.svg";
 
 function Header() {
   return (
-    <header className="w-screen flex items-center justify-around border-solid border-2 h-16">
+    <header className="w-screen flex items-center justify-around border-solid border-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
       <nav>
         <ul className="flex gap-4">
@@ -35,10 +35,10 @@ function Header() {
               Parcourir les décisions
             </span>
           </li>
-          <li>
+          <li className="flex flex-col hover:underline justify-center">
             <NavLink
               to="/decision"
-              className="flex flex-col hover:underline justify-center"
+              className="flex flex-col hover:underline justify-center items-center"
             >
               <img
                 src={calendarIcon}

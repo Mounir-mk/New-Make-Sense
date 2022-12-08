@@ -6,7 +6,7 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App w-screen">
       <Header />
       <Routes>
         <Route path="/decisions/create" element={<CreateDecision />} />
