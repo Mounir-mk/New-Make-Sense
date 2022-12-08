@@ -4,6 +4,7 @@ import CreateDecision from "./pages/CreateDecision";
 import Decision from "./pages/Decision";
 import Header from "./components/Header";
 import "./App.css";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [createDecision, setCreateDecision] = useState({
@@ -33,6 +34,7 @@ function App() {
           path="/decision"
           element={<Decision createDecision={createDecision} />}
         />
+        <Route path="/" element={<Dashboard />} />
       </Routes>
     </div>
   );
