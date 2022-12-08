@@ -30,10 +30,15 @@ function Header() {
             </NavLink>
           </li>
           <li className="flex flex-col hover:underline justify-center">
-            <img src={homeIcon} alt="Home" className="max-h-4 w-auto" />
-            <span className="hidden md:inline font-bold text-xs">
-              Parcourir les décisions
-            </span>
+            <NavLink
+              to="/"
+              className="flex flex-col hover:underline justify-center"
+            >
+              <img src={homeIcon} alt="Home" className="max-h-4 w-auto" />
+              <span className="hidden md:inline font-bold text-xs">
+                Parcourir les décisions
+              </span>
+            </NavLink>
           </li>
           <li>
             <NavLink
