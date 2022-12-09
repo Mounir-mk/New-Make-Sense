@@ -9,18 +9,22 @@ function Dashboard() {
       .then((data) => setDecisions(data));
   }, []);
   return (
-    <section>
-      <h1>Décisions en cours</h1>
-      <div className="running-decision-dashboard">
-        {decisions.map((decision) => (
-          <DashboardCard
-            key={decision.id}
-            decisionTitle={decision.title}
-            author={`${decision.firstname} ${decision.lastname}`}
-          />
-        ))}
-      </div>
-    </section>
+    <main className="flex justify-center">
+      <section id="current-decision" className="w-2/3 mt-24 mb-20">
+        <h1 className="font-bold text-3xl text-blue-dianne pb-12 border-b-2">
+          Décisions en cours
+        </h1>
+        <div className="flex flex-col md:flex-row gap-4 flex-wrap">
+          {decisions.map((decision) => (
+            <DashboardCard
+              key={decision.id}
+              decisionTitle={decision.title}
+              author={`${decision.firstname} ${decision.lastname}`}
+            />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
 
