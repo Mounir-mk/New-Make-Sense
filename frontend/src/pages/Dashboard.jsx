@@ -4,7 +4,7 @@ import DashboardCard from "../components/DecisionCard";
 function Dashboard() {
   const [decisions, setDecisions] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:5000/decisions-cards")
+    fetch("http://localhost:5000/users/1/decisions")
       .then((res) => res.json())
       .then((data) => setDecisions(data));
   }, []);
