@@ -47,8 +47,26 @@ const postDecision = (req, res) => {
     });
 };
 
+const deleteDecision = (req, res) => {
+  const { id } = req.params;
+  database
+    .query("delete from decision where id = ?", [id])
+    .then(([result]) => {
+      if (result.affectedRows) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(404);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   getDecisions,
   getDecision,
   postDecision,
+  deleteDecision,
 };
