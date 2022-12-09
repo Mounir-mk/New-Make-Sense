@@ -7,8 +7,11 @@ import smileIcon from "../assets/smile.svg";
 import menuIcon from "../assets/menu.svg";
 import userIcon from "../assets/sampleprofile.png";
 import plusIcon from "../assets/plus.svg";
+import user from "../assets/user.svg";
+import logout from "../assets/log-out.svg";
 
 function Header() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
     <header className="w-screen flex items-center justify-around border-solid border-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
@@ -19,11 +22,7 @@ function Header() {
               to="/decisions/create"
               className="group border rounded-full h-8 w-8 flex items-center justify-center relative"
             >
-              <img
-                src={plusIcon}
-                alt="Plus"
-                className="max-h-4 w-auto group-hover:animate-spin"
-              />
+              <img src={plusIcon} alt="Plus" className="max-h-4 w-auto" />
               <p className="hidden absolute top-full group-hover:block text-xs whitespace-nowrap mx-auto bg-slate-600 text-white px-2 rounded-md">
                 Créer une décision
               </p>
@@ -52,13 +51,51 @@ function Header() {
               Notifications
             </span>
           </li>
-          <li className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center">
-            <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
-            <img
-              src={userIcon}
-              alt="User"
-              className="h-8 w-8 rounded-full object-cover"
-            />
+          <li>
+            <button
+              type="button"
+              className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center relative"
+              onClick={() => setIsMenuOpen((old) => !old)}
+            >
+              <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
+              <img
+                src={userIcon}
+                alt="User"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+              {isMenuOpen && (
+                <div className="absolute top-full w-32">
+                  <ul className="bg-white border border-solid border-gray-300 rounded-md shadow-md">
+                    <li className="p-2 hover:bg-gray-200 text-blue-dianne text-left border-b-2 text-sm font-bold">
+                      <NavLink
+                        to="/profile"
+                        className="flex items-center gap-1"
+                      >
+                        <img
+                          src={user}
+                          alt="User"
+                          className="max-h-4 w-auto inline-block"
+                        />
+                        <p>Mon Profil</p>
+                      </NavLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-200 text-blue-dianne text-left text-sm font-bold">
+                      <NavLink
+                        to="/logout"
+                        className="flex items-center gap-1 "
+                      >
+                        <img
+                          src={logout}
+                          alt="Logout"
+                          className="max-h-4 w-auto inline-block"
+                        />
+                        <p>Déconnexion</p>
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </button>
           </li>
         </ul>
       </nav>
