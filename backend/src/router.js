@@ -18,5 +18,6 @@ router.post("/decisions", decisionControllers.postDecision);
 
 router.get("/users", userControllers.getUsers);
 router.get("/users/:id", userControllers.getUser);
+router.get("/users/:id/decisions", userControllers.getDecisionsWithUsers);
 
 module.exports = router;
