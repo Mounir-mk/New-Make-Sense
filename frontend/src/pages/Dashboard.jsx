@@ -15,10 +15,13 @@ function Dashboard() {
           Décisions en cours
         </h1>
         <div className="flex flex-col md:flex-row gap-4 flex-wrap">
-          <DashboardCard
-            decisionTitle="Déménager hors de paris à printemps 2023 (fin Avril) et tester Milan"
-            author="Jane Doe"
-          />
+          {decisions.map((decision) => (
+            <DashboardCard
+              key={decision.id}
+              decisionTitle={decision.title}
+              author={`${decision.firstname} ${decision.lastname}`}
+            />
+          ))}
         </div>
       </section>
     </main>
