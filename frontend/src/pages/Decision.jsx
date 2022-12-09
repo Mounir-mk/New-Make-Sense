@@ -32,6 +32,53 @@ export default function Decision({ createDecision }) {
           title="Risques potentiels 🚨"
           content={createDecision.risks}
         />
+        <section id="comments" className="flex flex-col md:my-20">
+          <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4">
+            Commentaires
+          </h2>
+          {/* add comment */}
+          <div className="flex flex-col">
+            <textarea className="w-full h-24 border-2 border-gray-300 rounded-lg my-4" />
+            <button
+              type="button"
+              className="bg-slate-400 text-white rounded-lg px-4 py-2 w-56 ml-auto md:mr-2"
+            >
+              Ajouter un commentaire
+            </button>
+          </div>
+          <div className="flex flex-col gap-3 bg-red-50 rounded-lg border-b-2 md:w-2/3 border-r-2 my-4">
+            <div className="flex items-center gap-2">
+              <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
+              <div className="flex flex-col">
+                <h3 className="text-sm font-bold">Cat</h3>
+                <p className="text-sm">Il y a 2 jours</p>
+              </div>
+            </div>
+            <p className="text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+              tincidunt, nisl eget ultricies tincidunt, nisl nisl aliquam nisl,
+              eu aliquam nisl nisl sit amet nisl. Sed tincidunt, nisl eget
+              ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl nisl
+              sit amet nisl.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 bg-red-50 rounded-lg border-b-2 md:w-2/3 border-r-2 my-4">
+            <div className="flex items-center gap-2">
+              <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
+              <div className="flex flex-col">
+                <h3 className="text-sm font-bold">Cat</h3>
+                <p className="text-sm">Il y a 2 jours</p>
+              </div>
+            </div>
+            <p className="text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+              tincidunt, nisl eget ultricies tincidunt, nisl nisl aliquam nisl,
+              eu aliquam nisl nisl sit amet nisl. Sed tincidunt, nisl eget
+              ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl nisl
+              sit amet nisl.
+            </p>
+          </div>
+        </section>
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white">
         <div id="timeline" className="flex flex-col">
