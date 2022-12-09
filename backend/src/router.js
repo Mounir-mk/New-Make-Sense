@@ -13,6 +13,7 @@ router.post("/items", itemControllers.add);
 router.delete("/items/:id", itemControllers.destroy);
 
 router.get("/decisions", decisionControllers.getDecisions);
+router.get("/decisions-cards", decisionControllers.getDecisionCards);
 router.get("/decisions/:id", decisionControllers.getDecision);
 router.post("/decisions", decisionControllers.postDecision);
 

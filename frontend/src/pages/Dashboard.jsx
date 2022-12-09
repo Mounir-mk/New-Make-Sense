@@ -4,7 +4,7 @@ import DashboardCard from "../components/DecisionCard";
 function Dashboard() {
   const [decisions, setDecisions] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:5000/decisions")
+    fetch("http://localhost:5000/decisions-cards")
       .then((res) => res.json())
       .then((data) => setDecisions(data));
   }, []);
@@ -14,8 +14,9 @@ function Dashboard() {
       <div className="running-decision-dashboard">
         {decisions.map((decision) => (
           <DashboardCard
+            key={decision.id}
             decisionTitle={decision.title}
-            author={`${decision.user_id}`}
+            author={`${decision.firstname} ${decision.lastname}`}
           />
         ))}
       </div>

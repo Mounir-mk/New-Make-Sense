@@ -12,6 +12,20 @@ const getDecisions = (req, res) => {
     });
 };
 
+const getDecisionCards = (req, res) => {
+  database
+    .query(
+      "select u.firstname, u.lastname, d.title, d.id from user u inner join decision d on d.user_id = u.id"
+    )
+    .then(([result]) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 const getDecision = (req, res) => {
   const { id } = req.params;
   database
@@ -50,4 +64,5 @@ module.exports = {
   getDecisions,
   getDecision,
   postDecision,
+  getDecisionCards,
 };
