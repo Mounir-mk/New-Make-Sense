@@ -9,6 +9,27 @@ function InputDecisionForm({
   stepName,
   redirectButton,
 }) {
+  const postDecision = async () => {
+    const decision = {
+      title: createDecision.title,
+      deadline: createDecision.date,
+      content: createDecision.description,
+      impact: createDecision.impacts,
+      risk: createDecision.risks,
+      advantage: createDecision.advantages,
+      userId: 1,
+    };
+    const response = await fetch("http://localhost:5000/decisions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(decision, null, 2),
+    });
+    const data = await response.json();
+    console.warn(data);
+  };
+
   const changeStepName = () => {
     if (stepName === "risks") {
       return "risques";
@@ -43,6 +64,7 @@ function InputDecisionForm({
           <Link
             to="/decision"
             className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
+            onClick={() => postDecision()}
           >
             Créer la décision
           </Link>
@@ -50,7 +72,7 @@ function InputDecisionForm({
           <button
             type="submit"
             className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
               setStep((old) => old + 1);
             }}
