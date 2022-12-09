@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import avatar from "../assets/profile_pic_default.svg";
 
+function DashboardCard({ decisionTitle, author }) {
 function DashboardCard({ decisionTitle, author }) {
   return (
     <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-2xl my-4 w-72 h-56">

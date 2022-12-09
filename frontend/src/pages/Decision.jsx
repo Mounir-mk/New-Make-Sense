@@ -1,15 +1,19 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
+import Comment from "../components/Comment";
 
 export default function Decision({ createDecision }) {
+  const [inputComment, setInputComment] = useState("");
+  const [comments, setComments] = useState([]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto">
-      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2">
+      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {createDecision.title}
         </h1>
-        <section id="author" className="flex items-center gap-2">
+        <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
           <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
           <div className="flex gap-1">
             <p className="text-sm">par</p>
@@ -32,6 +36,40 @@ export default function Decision({ createDecision }) {
           title="Risques potentiels 🚨"
           content={createDecision.risks}
         />
+        <section id="comments" className="flex flex-col md:my-20">
+          <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
+            Commentaires
+          </h2>
+          {/* add comment */}
+          <div className="flex flex-col">
+            <textarea
+              className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
+              placeholder="Ajouter un commentaire"
+              value={inputComment}
+              onChange={(e) => setInputComment(e.target.value)}
+            />
+            <button
+              type="button"
+              className="bg-slate-400 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
+              onClick={() => {
+                setComments([...comments, inputComment]);
+                setInputComment("");
+              }}
+            >
+              Ajouter un commentaire
+            </button>
+          </div>
+          <Comment
+            icon={cat}
+            comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt,
+        nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl
+        nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
+        nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
+          />
+          {comments.map((comment) => (
+            <Comment key={comment} icon={cat} comment={comment} />
+          ))}
+        </section>
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white">
         <div id="timeline" className="flex flex-col">

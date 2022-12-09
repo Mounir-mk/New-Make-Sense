@@ -1,6 +1,13 @@
+import { useEffect, useState } from "react";
 import DashboardCard from "../components/DecisionCard";
 
 function Dashboard() {
+  const [decisions, setDecisions] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:5000/users/1/decisions")
+      .then((res) => res.json())
+      .then((data) => setDecisions(data));
+  }, []);
   return (
     <main className="flex justify-center">
       <section id="current-decision" className="w-2/3 mt-24 mb-20">
