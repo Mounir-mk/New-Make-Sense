@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
+import Comment from "../components/Comment";
 
 export default function Decision({ createDecision }) {
   return (
@@ -46,38 +47,7 @@ export default function Decision({ createDecision }) {
               Ajouter un commentaire
             </button>
           </div>
-          <div className="flex flex-col gap-3 bg-red-50 rounded-lg border-b-2 md:w-2/3 border-r-2 my-4">
-            <div className="flex items-center gap-2">
-              <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
-              <div className="flex flex-col">
-                <h3 className="text-sm font-bold">Cat</h3>
-                <p className="text-sm">Il y a 2 jours</p>
-              </div>
-            </div>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, nisl eget ultricies tincidunt, nisl nisl aliquam nisl,
-              eu aliquam nisl nisl sit amet nisl. Sed tincidunt, nisl eget
-              ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl nisl
-              sit amet nisl.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 bg-red-50 rounded-lg border-b-2 md:w-2/3 border-r-2 my-4">
-            <div className="flex items-center gap-2">
-              <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
-              <div className="flex flex-col">
-                <h3 className="text-sm font-bold">Cat</h3>
-                <p className="text-sm">Il y a 2 jours</p>
-              </div>
-            </div>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, nisl eget ultricies tincidunt, nisl nisl aliquam nisl,
-              eu aliquam nisl nisl sit amet nisl. Sed tincidunt, nisl eget
-              ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl nisl
-              sit amet nisl.
-            </p>
-          </div>
+          <Comment icon={cat} />
         </section>
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white">
