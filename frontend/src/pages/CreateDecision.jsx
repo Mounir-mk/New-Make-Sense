@@ -1,21 +1,13 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import rightchevron from "../assets/chevron-right.svg";
 import DescriptionDecisionForm from "../components/DescriptionDecisionForm";
 import InputDecisionForm from "../components/InputDecisionForm";
 
-function CreateDecision() {
+function CreateDecision({ createDecision, setCreateDecision }) {
   const [inputImpacted, setInputImpacted] = useState("");
   const [inputExpert, setInputExpert] = useState("");
-  const [createDecision, setCreateDecision] = useState({
-    impacted: [],
-    experts: [],
-    title: "",
-    date: "",
-    description: "",
-    impacts: "",
-    advantages: "",
-    risks: "",
-  });
+
   const [step, setStep] = useState(1);
   return (
     <main className="w-screen  flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
@@ -118,6 +110,7 @@ function CreateDecision() {
               setCreateDecision={setCreateDecision}
               setStep={setStep}
               stepName="risks"
+              redirectButton
             />
           )}
         </div>
@@ -125,5 +118,19 @@ function CreateDecision() {
     </main>
   );
 }
+
+CreateDecision.propTypes = {
+  createDecision: PropTypes.shape({
+    title: PropTypes.string,
+    date: PropTypes.string,
+    description: PropTypes.string,
+    impacted: PropTypes.arrayOf(PropTypes.string),
+    experts: PropTypes.arrayOf(PropTypes.string),
+    impacts: PropTypes.string,
+    advantages: PropTypes.string,
+    risks: PropTypes.string,
+  }).isRequired,
+  setCreateDecision: PropTypes.func.isRequired,
+};
 
 export default CreateDecision;

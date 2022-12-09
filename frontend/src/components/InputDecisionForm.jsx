@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 function InputDecisionForm({
   createDecision,
   setCreateDecision,
   setStep,
   stepName,
+  redirectButton,
 }) {
   const changeStepName = () => {
     if (stepName === "risks") {
@@ -37,16 +39,25 @@ function InputDecisionForm({
             }))
           }
         />
-        <button
-          type="submit"
-          className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
-          onClick={(e) => {
-            e.preventDefault();
-            setStep((old) => old + 1);
-          }}
-        >
-          {stepName === "risks" ? "Créer la décision" : "Suivant"}
-        </button>
+        {redirectButton ? (
+          <Link
+            to="/decision"
+            className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
+          >
+            Créer la décision
+          </Link>
+        ) : (
+          <button
+            type="submit"
+            className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+            onClick={(e) => {
+              e.preventDefault();
+              setStep((old) => old + 1);
+            }}
+          >
+            Suivant
+          </button>
+        )}
       </div>
     </div>
   );
@@ -54,15 +65,19 @@ function InputDecisionForm({
 
 InputDecisionForm.propTypes = {
   createDecision: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    advantages: PropTypes.string.isRequired,
-    risks: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    date: PropTypes.string,
+    description: PropTypes.string,
+    impacted: PropTypes.arrayOf(PropTypes.string),
+    experts: PropTypes.arrayOf(PropTypes.string),
+    impacts: PropTypes.string,
+    advantages: PropTypes.string,
+    risks: PropTypes.string,
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
+  redirectButton: PropTypes.bool.isRequired,
 };
 
 export default InputDecisionForm;

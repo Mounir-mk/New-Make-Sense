@@ -41,19 +41,10 @@ function Header() {
             </NavLink>
           </li>
           <li className="flex flex-col hover:underline justify-center">
-            <NavLink
-              to="/decision"
-              className="flex flex-col hover:underline justify-center items-center"
-            >
-              <img
-                src={calendarIcon}
-                alt="Calendar"
-                className="max-h-4 w-auto"
-              />
-              <span className="hidden md:inline font-bold text-xs">
-                Mes décisions
-              </span>
-            </NavLink>
+            <img src={calendarIcon} alt="Calendar" className="max-h-4 w-auto" />
+            <span className="hidden md:inline font-bold text-xs">
+              Mes décisions
+            </span>
           </li>
           <li className="flex flex-col hover:underline justify-center">
             <img src={smileIcon} alt="Smile" className="max-h-4 w-auto" />
