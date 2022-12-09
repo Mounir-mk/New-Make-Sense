@@ -5,10 +5,7 @@ function Dashboard() {
     <section>
       <h1>Décisions en cours</h1>
       <div className="running-decision-dashboard">
-        <DashboardCard />
-        <DashboardCard />
-        <DashboardCard />
-        <DashboardCard />
+        <DashboardCard decisionTitle="Lorem ipsum" author="John Doe" />
       </div>
     </section>
   );
