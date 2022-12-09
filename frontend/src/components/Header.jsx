@@ -9,6 +9,7 @@ import userIcon from "../assets/sampleprofile.png";
 import plusIcon from "../assets/plus.svg";
 
 function Header() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
     <header className="w-screen flex items-center justify-around border-solid border-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
@@ -61,23 +62,31 @@ function Header() {
               Notifications
             </span>
           </li>
-          <li className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center relative group">
-            <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
-            <img
-              src={userIcon}
-              alt="User"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-            <div className="absolute top-full hidden md:group-hover:block md:hover:block">
-              <ul className="bg-white border border-solid border-gray-300 rounded-md shadow-md">
-                <li className="p-2 hover:bg-gray-200">
-                  <NavLink to="/profile">Mon profil</NavLink>
-                </li>
-                <li className="p-2 hover:bg-gray-200">
-                  <NavLink to="/logout">Déconnexion</NavLink>
-                </li>
-              </ul>
-            </div>
+          <li>
+            <button
+              type="button"
+              className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center relative"
+              onClick={() => setIsMenuOpen((old) => !old)}
+            >
+              <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
+              <img
+                src={userIcon}
+                alt="User"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+              {isMenuOpen && (
+                <div className="absolute top-full">
+                  <ul className="bg-white border border-solid border-gray-300 rounded-md shadow-md">
+                    <li className="p-2 hover:bg-gray-200">
+                      <NavLink to="/profile">Mon profil</NavLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-200">
+                      <NavLink to="/logout">Déconnexion</NavLink>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </button>
           </li>
         </ul>
       </nav>
