@@ -6,6 +6,10 @@ module.exports = {
       content: {
         "chevron-down": "url(./src/assets/chevron-down.svg)",
       },
+      colors: {
+        "blue-dianne": "#0C3944",
+        "cerise-dark": "#9B084F",
+      },
     },
   },
   plugins: [],
