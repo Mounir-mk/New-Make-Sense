@@ -61,13 +61,23 @@ function Header() {
               Notifications
             </span>
           </li>
-          <li className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center">
+          <li className="w-20 h-8 rounded-full bg-slate-400 flex justify-around items-center relative group">
             <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
             <img
               src={userIcon}
               alt="User"
               className="h-8 w-8 rounded-full object-cover"
             />
+            <div className="absolute top-full hidden md:group-hover:block md:hover:block">
+              <ul className="bg-white border border-solid border-gray-300 rounded-md shadow-md">
+                <li className="p-2 hover:bg-gray-200">
+                  <NavLink to="/profile">Mon profil</NavLink>
+                </li>
+                <li className="p-2 hover:bg-gray-200">
+                  <NavLink to="/logout">Déconnexion</NavLink>
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </nav>
