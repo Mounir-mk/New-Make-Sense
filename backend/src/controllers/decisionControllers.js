@@ -32,14 +32,13 @@ const getDecision = (req, res) => {
 const postDecision = (req, res) => {
   const { title, deadline, content, impact, risk, advantage, userId } =
     req.body;
-
   database
     .query(
-      "insert into decision (title, deadline, content, impact, risk, advantage, user_id) values (?,?,?,?,?,?,?)",
+      "insert into decision (title, deadline, content, impact, risk, advantage, user_id) values (?, ?, ?, ?, ?, ?, ?)",
       [title, deadline, content, impact, risk, advantage, userId]
     )
     .then(([result]) => {
-      res.location(`/decisions/${result.insertId}`).sendStatus(201);
+      res.status(201).json(result);
     })
     .catch((err) => {
       console.error(err);
