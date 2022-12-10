@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function InputDecisionForm({
   createDecision,
@@ -8,6 +9,7 @@ function InputDecisionForm({
   setStep,
   stepName,
   redirectButton,
+  setDataId,
 }) {
   const postDecision = async () => {
     const decision = {
@@ -19,15 +21,12 @@ function InputDecisionForm({
       advantage: createDecision.advantages,
       userId: 1,
     };
-    const response = await fetch("http://localhost:5000/decisions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(decision, null, 2),
-    });
-    const data = await response.json();
-    console.warn(data);
+    // post the decision to the database with axios and console.log the id of the decision created
+    const response = await axios.post(
+      "http://localhost:5000/decisions",
+      decision
+    );
+    setDataId(response.data.insertId);
   };
 
   const changeStepName = () => {
@@ -100,6 +99,17 @@ InputDecisionForm.propTypes = {
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
   redirectButton: PropTypes.bool.isRequired,
+  setDataId: PropTypes.func.isRequired,
 };
 
 export default InputDecisionForm;
+
+//   const response = await fetch("http://localhost:5000/decisions", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(decision, null, 2),
+//   })
+//     .then((res) => res.json())
+//     .then((data) => console.log(data));

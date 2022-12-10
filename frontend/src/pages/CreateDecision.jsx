@@ -4,7 +4,12 @@ import rightchevron from "../assets/chevron-right.svg";
 import DescriptionDecisionForm from "../components/DescriptionDecisionForm";
 import InputDecisionForm from "../components/InputDecisionForm";
 
-function CreateDecision({ createDecision, setCreateDecision }) {
+function CreateDecision({
+  createDecision,
+  setCreateDecision,
+  dataId,
+  setDataId,
+}) {
   const [inputImpacted, setInputImpacted] = useState("");
   const [inputExpert, setInputExpert] = useState("");
 
@@ -111,6 +116,8 @@ function CreateDecision({ createDecision, setCreateDecision }) {
               setStep={setStep}
               stepName="risks"
               redirectButton
+              dataId={dataId}
+              setDataId={setDataId}
             />
           )}
         </div>
@@ -131,6 +138,8 @@ CreateDecision.propTypes = {
     risks: PropTypes.string,
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
+  dataId: PropTypes.string.isRequired,
+  setDataId: PropTypes.func.isRequired,
 };
 
 export default CreateDecision;
