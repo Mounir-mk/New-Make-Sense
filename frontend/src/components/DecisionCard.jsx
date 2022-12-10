@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import avatar from "../assets/profile_pic_default.svg";
 
@@ -25,13 +26,15 @@ function DashboardCard({ decisionTitle, author, id }) {
             className="max-h-12 w-auto rounded-full"
           />
           <figcaption className="text-sm text-slate-600 font-bold">{`par ${author}`}</figcaption>
-          <button
-            type="button"
+          <Link
+            to={decicionData.id && `/decision/${decicionData.id}`}
             className="bg-[#9B084F] text-white rounded-md px-4 py-2 ml-auto"
-            onClick={() => handleClick()}
+            onClick={() => {
+              handleClick();
+            }}
           >
             Voir
-          </button>
+          </Link>
         </figure>
       </div>
     </section>
