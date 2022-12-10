@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
 
 export default function Decision({ createDecision }) {
+  const { id } = useParams();
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/decisions/${id}`)
+      .then((res) => res.json())
+      .then((data) => setComments(data.comments));
+  }, [id]);
+
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">

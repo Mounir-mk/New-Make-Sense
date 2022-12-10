@@ -10,6 +10,7 @@ function InputDecisionForm({
   stepName,
   redirectButton,
   setDataId,
+  dataId,
 }) {
   const postDecision = async () => {
     const decision = {
@@ -61,9 +62,11 @@ function InputDecisionForm({
         />
         {redirectButton ? (
           <Link
-            to="/decision"
+            to={`/decision/${dataId}`}
             className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
-            onClick={() => postDecision()}
+            onClick={async () => {
+              await postDecision();
+            }}
           >
             Créer la décision
           </Link>
@@ -100,6 +103,7 @@ InputDecisionForm.propTypes = {
   stepName: PropTypes.string.isRequired,
   redirectButton: PropTypes.bool.isRequired,
   setDataId: PropTypes.func.isRequired,
+  dataId: PropTypes.number.isRequired,
 };
 
 export default InputDecisionForm;

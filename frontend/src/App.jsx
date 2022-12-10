@@ -34,7 +34,7 @@ function App() {
           }
         />
         <Route
-          path="/decision"
+          path="/decision/:id"
           element={<Decision createDecision={createDecision} dataId={dataId} />}
         />
         <Route path="/" element={<Dashboard />} />
