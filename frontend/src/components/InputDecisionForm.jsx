@@ -62,7 +62,7 @@ function InputDecisionForm({
         />
         {redirectButton ? (
           <Link
-            to={`/decision/${dataId}`}
+            to={dataId && `/decision/${dataId}`}
             className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
             onClick={async () => {
               await postDecision();

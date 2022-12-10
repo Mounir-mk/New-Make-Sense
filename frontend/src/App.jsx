@@ -33,10 +33,7 @@ function App() {
             />
           }
         />
-        <Route
-          path="/decision/:id"
-          element={<Decision createDecision={createDecision} dataId={dataId} />}
-        />
+        <Route path="/decision/:id" element={<Decision />} />
         <Route path="/" element={<Dashboard />} />
       </Routes>
     </div>
