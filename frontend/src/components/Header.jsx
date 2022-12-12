@@ -13,7 +13,7 @@ import logout from "../assets/log-out.svg";
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
-    <header className="w-screen flex items-center justify-around border-solid border-2 h-16 bg-white">
+    <header className="w-full flex items-center justify-around border-solid border-b-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
       <nav>
         <ul className="flex gap-4">

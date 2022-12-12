@@ -34,7 +34,7 @@ export default function Decision() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:w-2/3 mx-auto">
+    <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {content.title}

@@ -19,7 +19,7 @@ function App() {
     risks: "",
   });
   return (
-    <div className="App w-screen">
+    <div className="App">
       <Header />
       <Routes>
         <Route
