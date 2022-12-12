@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function InputDecisionForm({
@@ -12,6 +12,7 @@ function InputDecisionForm({
   setDataId,
   dataId,
 }) {
+  const navigate = useNavigate();
   const postDecision = async () => {
     const decision = {
       title: createDecision.title,
@@ -22,12 +23,12 @@ function InputDecisionForm({
       advantage: createDecision.advantages,
       userId: 1,
     };
-    // post the decision to the database with axios and console.log the id of the decision created
-    const response = await axios.post(
-      "http://localhost:5000/decisions",
-      decision
-    );
-    setDataId(response.data.insertId);
+    await axios
+      .post("http://localhost:5000/decisions", decision)
+      .then((res) => {
+        setDataId(res.data.insertId);
+        navigate(`/decision/${res.data.insertId}`);
+      });
   };
 
   const changeStepName = () => {
@@ -62,7 +63,7 @@ function InputDecisionForm({
         />
         {redirectButton ? (
           <Link
-            to={dataId && `/decision/${dataId}`}
+            to={`/decision/${dataId}`}
             className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white text-center"
             onClick={async () => {
               await postDecision();

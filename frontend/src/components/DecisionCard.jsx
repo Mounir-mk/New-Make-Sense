@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import avatar from "../assets/profile_pic_default.svg";
 
 function DashboardCard({ decisionTitle, author, id }) {
+  const navigate = useNavigate();
   const [decicionData, setDecisionData] = useState({});
   // fectch data of the decision when the user click on the button "Voir
   // la décision"
-  const handleClick = () => {
-    fetch(`http://localhost:5000/decisions/${id}`)
+  const handleClick = async () => {
+    await fetch(`http://localhost:5000/decisions/${id}`)
       .then((res) => res.json())
-      .then((data) => setDecisionData(data));
+      .then((data) => {
+        setDecisionData(data);
+        navigate(`/decision/${data.id}`);
+      });
   };
 
   console.warn(decicionData);
@@ -27,7 +31,7 @@ function DashboardCard({ decisionTitle, author, id }) {
           />
           <figcaption className="text-sm text-slate-600 font-bold">{`par ${author}`}</figcaption>
           <Link
-            to={decicionData.id && `/decision/${decicionData.id}`}
+            to={`/decision/${decicionData.id}`}
             className="bg-[#9B084F] text-white rounded-md px-4 py-2 ml-auto"
             onClick={() => {
               handleClick();
