@@ -4,14 +4,19 @@ import rightchevron from "../assets/chevron-right.svg";
 import DescriptionDecisionForm from "../components/DescriptionDecisionForm";
 import InputDecisionForm from "../components/InputDecisionForm";
 
-function CreateDecision({ createDecision, setCreateDecision }) {
+function CreateDecision({
+  createDecision,
+  setCreateDecision,
+  dataId,
+  setDataId,
+}) {
   const [inputImpacted, setInputImpacted] = useState("");
   const [inputExpert, setInputExpert] = useState("");
 
   const [step, setStep] = useState(1);
   return (
-    <main className="w-screen  flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
-      <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
+    <main className="w-full flex justify-evenly items-start h-[calc(100vh_-_64px)]">
+      <div className="h-full flex flex-col gap-2 md:gap-4 justify-around items-start">
         <span>
           <h1 className="font-bold text-2xl md:mt-16">Créer une décision</h1>
         </span>
@@ -111,6 +116,8 @@ function CreateDecision({ createDecision, setCreateDecision }) {
               setStep={setStep}
               stepName="risks"
               redirectButton
+              dataId={dataId}
+              setDataId={setDataId}
             />
           )}
         </div>
@@ -131,6 +138,8 @@ CreateDecision.propTypes = {
     risks: PropTypes.string,
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
+  dataId: PropTypes.string.isRequired,
+  setDataId: PropTypes.func.isRequired,
 };
 
 export default CreateDecision;
