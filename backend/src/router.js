@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const decisionControllers = require("./controllers/decisionControllers");
+const decisionControllers = require("./controllers/DecisionControllers");
 
 router.get("/decisions", decisionControllers.browse);
 router.get("/decisions/:id", decisionControllers.read);
@@ -10,7 +10,7 @@ router.put("/decisions/:id", decisionControllers.edit);
 router.post("/decisions", decisionControllers.add);
 router.delete("/decisions/:id", decisionControllers.destroy);
 
-const userControllers = require("./controllers/userControllers");
+const userControllers = require("./controllers/UserControllers");
 
 router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
