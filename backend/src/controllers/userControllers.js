@@ -1,10 +1,10 @@
-const database = require("../../db");
+const models = require("../models");
 
-const getUsers = (req, res) => {
-  database
-    .query("select * from user")
-    .then(([result]) => {
-      res.json(result);
+const browse = (req, res) => {
+  models.user
+    .findAll()
+    .then(([rows]) => {
+      res.send(rows);
     })
     .catch((err) => {
       console.error(err);
@@ -12,15 +12,14 @@ const getUsers = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
-  const { id } = req.params;
-  database
-    .query("select * from user where id = ?", [id])
-    .then(([result]) => {
-      if (result.length) {
-        res.json(result[0]);
-      } else {
+const read = (req, res) => {
+  models.user
+    .find(req.params.id)
+    .then(([rows]) => {
+      if (rows[0] == null) {
         res.sendStatus(404);
+      } else {
+        res.send(rows[0]);
       }
     })
     .catch((err) => {
@@ -29,15 +28,53 @@ const getUser = (req, res) => {
     });
 };
 
-const getDecisionsWithUsers = (req, res) => {
-  const { id } = req.params;
-  database
-    .query(
-      "select u.firstname, u.lastname, d.title, d.id from user u inner join decision d on d.user_id = u.id where u.id = ?",
-      [id]
-    )
+const edit = (req, res) => {
+  const user = req.body;
+
+  // TODO validations (length, format...)
+
+  user.id = parseInt(req.params.id, 10);
+
+  models.user
+    .update(user)
     .then(([result]) => {
-      res.json(result);
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const add = (req, res) => {
+  const user = req.body;
+
+  // TODO validations (length, format...)
+
+  models.user
+    .insert(user)
+    .then(([result]) => {
+      res.location(`/users/${result.insertId}`).sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const destroy = (req, res) => {
+  models.user
+    .delete(req.params.id)
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -46,7 +83,9 @@ const getDecisionsWithUsers = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
-  getUser,
-  getDecisionsWithUsers,
+  browse,
+  read,
+  edit,
+  add,
+  destroy,
 };
