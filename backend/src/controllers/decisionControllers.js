@@ -30,8 +30,8 @@ const getDecision = (req, res) => {
 };
 
 const postDecision = (req, res) => {
-  const { title, deadline, content, impact, risk, advantage, userId } =
-    req.body;
+  const userId = 1;
+  const { title, deadline, content, impact, risk, advantage } = req.body;
   database
     .query(
       "insert into decision (title, deadline, content, impact, risk, advantage, user_id) values (?, ?, ?, ?, ?, ?, ?)",

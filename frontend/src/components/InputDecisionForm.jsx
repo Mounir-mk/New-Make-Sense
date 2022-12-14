@@ -108,13 +108,3 @@ InputDecisionForm.propTypes = {
 };
 
 export default InputDecisionForm;
-
-//   const response = await fetch("http://localhost:5000/decisions", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(decision, null, 2),
-//   })
-//     .then((res) => res.json())
-//     .then((data) => console.log(data));

@@ -20,10 +20,9 @@ export default function Decision() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:5000/decisions/${id}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.warn(data);
         setContent(data);
       });
   }, [id]);
@@ -140,25 +139,13 @@ export default function Decision() {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          <ul className="flex gap-1 flex-wrap self-start">
-            {/* {createDecision.impacted.map((oneImpacted) => (
-              <li className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black">
-                {`#${
-                  oneImpacted.charAt(0).toUpperCase() + oneImpacted.slice(1)
-                }`}
-              </li>
-            ))} */}
-          </ul>
+          {/* this ul will be filled with the impacted people */}
+          <ul className="flex gap-1 flex-wrap self-start" />
         </div>
         <div id="experts">
           <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
-          <ul className="flex gap-1 flex-wrap self-start">
-            {/* {createDecision.experts.map((expert) => (
-              <li className="text-[#0C3944] text-xl rounded-full text-center px-4 py-2 font-bold border border-black">
-                {`#${expert.charAt(0).toUpperCase() + expert.slice(1)}`}
-              </li>
-            ))} */}
-          </ul>
+          {/* this ul will be filled with the experts people */}
+          <ul className="flex gap-1 flex-wrap self-start" />
         </div>
       </aside>
     </div>
