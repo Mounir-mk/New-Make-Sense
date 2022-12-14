@@ -5,6 +5,7 @@ import Decision from "./pages/Decision";
 import Header from "./components/Header";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route
           path="/decisions/create"
