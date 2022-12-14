@@ -15,6 +15,7 @@ router.delete("/items/:id", itemControllers.destroy);
 router.get("/decisions", decisionControllers.getDecisions);
 router.get("/decisions/:id", decisionControllers.getDecision);
 router.post("/decisions", decisionControllers.postDecision);
+router.delete("/decisions/:id", decisionControllers.deleteDecision);
 
 router.get("/users", userControllers.getUsers);
 router.get("/users/:id", userControllers.getUser);

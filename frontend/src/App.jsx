@@ -7,6 +7,7 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const [dataId, setDataId] = useState();
   const [createDecision, setCreateDecision] = useState({
     impacted: [],
     experts: [],
@@ -18,7 +19,7 @@ function App() {
     risks: "",
   });
   return (
-    <div className="App w-screen">
+    <div className="App">
       <Header />
       <Routes>
         <Route
@@ -27,13 +28,12 @@ function App() {
             <CreateDecision
               createDecision={createDecision}
               setCreateDecision={setCreateDecision}
+              dataId={dataId}
+              setDataId={setDataId}
             />
           }
         />
-        <Route
-          path="/decision"
-          element={<Decision createDecision={createDecision} />}
-        />
+        <Route path="/decision/:id" element={<Decision />} />
         <Route path="/" element={<Dashboard />} />
       </Routes>
     </div>

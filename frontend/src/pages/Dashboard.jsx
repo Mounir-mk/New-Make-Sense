@@ -18,6 +18,7 @@ function Dashboard() {
           {decisions.map((decision) => (
             <DashboardCard
               key={decision.id}
+              id={decision.id}
               decisionTitle={decision.title}
               author={`${decision.firstname} ${decision.lastname}`}
             />
