@@ -11,13 +11,30 @@ export default function Decision() {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState({
     title: "",
+    publish_date: "",
     deadline: "",
-    content: "",
+    start_content: "",
+    middle_decision: "",
+    final_decision: "",
     impact: "",
     risk: "",
     advantage: "",
     userId: "",
   });
+
+  // Reformatting dates received from DB and also putting the current date
+  const publishDate = new Date("2022-12-06T23:00:00.000Z");
+  const deadlineDate = new Date("2022-12-30T23:00:00.000Z");
+  const currentDate = new Date();
+
+  // calculating to have the percentage of time from publishDate to deadlineDate
+  const totalDuration = deadlineDate.getTime() - publishDate.getTime();
+  const elapsedDuration = currentDate.getTime() - publishDate.getTime();
+
+  // calculating to get a percentage of this
+  const percentage = (elapsedDuration / totalDuration) * 100;
+
+  console.warn(percentage.toFixed(1), "%");
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`)
