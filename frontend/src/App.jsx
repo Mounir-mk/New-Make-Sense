@@ -5,6 +5,7 @@ import Decision from "./pages/Decision";
 import Header from "./components/Header";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 
 function App() {
   const [createDecision, setCreateDecision] = useState({
@@ -21,6 +22,7 @@ function App() {
     <div className="App w-screen">
       <Header />
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route
           path="/decisions/create"
           element={
