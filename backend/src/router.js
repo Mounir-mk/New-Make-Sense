@@ -5,7 +5,6 @@ const router = express.Router();
 const decisionControllers = require("./controllers/decisionControllers");
 
 router.get("/decisions", decisionControllers.browse);
-router.get("/decisions/current", decisionControllers.browseCurrentDecisions);
 router.get("/decisions/:id", decisionControllers.read);
 router.put("/decisions/:id", decisionControllers.edit);
 router.post("/decisions", decisionControllers.add);

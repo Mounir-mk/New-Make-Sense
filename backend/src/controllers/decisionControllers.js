@@ -1,27 +1,27 @@
 const models = require("../models");
 
 const browse = (req, res) => {
-  models.decision
-    .findAll()
-    .then(([rows]) => {
-      res.send(rows);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-};
-
-const browseCurrentDecisions = (req, res) => {
-  models.decision
-    .findCurrentDecisions()
-    .then(([rows]) => {
-      res.send(rows);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+  if (req.query.status != null) {
+    models.decision
+      .findCurrentDecisions()
+      .then(([rows]) => {
+        res.send(rows);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  } else {
+    models.decision
+      .findAll()
+      .then(([rows]) => {
+        res.send(rows);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  }
 };
 
 const read = (req, res) => {
@@ -100,5 +100,4 @@ module.exports = {
   edit,
   add,
   destroy,
-  browseCurrentDecisions,
 };
