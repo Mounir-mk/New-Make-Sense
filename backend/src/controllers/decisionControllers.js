@@ -30,12 +30,32 @@ const getDecision = (req, res) => {
 };
 
 const postDecision = (req, res) => {
-  const { title, deadline, content, impact, risk, advantage } = req.body;
+  const {
+    title,
+    deadline,
+    publishDate,
+    startContent,
+    impact,
+    risk,
+    advantage,
+    middleDecision,
+    finalDecision,
+  } = req.body;
 
   database
     .query(
-      "insert into decision (title, deadline, content, impact, risk, advantage) values (?,?,?,?,?,?)",
-      [title, deadline, content, impact, risk, advantage]
+      "insert into decision (title, deadline,publish_date, start_content, impact, risk, advantage, middle_decision, final_decision) values (?,?,?,?,?,?)",
+      [
+        title,
+        deadline,
+        publishDate,
+        startContent,
+        impact,
+        risk,
+        advantage,
+        middleDecision,
+        finalDecision,
+      ]
     )
     .then(([result]) => {
       res.location(`/decisions/${result.insertId}`).sendStatus(201);
