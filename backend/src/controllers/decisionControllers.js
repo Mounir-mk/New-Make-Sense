@@ -44,7 +44,7 @@ const postDecision = (req, res) => {
 
   database
     .query(
-      "insert into decision (title, deadline,publish_date, start_content, impact, risk, advantage, middle_decision, final_decision) values (?,?,?,?,?,?)",
+      "insert into decision (title, deadline, publish_date, start_content, impact, risk, advantage, middle_decision, final_decision) values (?,?,?,?,?,?)",
       [
         title,
         deadline,
