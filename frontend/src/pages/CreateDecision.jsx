@@ -15,8 +15,8 @@ function CreateDecision({
 
   const [step, setStep] = useState(1);
   return (
-    <main className="w-full flex md:justify-center md:items-start h-[calc(100vh_-_64px)]">
-      <div className="h-full flex flex-col gap-2 md:gap-4 md:justify-start md:items-start">
+    <main className="w-full flex justify-evenly items-start h-[calc(100vh_-_64px)]">
+      <div className="h-full flex flex-col gap-2 md:gap-4 justify-around items-start">
         <span>
           <h1 className="font-bold text-2xl md:mt-16">Créer une décision</h1>
         </span>
