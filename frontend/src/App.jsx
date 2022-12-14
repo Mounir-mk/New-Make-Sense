@@ -5,6 +5,7 @@ import Decision from "./pages/Decision";
 import Header from "./components/Header";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
 
 function App() {
   const [dataId, setDataId] = useState();
@@ -22,6 +23,7 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
+        <Route path="/register" element={<Register />} />
         <Route
           path="/decisions/create"
           element={
