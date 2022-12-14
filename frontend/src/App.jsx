@@ -5,6 +5,7 @@ import Decision from "./pages/Decision";
 import Header from "./components/Header";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 
 function App() {
   const [dataId, setDataId] = useState();
@@ -22,6 +23,7 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route
           path="/decisions/create"
           element={
