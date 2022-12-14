@@ -11,12 +11,16 @@ export default function Decision() {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState({
     title: "",
+    publish_date: "",
     deadline: "",
-    content: "",
+    start_content: "",
+    middle_decision: "",
+    final_decision: "",
     impact: "",
     risk: "",
     advantage: "",
     userId: "",
+    statusId: "",
   });
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export default function Decision() {
         </section>
         <DescriptionDecisionDetails
           title="Les détails de la décision"
-          content={content?.content}
+          content={content?.start_content}
         />
         <DescriptionDecisionDetails
           title="Impact sur l'organisation"
