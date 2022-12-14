@@ -1,10 +1,10 @@
-const database = require("../../db");
+const models = require("../models");
 
-const getDecisions = (req, res) => {
-  database
-    .query("select * from decision")
-    .then(([result]) => {
-      res.json(result);
+const browse = (req, res) => {
+  models.decision
+    .findAll()
+    .then(([rows]) => {
+      res.send(rows);
     })
     .catch((err) => {
       console.error(err);
@@ -12,15 +12,14 @@ const getDecisions = (req, res) => {
     });
 };
 
-const getDecision = (req, res) => {
-  const { id } = req.params;
-  database
-    .query("select * from decision where id = ?", [id])
-    .then(([result]) => {
-      if (result.length) {
-        res.json(result[0]);
-      } else {
+const read = (req, res) => {
+  models.decision
+    .find(req.params.id)
+    .then(([rows]) => {
+      if (rows[0] == null) {
         res.sendStatus(404);
+      } else {
+        res.send(rows[0]);
       }
     })
     .catch((err) => {
@@ -29,14 +28,35 @@ const getDecision = (req, res) => {
     });
 };
 
-const postDecision = (req, res) => {
-  const { title, deadline, content, impact, risk, advantage } = req.body;
+const edit = (req, res) => {
+  const decision = req.body;
 
-  database
-    .query(
-      "insert into decision (title, deadline, content, impact, risk, advantage) values (?,?,?,?,?,?)",
-      [title, deadline, content, impact, risk, advantage]
-    )
+  // TODO validations (length, format...)
+
+  decision.id = parseInt(req.params.id, 10);
+
+  models.decision
+    .update(decision)
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const add = (req, res) => {
+  const decision = req.body;
+
+  // TODO validations (length, format...)
+
+  models.decision
+    .insert(decision)
     .then(([result]) => {
       res.location(`/decisions/${result.insertId}`).sendStatus(201);
     })
@@ -46,8 +66,26 @@ const postDecision = (req, res) => {
     });
 };
 
+const destroy = (req, res) => {
+  models.decision
+    .delete(req.params.id)
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
-  getDecisions,
-  getDecision,
-  postDecision,
+  browse,
+  read,
+  edit,
+  add,
+  destroy,
 };

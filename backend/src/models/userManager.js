@@ -21,15 +21,15 @@ class UserManager extends AbstractManager {
   insert(user) {
     return this.connection.query(
       `insert into ${this.table} (firstname, lastname, email, hashedPassword) values (?,?,?,?)`,
-      [user.title]
+      [user.firstname, user.lastname, user.email, user.hashedPassword]
     );
   }
 
   update(user) {
-    return this.connection.query(
-      `update ${this.table} set title = ? where id = ?`,
-      [user.title, user.id]
-    );
+    return this.connection.query(`update ${this.table} set ? where id = ?`, [
+      user.body,
+      user.id,
+    ]);
   }
 }
 
