@@ -36,7 +36,7 @@ create table concerned (
   constraint concerned_decision foreign key (decision_id) references decision(id)
 ) engine=InnoDB default charset=latin1;
 
-insert into concerned (user_status, decision_id, user_id) values 
+insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 1, 2),
 ("expert", 1, 3),
 ("impacted", 2, 3);
