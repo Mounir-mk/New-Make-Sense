@@ -70,7 +70,7 @@ const add = (req, res) => {
   models.decision
     .insert(decision)
     .then(([result]) => {
-      res.location(`/decisions/${result.insertId}`).sendStatus(201);
+      res.json(result);
     })
     .catch((err) => {
       console.error(err);
