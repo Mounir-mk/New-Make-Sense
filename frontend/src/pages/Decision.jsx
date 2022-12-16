@@ -22,6 +22,36 @@ export default function Decision() {
     userId: "",
     statusId: "",
   });
+  let statusStep = 1;
+  // Reformatting dates received from DB and also putting the current date
+  const publishDate = new Date("2022-12-06T23:00:00.000Z");
+  const deadlineDate = new Date("2022-12-30T23:00:00.000Z");
+  const currentDate = new Date();
+
+  // calculating to have the durationPercentage of time from publishDate to deadlineDate
+  const totalDuration = deadlineDate.getTime() - publishDate.getTime();
+  const elapsedDuration = currentDate.getTime() - publishDate.getTime();
+
+  // calculating to get a durationPercentage of this
+  const durationPercentage = (elapsedDuration / totalDuration) * 100;
+  // this condition defines which step of the status are we in. if above 50%, step 2, if above 75%, step 3
+  if (durationPercentage >= 20) {
+    statusStep = 2;
+  } else if (durationPercentage >= 40) {
+    statusStep = 3;
+  } else if (durationPercentage >= 60) {
+    statusStep = 4;
+  } else if (durationPercentage >= 80) {
+    statusStep = 5;
+  }
+  // i divide the totalDuration by 4 to get the duration of each status
+  const statusDuration = totalDuration / 4;
+  // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
+  const currentStatusDuration =
+    publishDate.getTime() + statusDuration * statusStep;
+
+  const statusDate = new Date(currentStatusDuration);
+  console.warn(statusDate);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`)
@@ -31,10 +61,11 @@ export default function Decision() {
       });
   }, [id]);
 
-  // return only the first 10 characters of the date
-  const formatDate = (date) => {
-    return date.slice(0, 10);
-  };
+  // return only the first 10 characters of the date  ( mettre au début : {formatDate(content.publish_date)}
+  //  et à la fin {formatDate(content.deadline)} à la place des dates
+  // const formatDate = (date) => {
+  //  return date.slice(0, 10);
+  // };
 
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
@@ -102,14 +133,23 @@ export default function Decision() {
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white">
         <div id="timeline" className="flex flex-col">
-          <h1 className="font-bold text-base">Date à retenir</h1>
+          <h1 className="font-bold text-base">Dates à retenir</h1>
           <ol className="border-l border-gray-300">
             <li>
-              <div className="flex flex-start items-center pt-3">
+              <div className="flex flex-start items-center pt-2">
                 <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
-                <p className="text-gray-500 text-sm">
-                  {formatDate(content.deadline)}
-                </p>
+                <p className="text-gray-500 text-sm">07.12.2022</p>
+              </div>
+              <div className="mt-0.5 ml-4 mb-6">
+                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
+                  Date de publication
+                </h4>
+              </div>
+            </li>
+            <li>
+              <div className="flex flex-start items-center pt-2">
+                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
+                <p className="text-gray-500 text-sm">13.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -120,7 +160,7 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
-                <p className="text-gray-500 text-sm">13.09.2021</p>
+                <p className="text-gray-500 text-sm">19.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -131,11 +171,22 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
-                <p className="text-gray-500 text-sm">25.11.2021</p>
+                <p className="text-gray-500 text-sm">25.12.2022</p>
+              </div>
+              <div className="mt-0.5 ml-4 mb-6">
+                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
+                  Title of section 3
+                </h4>
+              </div>
+            </li>
+            <li>
+              <div className="flex flex-start items-center pt-2">
+                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
+                <p className="text-gray-500 text-sm">31.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 3
+                  Deadline
                 </h4>
               </div>
             </li>
