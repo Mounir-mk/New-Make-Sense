@@ -16,3 +16,6 @@ Content-type: application/json
   "email": "johndoe1@email.com",
   "password": "password4"
 }
+
+###
+GET http://localhost:5000/users
