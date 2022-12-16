@@ -29,6 +29,7 @@ create table decision (
 INSERT INTO decision (title, deadline, publish_date, start_content, impact, risk, advantage, middle_decision, final_decision, user_id) VALUES ('Titre de la décision','2022-12-07','2022-12-31','Lorem ipsum content','Lorem ipsum impact','Lorem ipsum risk','Lorem ipsum advantage','Lorem ipsum middledecision','Lorem ipsum finaldecision', 1), ('Titre de la décision 2','2022-12-08','2022-12-30','Lorem ipsum content2','Lorem ipsum impact2','Lorem ipsum risk2','Lorem ipsum advantage2','Lorem ipsum middledecision2','Lorem ipsum finaldecision2', 1);
 
 create table concerned (
+  id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
   user_status varchar(10) NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,
