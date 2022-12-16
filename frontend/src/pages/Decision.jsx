@@ -21,28 +21,35 @@ export default function Decision() {
     advantage: "",
     userId: "",
   });
-
-  const statusStep = 1;
-
+  let statusStep = 1;
   // Reformatting dates received from DB and also putting the current date
   const publishDate = new Date("2022-12-06T23:00:00.000Z");
   const deadlineDate = new Date("2022-12-30T23:00:00.000Z");
   const currentDate = new Date();
 
-  // calculating to have the percentage of time from publishDate to deadlineDate
+  // calculating to have the durationPercentage of time from publishDate to deadlineDate
   const totalDuration = deadlineDate.getTime() - publishDate.getTime();
   const elapsedDuration = currentDate.getTime() - publishDate.getTime();
 
-  // calculating to get a percentage of this
-  const percentage = (elapsedDuration / totalDuration) * 100;
-  console.warn(percentage.toFixed(1), "%");
-  // i divide the totalDuration by 5 to get the duration of one status
-  const statusDurationTimestamp = totalDuration / 4;
+  // calculating to get a durationPercentage of this
+  const durationPercentage = (elapsedDuration / totalDuration) * 100;
+  // this condition defines which step of the status are we in. if above 50%, step 2, if above 75%, step 3
+  if (durationPercentage >= 20) {
+    statusStep = 2;
+  } else if (durationPercentage >= 40) {
+    statusStep = 3;
+  } else if (durationPercentage >= 60) {
+    statusStep = 4;
+  } else if (durationPercentage >= 80) {
+    statusStep = 5;
+  }
+  // i divide the totalDuration by 4 to get the duration of each status
+  const statusDuration = totalDuration / 4;
   // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
-  const statusDuration =
-    publishDate.getTime() + statusDurationTimestamp * statusStep;
+  const currentStatusDuration =
+    publishDate.getTime() + statusDuration * statusStep;
 
-  const statusDate = new Date(statusDuration);
+  const statusDate = new Date(currentStatusDuration);
   console.warn(statusDate);
 
   useEffect(() => {
