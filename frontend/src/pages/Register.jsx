@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import loginImage from "../assets/login_image.jpg";
 import eyeOpen from "../assets/eye.svg";
 import eyeClosed from "../assets/eye-off.svg";
 
 function Register() {
+  const navigate = useNavigate();
   const firstnameRef = useRef();
   const lastnameRef = useRef();
   const emailRef = useRef();
@@ -23,7 +25,9 @@ function Register() {
     };
     axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/users`, userInformations)
-      .then((response) => response)
+      .then(() => {
+        navigate("/login");
+      })
       .catch((error) => {
         console.error(error);
       });
