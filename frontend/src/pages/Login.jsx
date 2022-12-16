@@ -44,7 +44,7 @@ function Login() {
                 placeholder="Exemple : 123456"
               />
               <NavLink
-                to="/"
+                to="/register"
                 className="bg-black text-white rounded-lg p-2 text-center"
               >
                 Se connecter
