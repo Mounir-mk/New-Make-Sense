@@ -1,9 +1,7 @@
-GET http://localhost:5000/users
-
-POST http://localhost:5000/users
-Content-Type: application/json
+POST http://localhost:5000/users/login
+Content-type: application/json
 
 {
-  "name": "John Doe",
-  "email": "
+  "email": "john.doe@gmail.com",
+  "password" : "password"
 }
