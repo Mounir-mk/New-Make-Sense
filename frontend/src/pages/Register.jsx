@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import loginImage from "../assets/login_image.jpg";
 import eyeOpen from "../assets/eye.svg";
 import eyeClosed from "../assets/eye-off.svg";
 
 function Register() {
-  const [inputPassWord, setInputPassWord] = useState();
-  const [inputPassWordConfirm, setInputPassWordConfirm] = useState();
+  const navigate = useNavigate();
+  const firstnameRef = useRef();
+  const lastnameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
   const [isPasswordVisible, setIsPasswordVisible] = useState({
     password: false,
     passwordConfirm: false,
   });
+  const handleSubmit = () => {
+    const userInformations = {
+      firstname: firstnameRef.current.value,
+      lastname: lastnameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/users`, userInformations)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <main className="w-screen  flex justify-center items-center h-[calc(100vh_-_64px)] md:bg-blue-dianne">
       <div className="w-[80%] h-[calc(100vh_-_64px)] rounded-lg flex justify-center items-center p-4">
@@ -29,7 +52,13 @@ function Register() {
             className="bg-white h-full md:w-1/2 flex flex-col md:gap-2 md:p-4 rounded-lg justify-evenly"
           >
             <h1 className="text-2xl font-bold text-center">Inscription</h1>
-            <form className="flex flex-col gap-4">
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
               <label htmlFor="fistname" className="font-bold">
                 Prénom
               </label>
@@ -39,6 +68,7 @@ function Register() {
                 id="fistname"
                 className="border-2 border-black rounded-lg p-2"
                 placeholder="John"
+                ref={firstnameRef}
               />
               <label htmlFor="lastname" className="font-bold">
                 Nom
@@ -49,6 +79,7 @@ function Register() {
                 id="lastname"
                 className="border-2 border-black rounded-lg p-2"
                 placeholder="Doe"
+                ref={lastnameRef}
               />
               <label htmlFor="email" className="font-bold">
                 Email
@@ -59,6 +90,7 @@ function Register() {
                 id="email"
                 className="border-2 border-black rounded-lg p-2"
                 placeholder="johnDoe@email.com"
+                ref={emailRef}
               />
               <label htmlFor="password" className="font-bold">
                 Mot de passe
@@ -70,8 +102,7 @@ function Register() {
                   id="password"
                   className="border-2 border-black rounded-lg p-2 w-full"
                   placeholder="********"
-                  value={inputPassWord}
-                  onChange={(e) => setInputPassWord(e.target.value)}
+                  ref={passwordRef}
                 />
                 <button
                   type="button"
@@ -100,8 +131,7 @@ function Register() {
                   id="passwordConfirm"
                   className="border-2 border-black rounded-lg p-2 w-full"
                   placeholder="********"
-                  value={inputPassWordConfirm}
-                  onChange={(e) => setInputPassWordConfirm(e.target.value)}
+                  ref={passwordConfirmRef}
                 />
                 <button
                   type="button"
