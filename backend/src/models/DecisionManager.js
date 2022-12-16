@@ -28,6 +28,12 @@ class DecisionManager extends AbstractManager {
       decision.id,
     ]);
   }
+
+  findCurrentDecisions() {
+    return this.connection.query(
+      `select u.firstname, u.lastname, d.title, d.id from user u inner join ${this.table} d on d.user_id = u.id`
+    );
+  }
 }
 
 module.exports = DecisionManager;

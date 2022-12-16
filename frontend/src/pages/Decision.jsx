@@ -20,6 +20,7 @@ export default function Decision() {
     risk: "",
     advantage: "",
     userId: "",
+    statusId: "",
   });
   let statusStep = 1;
   // Reformatting dates received from DB and also putting the current date
@@ -81,7 +82,7 @@ export default function Decision() {
         </section>
         <DescriptionDecisionDetails
           title="Les détails de la décision"
-          content={content?.content}
+          content={content?.start_content}
         />
         <DescriptionDecisionDetails
           title="Impact sur l'organisation"
