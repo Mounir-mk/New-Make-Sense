@@ -12,15 +12,10 @@ function InputDecisionForm({
   setDataId,
   dataId,
 }) {
-  const currentDate = new Date();
-
   const navigate = useNavigate();
   const postDecision = async () => {
     const decision = {
       title: createDecision.title,
-      publish_date: `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`,
       deadline: createDecision.date,
       start_content: createDecision.description,
       impact: createDecision.impacts,
@@ -31,8 +26,8 @@ function InputDecisionForm({
     await axios
       .post("http://localhost:5000/decisions", decision)
       .then((res) => {
-        setDataId(res.data.insertId);
-        navigate(`/decision/${res.data.insertId}`);
+        setDataId(res.data);
+        navigate(`/decision/${res.data}`);
       });
   };
 

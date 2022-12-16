@@ -6,11 +6,15 @@ class DecisionManager extends AbstractManager {
   }
 
   insert(decision) {
+    const currentDate = new Date();
+    const publishDate = `${currentDate.getFullYear()}-${
+      currentDate.getMonth() + 1
+    }-${currentDate.getDate()}`;
     return this.connection.query(
       `insert into ${this.table} (title, publish_date, deadline, start_content, impact, risk, advantage, user_id) values (?,?,?,?,?,?,?,?)`,
       [
         decision.title,
-        decision.publish_date,
+        publishDate,
         decision.deadline,
         decision.start_content,
         decision.impact,
