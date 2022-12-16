@@ -3,7 +3,7 @@ create table user (
   firstname varchar(50) NOT NULL,
   lastname varchar(50) NOT NULL,
   email varchar(50) NOT NULL UNIQUE,
-  hashed_password varchar(50) NOT NULL
+  hashed_password varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO user (firstname, lastname, email, hashed_password) VALUES 
