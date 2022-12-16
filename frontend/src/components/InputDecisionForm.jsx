@@ -17,7 +17,7 @@ function InputDecisionForm({
     const decision = {
       title: createDecision.title,
       deadline: createDecision.date,
-      content: createDecision.description,
+      start_content: createDecision.description,
       impact: createDecision.impacts,
       risk: createDecision.risks,
       advantage: createDecision.advantages,
@@ -26,8 +26,8 @@ function InputDecisionForm({
     await axios
       .post("http://localhost:5000/decisions", decision)
       .then((res) => {
-        setDataId(res.data.insertId);
-        navigate(`/decision/${res.data.insertId}`);
+        setDataId(res.data);
+        navigate(`/decision/${res.data}`);
       });
   };
 
