@@ -33,7 +33,7 @@ const verifyPassword = (req, res) => {
           expiresIn: "1h",
         });
         delete req.user.hashed_password;
-        res.status(200).json({ token });
+        res.send({ user: req.user, token });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
       }

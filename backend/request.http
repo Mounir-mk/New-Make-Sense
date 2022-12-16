@@ -2,6 +2,17 @@ POST http://localhost:5000/users/login
 Content-type: application/json
 
 {
-  "email": "john.doe@gmail.com",
-  "password" : "password"
+  "email": "johndoe1@email.com",
+  "password" : "password4"
+}
+
+###
+POST http://localhost:5000/users
+Content-type: application/json
+
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "johndoe1@email.com",
+  "password": "password4"
 }
