@@ -20,13 +20,13 @@ create table decision (
   impact varchar(250) NOT NULL,
   risk varchar(250) NOT NULL,
   advantage varchar(250) NOT NULL,
-  middle_decision varchar(250) NOT NULL,
-  final_decision varchar(250) NOT NULL,
+  middle_decision varchar(250),
+  final_decision varchar(250),
   user_id int(11) unsigned NOT NULL,
   constraint decision_user foreign key (user_id) references user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO decision (title, deadline, publish_date, start_content, impact, risk, advantage, middle_decision, final_decision, user_id) VALUES ('Titre de la décision','2022-12-07','2022-12-31','Lorem ipsum content','Lorem ipsum impact','Lorem ipsum risk','Lorem ipsum advantage','Lorem ipsum middledecision','Lorem ipsum finaldecision', 1), ('Titre de la décision 2','2022-12-08','2022-12-30','Lorem ipsum content2','Lorem ipsum impact2','Lorem ipsum risk2','Lorem ipsum advantage2','Lorem ipsum middledecision2','Lorem ipsum finaldecision2', 1);
+INSERT INTO decision (title, deadline, publish_date, start_content, impact, risk, advantage, user_id) VALUES ('Titre de la décision','2022-12-07','2022-12-31','Lorem ipsum content','Lorem ipsum impact','Lorem ipsum risk','Lorem ipsum advantage', 1), ('Titre de la décision 2','2022-12-08','2022-12-30','Lorem ipsum content2','Lorem ipsum impact2','Lorem ipsum risk2','Lorem ipsum advantage2', 1);
 
 create table concerned (
   id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
