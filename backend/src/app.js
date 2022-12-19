@@ -50,6 +50,5 @@ if (fs.existsSync(reactIndexFile)) {
     res.sendFile(reactIndexFile);
   });
 }
-
 // ready to export
 module.exports = app;
