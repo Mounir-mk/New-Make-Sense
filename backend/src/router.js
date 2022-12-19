@@ -19,4 +19,12 @@ router.put("/users/:id", hashPassword, userControllers.edit);
 router.post("/users", hashPassword, userControllers.add);
 router.delete("/users/:id", userControllers.destroy);
 
+const concernedControllers = require("./controllers/concernedControllers");
+
+router.get("/concerned", concernedControllers.browse);
+router.get("/concerned/:id", concernedControllers.read);
+router.put("/concerned/:id", hashPassword, concernedControllers.edit);
+router.post("/concerned", hashPassword, concernedControllers.add);
+router.delete("/concerned/:id", concernedControllers.destroy);
+
 module.exports = router;
