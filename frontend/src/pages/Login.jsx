@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../_services/AuthContext";
 import loginImage from "../assets/login_image.jpg";
 
 function Login() {
+  const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -17,6 +19,12 @@ function Login() {
       .then((res) => {
         const { token } = res.data;
         if (token) {
+          document.cookie = `token=${token}`;
+          setAuth((oldAuth) => ({
+            ...oldAuth,
+            isAuthenticated: true,
+            token,
+          }));
           navigate("/");
         } else {
           setErrorInput(true);
