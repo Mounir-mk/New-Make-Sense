@@ -17,12 +17,14 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {auth.isAuthenticated && (
+        {auth.isAuthenticated ? (
           <>
             <Route path="/decisions/create" element={<CreateDecision />} />
             <Route path="/decision/:id" element={<Decision />} />
             <Route path="/" element={<Dashboard />} />
           </>
+        ) : (
+          <Route path="/" element={<Login />} />
         )}
       </Routes>
     </div>

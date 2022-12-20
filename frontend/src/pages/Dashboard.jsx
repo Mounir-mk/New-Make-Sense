@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../_services/AuthContext";
 import DashboardCard from "../components/DecisionCard";
 
 function Dashboard() {
+  const { auth } = useContext(AuthContext);
   const [decisions, setDecisions] = useState([]);
   useEffect(() => {
     axios
       .get("http://localhost:5000/decisions?status=current", {
         headers: {
-          Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+          Authorization: `Bearer ${auth.token}`,
         },
       })
       .then((response) => {

@@ -19,7 +19,6 @@ function Login() {
       .then((res) => {
         const { token } = res.data;
         if (token) {
-          document.cookie = `token=${token}`;
           setAuth((oldAuth) => ({
             ...oldAuth,
             isAuthenticated: true,

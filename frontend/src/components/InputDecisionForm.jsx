@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../_services/AuthContext";
 
 function InputDecisionForm({
   createDecision,
@@ -10,6 +11,7 @@ function InputDecisionForm({
   stepName,
   redirectButton,
 }) {
+  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const postDecision = async () => {
     const decision = {
@@ -24,7 +26,7 @@ function InputDecisionForm({
     await axios
       .post("http://localhost:5000/decisions", decision, {
         headers: {
-          Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+          Authorization: `Bearer ${auth.token}`,
         },
       })
       .then((res) => {
