@@ -1,19 +1,26 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/login_image.jpg";
 
 function Login() {
+  const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [errorInput, setErrorInput] = useState(false);
   const handleLogin = () => {
     axios
-      .post("http://localhost:3000/login", {
+      .post("http://localhost:5000/users/login", {
         email: emailRef.current.value,
         password: passwordRef.current.value,
       })
-      .then((response) => {
-        console.warn(response);
+      .then((res) => {
+        const { token } = res.data;
+        if (token) {
+          navigate("/");
+        } else {
+          setErrorInput(true);
+        }
       })
       .catch((error) => {
         console.warn(error);
@@ -68,12 +75,18 @@ function Login() {
                 placeholder="Exemple : 123456"
                 ref={passwordRef}
               />
-              <NavLink
-                to="/register"
+              <button
+                type="submit"
                 className="bg-black text-white rounded-lg p-2 text-center"
+                onClick={handleLogin}
               >
                 Se connecter
-              </NavLink>
+              </button>
+              {errorInput && (
+                <p className="text-red-500 text-center">
+                  Email ou mot de passe incorrect
+                </p>
+              )}
             </form>
             <div className="flex flex-col gap-2">
               <p className="text-sm text-center">Vous n'avez pas de compte ?</p>
