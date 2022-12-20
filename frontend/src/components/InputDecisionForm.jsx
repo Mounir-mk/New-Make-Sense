@@ -27,7 +27,20 @@ function InputDecisionForm({
       .post("http://localhost:5000/decisions", decision)
       .then((res) => {
         setDataId(res.data);
-        navigate(`/decision/${res.data}`);
+        axios
+          .post(`http://localhost:5000/decisions/${res.data}/users`, {
+            users: [
+              {
+                userStatus: "impacted",
+                userId: 2,
+              },
+              {
+                userStatus: "expert",
+                userId: 1,
+              },
+            ],
+          })
+          .then(() => navigate(`/decision/${res.data}`));
       });
   };
 
