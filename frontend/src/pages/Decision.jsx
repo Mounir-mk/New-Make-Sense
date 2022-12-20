@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import cat from "../images/cat.jpg";
+import { Progress } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
+import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
 
 export default function Decision() {
@@ -26,8 +28,8 @@ export default function Decision() {
   });
   let statusStep = 1;
   // Reformatting dates received from DB and also putting the current date
-  const publishDate = new Date("2022-12-06T23:00:00.000Z");
-  const deadlineDate = new Date("2022-12-30T23:00:00.000Z");
+  const publishDate = new Date(content.publish_date);
+  const deadlineDate = new Date(content.deadline);
   const currentDate = new Date();
 
   // calculating to have the durationPercentage of time from publishDate to deadlineDate
@@ -37,15 +39,16 @@ export default function Decision() {
   // calculating to get a durationPercentage of this
   const durationPercentage = (elapsedDuration / totalDuration) * 100;
   // this condition defines which step of the status are we in. if above 50%, step 2, if above 75%, step 3
-  if (durationPercentage >= 20) {
-    statusStep = 2;
-  } else if (durationPercentage >= 40) {
-    statusStep = 3;
+  if (durationPercentage >= 80) {
+    statusStep = 5;
   } else if (durationPercentage >= 60) {
     statusStep = 4;
-  } else if (durationPercentage >= 80) {
-    statusStep = 5;
+  } else if (durationPercentage >= 40) {
+    statusStep = 3;
+  } else if (durationPercentage >= 20) {
+    statusStep = 2;
   }
+  console.warn(statusStep);
   // i divide the totalDuration by 4 to get the duration of each status
   const statusDuration = totalDuration / 4;
   // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
@@ -137,13 +140,21 @@ export default function Decision() {
           ))}
         </section>
       </main>
-      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white">
+      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white ">
+        <div className="flex rotate-180 absolute h-[40%] my-10">
+          <Progress.Line
+            vertical
+            percent={durationPercentage}
+            strokeColor="#C1E94E"
+            showInfo={false}
+            status="active"
+          />
+        </div>
         <div id="timeline" className="flex flex-col">
           <h1 className="font-bold text-base">Dates à retenir</h1>
-          <ol className="border-l border-gray-300">
+          <ol className="p-7">
             <li>
               <div className="flex flex-start items-center pt-2">
-                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
                 <p className="text-gray-500 text-sm">07.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -154,7 +165,6 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
                 <p className="text-gray-500 text-sm">13.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -165,7 +175,6 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
                 <p className="text-gray-500 text-sm">19.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -176,7 +185,6 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
                 <p className="text-gray-500 text-sm">25.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -187,7 +195,6 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <div className="bg-gray-300 w-2 h-2 rounded-full -ml-1 mr-3" />
                 <p className="text-gray-500 text-sm">31.12.2022</p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
