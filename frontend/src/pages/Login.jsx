@@ -36,7 +36,7 @@ function Login() {
   };
 
   return (
-    <main className="w-screen  flex justify-center items-center h-[calc(100vh_-_64px)] md:bg-blue-dianne">
+    <main className="w-screen  flex justify-center items-center h-screen md:bg-blue-dianne">
       <div className="h-[80%] w-[80%] rounded-lg flex justify-center items-center p-4">
         <section className="h-full w-full flex gap-10 flex-col md:flex-row">
           <article
