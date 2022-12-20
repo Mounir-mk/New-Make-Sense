@@ -8,6 +8,7 @@ router.get("/decisions", decisionControllers.browse);
 router.get("/decisions/:id", decisionControllers.read);
 router.put("/decisions/:id", decisionControllers.edit);
 router.post("/decisions", decisionControllers.add);
+router.post("/decisions/:id/users", decisionControllers.addConcerned);
 router.delete("/decisions/:id", decisionControllers.destroy);
 
 const userControllers = require("./controllers/userControllers");
