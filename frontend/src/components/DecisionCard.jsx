@@ -9,7 +9,11 @@ function DashboardCard({ decisionTitle, author, id }) {
   // fectch data of the decision when the user click on the button "Voir
   // la décision"
   const handleClick = async () => {
-    await fetch(`http://localhost:5000/decisions/${id}`)
+    await fetch(`http://localhost:5000/decisions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setDecisionData(data);

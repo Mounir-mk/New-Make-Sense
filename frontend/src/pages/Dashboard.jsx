@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import DashboardCard from "../components/DecisionCard";
 
 function Dashboard() {
   const [decisions, setDecisions] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:5000/decisions?status=current")
-      .then((res) => res.json())
-      .then((data) => setDecisions(data));
+    axios
+      .get("http://localhost:5000/decisions?status=current", {
+        headers: {
+          Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+        },
+      })
+      .then((response) => {
+        setDecisions(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
   return (
     <main className="flex justify-center">

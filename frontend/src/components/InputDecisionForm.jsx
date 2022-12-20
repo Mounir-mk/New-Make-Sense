@@ -24,7 +24,11 @@ function InputDecisionForm({
       userId: 1,
     };
     await axios
-      .post("http://localhost:5000/decisions", decision)
+      .post("http://localhost:5000/decisions", decision, {
+        headers: {
+          Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+        },
+      })
       .then((res) => {
         setDataId(res.data);
         navigate(`/decision/${res.data}`);

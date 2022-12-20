@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
+import { AuthContext } from "./_services/AuthContext";
 import CreateDecision from "./pages/CreateDecision";
 import Decision from "./pages/Decision";
 import Header from "./components/Header";
@@ -9,6 +10,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 
 function App() {
+  const { auth } = useContext(AuthContext);
   const [dataId, setDataId] = useState();
   const [createDecision, setCreateDecision] = useState({
     impacted: [],
@@ -22,23 +24,27 @@ function App() {
   });
   return (
     <div className="App">
-      <Header />
+      {auth.isAuthenticated && <Header />}
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/decisions/create"
-          element={
-            <CreateDecision
-              createDecision={createDecision}
-              setCreateDecision={setCreateDecision}
-              dataId={dataId}
-              setDataId={setDataId}
+        {auth.isAuthenticated && (
+          <>
+            <Route
+              path="/decisions/create"
+              element={
+                <CreateDecision
+                  createDecision={createDecision}
+                  setCreateDecision={setCreateDecision}
+                  dataId={dataId}
+                  setDataId={setDataId}
+                />
+              }
             />
-          }
-        />
-        <Route path="/decision/:id" element={<Decision />} />
-        <Route path="/" element={<Dashboard />} />
+            <Route path="/decision/:id" element={<Decision />} />
+            <Route path="/" element={<Dashboard />} />
+          </>
+        )}
       </Routes>
     </div>
   );

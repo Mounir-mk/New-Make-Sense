@@ -54,7 +54,11 @@ export default function Decision() {
   console.warn(statusDate);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setContent(data);
