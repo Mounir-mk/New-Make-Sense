@@ -41,7 +41,6 @@ function InputDecisionForm({
             ],
           })
           .then(() => navigate(`/decision/${res.data}`));
-        /* navigate(`/decision/${res.data}`); */
       });
   };
 
