@@ -12,11 +12,11 @@ function DescriptionDecisionForm({
   setInputExpert,
   setStep,
 }) {
-  const [users, setUsers] = useState([]);
+  const [myUsers, setMyUsers] = useState([]);
 
   useEffect(() => {
     axios.get(`http://localhost:5000/users`).then((res) => {
-      setUsers(res.data);
+      setMyUsers(res.data);
     });
   }, []);
 
@@ -49,11 +49,11 @@ function DescriptionDecisionForm({
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
             </button>
             <datalist id="impact">
-              {users.map(({ id, firstname, lastname }) => (
+              {myUsers.map(({ id, firstname, lastname }) => (
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${firstname} ${lastname}`}
+                  value={`${id} ${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
@@ -97,11 +97,11 @@ function DescriptionDecisionForm({
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
             </button>
             <datalist id="expert">
-              {users.map(({ id, firstname, lastname }) => (
+              {myUsers.map(({ id, firstname, lastname }) => (
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${firstname} ${lastname}`}
+                  value={`${id} ${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
