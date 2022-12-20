@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
+import { AuthContext } from "../_services/AuthContext";
 
 export default function Decision() {
+  const { auth } = useContext(AuthContext);
   const { id } = useParams();
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -54,7 +56,11 @@ export default function Decision() {
   console.warn(statusDate);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setContent(data);
