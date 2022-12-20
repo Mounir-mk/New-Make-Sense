@@ -134,18 +134,10 @@ export default function Decision() {
       </main>
 
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white relative">
-        <div className="absolute w-10 rotate-90">
-          <progress
-            className="m-10 w-100"
-            id="status"
-            max="5"
-            value={statusStep}
-          />
-        </div>
         <div id="timeline" className="flex flex-col">
           <h1 className="font-bold text-base">Dates à retenir</h1>
 
-          <ol className="p-10">
+          <ol className="border-l border-gray-300">
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">07.12.2022</p>
