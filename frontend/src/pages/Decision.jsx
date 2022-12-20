@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import cat from "../images/cat.jpg";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
+import { Progress } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
 
 export default function Decision() {
   const { id } = useParams();
@@ -132,12 +134,19 @@ export default function Decision() {
           ))}
         </section>
       </main>
-
-      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white relative">
+      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white ">
+        <div className="flex rotate-180 absolute h-[40%] my-10">
+          <Progress.Line
+            vertical
+            percent={durationPercentage}
+            strokeColor="#C1E94E"
+            showInfo={false}
+            status="active"
+          />
+        </div>
         <div id="timeline" className="flex flex-col">
           <h1 className="font-bold text-base">Dates à retenir</h1>
-
-          <ol className="border-l border-gray-300">
+          <ol className="p-7">
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">07.12.2022</p>
