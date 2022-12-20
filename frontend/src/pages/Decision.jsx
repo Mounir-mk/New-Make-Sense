@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import cat from "../images/cat.jpg";
+import { Progress } from "rsuite";
+import "rsuite/styles/index.less";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
-import { Progress } from "rsuite";
-import "rsuite/dist/rsuite.min.css";
+import cat from "../images/cat.jpg";
 
 export default function Decision() {
   const { id } = useParams();
