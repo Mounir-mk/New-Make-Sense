@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 import plusIcon from "../assets/plus.svg";
 
 function DescriptionDecisionForm({
@@ -11,6 +12,14 @@ function DescriptionDecisionForm({
   setInputExpert,
   setStep,
 }) {
+  const [myUsers, setMyUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5000/users`).then((res) => {
+      setMyUsers(res.data);
+    });
+  }, []);
+
   return (
     <>
       <section className="flex gap-2 w-full justify-evenly">
@@ -21,6 +30,7 @@ function DescriptionDecisionForm({
               type="text"
               placeholder="@Impactés"
               name="impacted"
+              list="impact"
               className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
               value={inputImpacted}
               onChange={(event) => setInputImpacted(event.target.value)}
@@ -38,6 +48,15 @@ function DescriptionDecisionForm({
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
             </button>
+            <datalist id="impact">
+              {myUsers.map(({ id, firstname, lastname }) => (
+                <option
+                  aria-label="User possibility"
+                  key={id}
+                  value={`${id} ${firstname} ${lastname}`}
+                />
+              ))}
+            </datalist>
           </div>
           <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
             {createDecision.impacted.map((impactElement) => (
@@ -59,6 +78,7 @@ function DescriptionDecisionForm({
               type="text"
               placeholder="@Experts"
               name="expert"
+              list="expert"
               className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
               value={inputExpert}
               onChange={(event) => setInputExpert(event.target.value)}
@@ -76,6 +96,15 @@ function DescriptionDecisionForm({
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
             </button>
+            <datalist id="expert">
+              {myUsers.map(({ id, firstname, lastname }) => (
+                <option
+                  aria-label="User possibility"
+                  key={id}
+                  value={`${id} ${firstname} ${lastname}`}
+                />
+              ))}
+            </datalist>
           </div>
           <ul className="flex gap-1 flex-wrap self-start md:my-16 w-full">
             {createDecision.experts.map((expertElement) => (
