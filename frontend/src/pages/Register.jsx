@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ProfilePicture from "../components/ProfilePicture";
 import loginImage from "../assets/login_image.jpg";
 import eyeOpen from "../assets/eye.svg";
 import eyeClosed from "../assets/eye-off.svg";
 
 function Register() {
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
   const firstnameRef = useRef();
   const lastnameRef = useRef();
@@ -52,6 +54,10 @@ function Register() {
             className="bg-white h-full md:w-1/2 flex flex-col md:gap-2 md:p-4 rounded-lg justify-evenly"
           >
             <h1 className="text-2xl font-bold text-center">Inscription</h1>
+            <ProfilePicture
+              profilePicture={profilePicture}
+              setProfilePicture={setProfilePicture}
+            />
             <form
               className="flex flex-col gap-4"
               onSubmit={(e) => {
