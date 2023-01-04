@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import plusIcon from "../assets/plus.svg";
+import { AuthContext } from "../_services/AuthContext";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -12,12 +13,22 @@ function DescriptionDecisionForm({
   setInputExpert,
   setStep,
 }) {
+  const [userConcerned, setUserConcerned] = useState([
+    { user_status: "expert", user_id: 0, decision_id: 1 },
+  ]);
+  const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/users`).then((res) => {
-      setMyUsers(res.data);
-    });
+    axios
+      .get(`http://localhost:5000/users`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      })
+      .then((res) => {
+        setMyUsers(res.data);
+      });
   }, []);
 
   return (
@@ -43,6 +54,14 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   impacted: [...createDecision.impacted, inputImpacted],
                 });
+                setUserConcerned([
+                  ...userConcerned,
+                  {
+                    user_status: "impacted",
+                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
+                    decision_id: 1,
+                  },
+                ]);
                 setInputImpacted("");
               }}
             >
@@ -91,6 +110,14 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   experts: [...createDecision.experts, inputExpert],
                 });
+                setUserConcerned([
+                  ...userConcerned,
+                  {
+                    user_status: "experts",
+                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
+                    decision_id: 1,
+                  },
+                ]);
                 setInputExpert("");
               }}
             >
