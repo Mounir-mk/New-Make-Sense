@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Progress } from "rsuite";
@@ -9,10 +9,14 @@ import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
 
 export default function Decision() {
+  const inputDecisionTitle = useRef("");
+  const contentDecisionTitle = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
+  const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [content, setContent] = useState({
     title: "",
     publish_date: "",
@@ -26,6 +30,10 @@ export default function Decision() {
     userId: "",
     statusId: "",
   });
+  // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
+  function toggleMiddleDecisionForm() {
+    setMiddleDecisionForm(!middleDecisionForm);
+  }
   let statusStep = 1;
   // Reformatting dates received from DB and also putting the current date
   const publishDate = new Date(content.publish_date);
@@ -105,6 +113,50 @@ export default function Decision() {
           title="Risques potentiels 🚨"
           content={content?.risk}
         />
+        {middleDecisionForm && (
+          <form>
+            <label className="font-bold text-center">
+              Title of new decision
+              <br />
+              <input
+                type="text"
+                name="middleDecisionTitle"
+                ref={inputDecisionTitle}
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+              />
+              <br />
+            </label>
+            <br />
+            <label className="font-bold text-center">
+              Content
+              <br />
+              <input
+                type="text"
+                name="contentDecisionTitle"
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                ref={contentDecisionTitle}
+              />
+            </label>
+            <br />
+            <button
+              type="submit"
+              className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleMiddleDecisionForm();
+                setMiddleDecisionIsCreated(true);
+              }}
+            >
+              Submit
+            </button>
+          </form>
+        )}
+        {middleDecisionIsCreated && (
+          <DescriptionDecisionDetails
+            title={inputDecisionTitle.current.value}
+            content={contentDecisionTitle.current.value}
+          />
+        )}
         <section id="comments" className="flex flex-col md:my-20">
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
@@ -239,6 +291,15 @@ export default function Decision() {
           {/* this ul will be filled with the experts people */}
           <ul className="flex gap-1 flex-wrap self-start" />
         </div>
+        {middleDecisionIsCreated === false && statusStep >= 2 && (
+          <button
+            type="button"
+            className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
+            onClick={toggleMiddleDecisionForm}
+          >
+            Create middle decision
+          </button>
+        )}
       </aside>
     </div>
   );
