@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ProfilePicture from "../components/ProfilePicture";
 import RegisterForm from "../components/RegisterForm";
 import loginImage from "../assets/login_image.jpg";
+import ProfilePicture from "../components/ProfilePicture";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,8 +12,8 @@ function Register() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const imageRef = useRef();
-  const [profilePicture, setProfilePicture] = useState(null);
+  const avatarRef = useRef();
+  const [avatar, setAvatar] = useState();
   const [isPasswordVisible, setIsPasswordVisible] = useState({
     password: false,
     passwordConfirm: false,
@@ -53,18 +53,27 @@ function Register() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       // Make a POST request to the server to register the user
-      try {
-        await axios
-          .post(`${import.meta.env.VITE_BACKEND_URL}/users`, userInformations)
-          .then(() => {
-            navigate("/login");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } catch (error) {
-        console.error(error);
-      }
+      const formData = new FormData();
+      formData.append("avatar", avatarRef.current.files[0]);
+      formData.append("firstname", firstnameRef.current.value);
+      formData.append("lastname", lastnameRef.current.value);
+      formData.append("email", emailRef.current.value);
+      formData.append("password", passwordRef.current.value);
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      await axios
+        .post("http://localhost:5000/users", formData, config)
+        .then((response) => {
+          console.warn(response);
+          navigate("/login");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -87,9 +96,9 @@ function Register() {
         >
           <h1 className="text-2xl font-bold text-center">Inscription</h1>
           <ProfilePicture
-            profilePicture={profilePicture}
-            setProfilePicture={setProfilePicture}
-            imageRef={imageRef}
+            avatar={avatar}
+            setAvatar={setAvatar}
+            avatarRef={avatarRef}
           />
           <RegisterForm
             firstnameRef={firstnameRef}
