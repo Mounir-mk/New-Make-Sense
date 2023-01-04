@@ -3,7 +3,7 @@ create table user (
   firstname varchar(50) NOT NULL,
   lastname varchar(50) NOT NULL,
   image_url varchar(255),
-  role varchar(15) NOT NULL,
+  role varchar(15) NOT NULL DEFAULT 'visitor',
   email varchar(50) NOT NULL UNIQUE,
   hashed_password varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

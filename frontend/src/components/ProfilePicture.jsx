@@ -1,20 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function ProfilePicture({ profilePicture, setProfilePicture }) {
+function ProfilePicture({ profilePicture, setProfilePicture, imageRef }) {
   return (
     <article
       id="login_image"
-      className="h-full md:w-1/2 pb-4 md:pb-0 flex justify-center items-center flex-col gap-4 md:gap-8"
+      className="h-full md:w-1/2 pb-4 md:pb-0 flex justify-center items-center flex-col gap-4 md:gap-4 self-center"
     >
       <img
-        src={
-          profilePicture
-            ? URL.createObjectURL(profilePicture)
-            : "https://via.placeholder.com/150"
-        }
+        src={profilePicture || "https://via.placeholder.com/150"}
         alt="image2"
-        className="h-16 w-16 md:h-32 md:w-32 rounded-full"
+        className="h-16 w-16 md:h-20 md:w-20 rounded-full"
       />
       <div className="flex flex-col gap-2">
         <label
@@ -29,10 +25,11 @@ function ProfilePicture({ profilePicture, setProfilePicture }) {
           type="file"
           name="file"
           id="file"
+          ref={imageRef}
           accept="image/*"
           className="hidden"
-          onChange={(e) => {
-            setProfilePicture(e.target.files[0]);
+          onChange={() => {
+            setProfilePicture(URL.createObjectURL(imageRef.current.files[0]));
           }}
         />
       </div>
@@ -46,7 +43,7 @@ ProfilePicture.propTypes = {
     size: PropTypes.number,
     type: PropTypes.string,
   }).isRequired,
-
+  imageRef: PropTypes.string.isRequired,
   setProfilePicture: PropTypes.func.isRequired,
 };
 
