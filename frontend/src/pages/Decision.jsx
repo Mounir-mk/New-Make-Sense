@@ -72,10 +72,10 @@ export default function Decision() {
 
   // return only the first 10 characters of the date  ( mettre au début : {formatDate(content.publish_date)}
   //  et à la fin {formatDate(content.deadline)} à la place des dates
-  // const formatDate = (date) => {
-  //  return date.slice(0, 10);
-  // };
-
+  const formatDate = (date) => {
+    return date.slice(0, 10);
+  };
+  // console.warn(formatDate(statusDate.toISOString()));
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
@@ -109,7 +109,6 @@ export default function Decision() {
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
           </h2>
-          {/* add comment */}
           <div className="flex flex-col">
             <textarea
               className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
@@ -155,7 +154,9 @@ export default function Decision() {
           <ol className="p-7">
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">07.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {formatDate(content.publish_date)}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -165,7 +166,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">13.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -175,7 +183,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">19.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration * 2
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -185,7 +200,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">25.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration * 3
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -195,7 +217,9 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">31.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {formatDate(content.deadline)}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
