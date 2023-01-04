@@ -11,7 +11,13 @@ router.post(
   userControllers.getUserByEmailWithPasswordAndPassToNext,
   verifyPassword
 );
-router.post("/users", hashPassword, userControllers.add);
+router.post(
+  "/users",
+  userControllers.uploadFile,
+  userControllers.handleFile,
+  hashPassword,
+  userControllers.add
+);
 
 router.use(verifyToken);
 

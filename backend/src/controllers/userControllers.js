@@ -1,4 +1,30 @@
+const fs = require("fs");
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 const models = require("../models");
+
+const upload = multer({ dest: "uploads/" });
+
+const uploadFile = upload.single("avatar");
+const handleFile = (req, res, next) => {
+  if (req.file) {
+    const { filename, originalname } = req.file;
+    fs.rename(
+      `uploads/${filename}`,
+      `uploads/${uuidv4()}-${originalname}`,
+      (err) => {
+        if (err) {
+          res.sendStatus(500);
+        }
+        const path = `uploads/${uuidv4()}-${originalname}`;
+        req.body.profilePicture = path;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
 
 const browse = (req, res) => {
   models.user
@@ -108,4 +134,6 @@ module.exports = {
   add,
   destroy,
   getUserByEmailWithPasswordAndPassToNext,
+  uploadFile,
+  handleFile,
 };
