@@ -12,10 +12,9 @@ function DescriptionDecisionForm({
   inputExpert,
   setInputExpert,
   setStep,
+  setUserConcerned,
+  userConcerned,
 }) {
-  const [userConcerned, setUserConcerned] = useState([
-    { user_status: "expert", user_id: 0, decision_id: 1 },
-  ]);
   const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
 
@@ -114,7 +113,7 @@ function DescriptionDecisionForm({
                   ...userConcerned,
                   {
                     user_status: "experts",
-                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
+                    user_id: +inputExpert.replace(/[^0-9]/g, ""),
                     decision_id: 1,
                   },
                 ]);
@@ -230,6 +229,13 @@ DescriptionDecisionForm.propTypes = {
   setInputImpacted: PropTypes.func.isRequired,
   inputImpacted: PropTypes.string.isRequired,
   inputExpert: PropTypes.string.isRequired,
+  setUserConcerned: PropTypes.func.isRequired,
+  userConcerned: PropTypes.arrayOf(
+    PropTypes.shape({
+      user_status: PropTypes.string,
+      user_id: PropTypes.number,
+    })
+  ).isRequired,
 };
 
 export default DescriptionDecisionForm;

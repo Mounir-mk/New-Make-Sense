@@ -42,9 +42,6 @@ const read = (req, res) => {
 
 const edit = (req, res) => {
   const decision = req.body;
-
-  // TODO validations (length, format...)
-
   decision.id = parseInt(req.params.id, 10);
 
   models.decision
@@ -95,15 +92,12 @@ const destroy = (req, res) => {
 };
 
 const addConcerned = (req, res) => {
+  const decisionId = +req.params.id;
   const { users } = req.body;
-  const decisionId = req.params.id;
-
-  // TODO validations (length, format...)
-
   models.decision
     .insertConcerned(users, decisionId)
-    .then(([result]) => {
-      res.location(`/decisions/${result.insertId}`).sendStatus(201);
+    .then(() => {
+      res.sendStatus(201);
     })
     .catch((err) => {
       console.error(err);
