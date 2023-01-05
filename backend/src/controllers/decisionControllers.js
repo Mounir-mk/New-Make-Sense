@@ -59,15 +59,14 @@ const edit = (req, res) => {
     });
 };
 
-const add = (req, res) => {
+const add = (req, res, next) => {
   const decision = req.body;
-
-  // TODO validations (length, format...)
-
   models.decision
     .insert(decision)
     .then(([result]) => {
+      req.body.decisionId = result.insertId;
       res.status(201).json(result.insertId);
+      next();
     })
     .catch((err) => {
       console.error(err);
@@ -92,8 +91,7 @@ const destroy = (req, res) => {
 };
 
 const addConcerned = (req, res) => {
-  const decisionId = +req.params.id;
-  const { users } = req.body;
+  const { users, decisionId } = req.body;
   models.decision
     .insertConcerned(users, decisionId)
     .then(() => {

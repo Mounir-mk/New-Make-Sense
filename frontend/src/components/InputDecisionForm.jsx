@@ -24,6 +24,7 @@ function InputDecisionForm({
       risk: createDecision.risks,
       advantage: createDecision.advantages,
       userId: 1,
+      users: userConcerned,
     };
     axios
       .post("http://localhost:5000/decisions", decision, {
@@ -32,15 +33,6 @@ function InputDecisionForm({
         },
       })
       .then((res) => {
-        axios.post(
-          `http://localhost:5000/decisions/${res.data}/users`,
-          { users: userConcerned },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
-          }
-        );
         navigate(`/decision/${res.data}`);
       });
   };
