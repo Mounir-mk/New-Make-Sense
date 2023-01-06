@@ -41,7 +41,6 @@ class DecisionManager extends AbstractManager {
   insertConcerned(users, decisionId) {
     let sql = `insert into concerned (user_status, user_id, decision_id) values`;
     const values = [];
-
     for (let i = 0; i < users.length; i += 1) {
       sql += "(?, ?, ?)";
 
@@ -49,7 +48,7 @@ class DecisionManager extends AbstractManager {
         sql += ",";
       }
 
-      values.push(users[i].userStatus, users[i].userId, decisionId);
+      values.push(users[i].user_status, users[i].user_id, decisionId);
     }
     return this.connection.query(sql, values);
   }

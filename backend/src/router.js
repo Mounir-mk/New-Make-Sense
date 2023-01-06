@@ -24,7 +24,11 @@ router.use(verifyToken);
 router.get("/decisions", decisionControllers.browse);
 router.get("/decisions/:id", decisionControllers.read);
 router.put("/decisions/:id", decisionControllers.edit);
-router.post("/decisions", decisionControllers.add);
+router.post(
+  "/decisions",
+  decisionControllers.add,
+  decisionControllers.addConcerned
+);
 router.post("/decisions/:id/users", decisionControllers.addConcerned);
 router.delete("/decisions/:id", decisionControllers.destroy);
 
