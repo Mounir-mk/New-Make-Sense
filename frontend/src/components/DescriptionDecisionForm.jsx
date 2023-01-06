@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import plusIcon from "../assets/plus.svg";
+import { AuthContext } from "../_services/AuthContext";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -11,13 +12,22 @@ function DescriptionDecisionForm({
   inputExpert,
   setInputExpert,
   setStep,
+  setUsersConcerned,
+  usersConcerned,
 }) {
+  const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/users`).then((res) => {
-      setMyUsers(res.data);
-    });
+    axios
+      .get(`http://localhost:5000/users`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      })
+      .then((res) => {
+        setMyUsers(res.data);
+      });
   }, []);
 
   return (
@@ -43,6 +53,14 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   impacted: [...createDecision.impacted, inputImpacted],
                 });
+                setUsersConcerned([
+                  ...usersConcerned,
+                  {
+                    user_status: "impacted",
+                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
+                    decision_id: 1,
+                  },
+                ]);
                 setInputImpacted("");
               }}
             >
@@ -91,6 +109,14 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   experts: [...createDecision.experts, inputExpert],
                 });
+                setUsersConcerned([
+                  ...usersConcerned,
+                  {
+                    user_status: "experts",
+                    user_id: +inputExpert.replace(/[^0-9]/g, ""),
+                    decision_id: 1,
+                  },
+                ]);
                 setInputExpert("");
               }}
             >
@@ -203,6 +229,13 @@ DescriptionDecisionForm.propTypes = {
   setInputImpacted: PropTypes.func.isRequired,
   inputImpacted: PropTypes.string.isRequired,
   inputExpert: PropTypes.string.isRequired,
+  setUsersConcerned: PropTypes.func.isRequired,
+  usersConcerned: PropTypes.arrayOf(
+    PropTypes.shape({
+      user_status: PropTypes.string,
+      user_id: PropTypes.number,
+    })
+  ).isRequired,
 };
 
 export default DescriptionDecisionForm;

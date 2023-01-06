@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Progress } from "rsuite";
@@ -9,10 +9,14 @@ import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
 
 export default function Decision() {
+  const inputDecisionTitle = useRef("");
+  const contentDecisionTitle = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
+  const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [content, setContent] = useState({
     title: "",
     publish_date: "",
@@ -26,6 +30,10 @@ export default function Decision() {
     userId: "",
     statusId: "",
   });
+  // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
+  function toggleMiddleDecisionForm() {
+    setMiddleDecisionForm(!middleDecisionForm);
+  }
   let statusStep = 1;
   // Reformatting dates received from DB and also putting the current date
   const publishDate = new Date(content.publish_date);
@@ -72,10 +80,10 @@ export default function Decision() {
 
   // return only the first 10 characters of the date  ( mettre au début : {formatDate(content.publish_date)}
   //  et à la fin {formatDate(content.deadline)} à la place des dates
-  // const formatDate = (date) => {
-  //  return date.slice(0, 10);
-  // };
-
+  const formatDate = (date) => {
+    return date.slice(0, 10);
+  };
+  // console.warn(formatDate(statusDate.toISOString()));
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
@@ -105,11 +113,54 @@ export default function Decision() {
           title="Risques potentiels 🚨"
           content={content?.risk}
         />
+        {middleDecisionForm && (
+          <form>
+            <label className="font-bold text-center">
+              Title of new decision
+              <br />
+              <input
+                type="text"
+                name="middleDecisionTitle"
+                ref={inputDecisionTitle}
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+              />
+              <br />
+            </label>
+            <br />
+            <label className="font-bold text-center">
+              Content
+              <br />
+              <input
+                type="text"
+                name="contentDecisionTitle"
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                ref={contentDecisionTitle}
+              />
+            </label>
+            <br />
+            <button
+              type="submit"
+              className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleMiddleDecisionForm();
+                setMiddleDecisionIsCreated(true);
+              }}
+            >
+              Submit
+            </button>
+          </form>
+        )}
+        {middleDecisionIsCreated && (
+          <DescriptionDecisionDetails
+            title={inputDecisionTitle.current.value}
+            content={contentDecisionTitle.current.value}
+          />
+        )}
         <section id="comments" className="flex flex-col md:my-20">
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
           </h2>
-          {/* add comment */}
           <div className="flex flex-col">
             <textarea
               className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
@@ -155,7 +206,9 @@ export default function Decision() {
           <ol className="p-7">
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">07.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {formatDate(content.publish_date)}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -165,7 +218,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">13.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -175,7 +235,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">19.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration * 2
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -185,7 +252,14 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">25.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {content.publish_date !== "" &&
+                    formatDate(
+                      new Date(
+                        publishDate.getTime() + statusDuration * 3
+                      ).toISOString()
+                    )}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -195,7 +269,9 @@ export default function Decision() {
             </li>
             <li>
               <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">31.12.2022</p>
+                <p className="text-gray-500 text-sm">
+                  {formatDate(content.deadline)}
+                </p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
@@ -215,6 +291,15 @@ export default function Decision() {
           {/* this ul will be filled with the experts people */}
           <ul className="flex gap-1 flex-wrap self-start" />
         </div>
+        {middleDecisionIsCreated === false && statusStep >= 2 && (
+          <button
+            type="button"
+            className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
+            onClick={toggleMiddleDecisionForm}
+          >
+            Create middle decision
+          </button>
+        )}
       </aside>
     </div>
   );

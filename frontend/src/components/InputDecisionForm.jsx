@@ -10,9 +10,11 @@ function InputDecisionForm({
   setStep,
   stepName,
   redirectButton,
+  usersConcerned,
 }) {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const postDecision = async () => {
     const decision = {
       title: createDecision.title,
@@ -22,8 +24,9 @@ function InputDecisionForm({
       risk: createDecision.risks,
       advantage: createDecision.advantages,
       userId: 1,
+      users: usersConcerned,
     };
-    await axios
+    axios
       .post("http://localhost:5000/decisions", decision, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -93,6 +96,12 @@ InputDecisionForm.propTypes = {
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
   redirectButton: PropTypes.bool.isRequired,
+  usersConcerned: PropTypes.arrayOf(
+    PropTypes.shape({
+      user_status: PropTypes.string,
+      user_id: PropTypes.number,
+    })
+  ).isRequired,
 };
 
 export default InputDecisionForm;
