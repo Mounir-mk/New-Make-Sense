@@ -21,8 +21,6 @@ function DashboardCard({ decisionTitle, author, id }) {
       });
   };
 
-  console.warn(decicionData);
-
   return (
     <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-2xl my-4 w-72 h-56">
       <h1 className="font-bold text-blue-dianne text-lg">{decisionTitle}</h1>

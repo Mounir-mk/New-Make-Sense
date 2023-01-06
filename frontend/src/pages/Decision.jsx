@@ -56,15 +56,9 @@ export default function Decision() {
   } else if (durationPercentage >= 20) {
     statusStep = 2;
   }
-  console.warn(statusStep);
   // i divide the totalDuration by 4 to get the duration of each status
   const statusDuration = totalDuration / 4;
   // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
-  const currentStatusDuration =
-    publishDate.getTime() + statusDuration * statusStep;
-
-  const statusDate = new Date(currentStatusDuration);
-  console.warn(statusDate);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
