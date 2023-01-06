@@ -12,8 +12,8 @@ function DescriptionDecisionForm({
   inputExpert,
   setInputExpert,
   setStep,
-  setUserConcerned,
-  userConcerned,
+  setUsersConcerned,
+  usersConcerned,
 }) {
   const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
@@ -53,8 +53,8 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   impacted: [...createDecision.impacted, inputImpacted],
                 });
-                setUserConcerned([
-                  ...userConcerned,
+                setUsersConcerned([
+                  ...usersConcerned,
                   {
                     user_status: "impacted",
                     user_id: +inputImpacted.replace(/[^0-9]/g, ""),
@@ -109,8 +109,8 @@ function DescriptionDecisionForm({
                   ...createDecision,
                   experts: [...createDecision.experts, inputExpert],
                 });
-                setUserConcerned([
-                  ...userConcerned,
+                setUsersConcerned([
+                  ...usersConcerned,
                   {
                     user_status: "experts",
                     user_id: +inputExpert.replace(/[^0-9]/g, ""),
@@ -229,8 +229,8 @@ DescriptionDecisionForm.propTypes = {
   setInputImpacted: PropTypes.func.isRequired,
   inputImpacted: PropTypes.string.isRequired,
   inputExpert: PropTypes.string.isRequired,
-  setUserConcerned: PropTypes.func.isRequired,
-  userConcerned: PropTypes.arrayOf(
+  setUsersConcerned: PropTypes.func.isRequired,
+  usersConcerned: PropTypes.arrayOf(
     PropTypes.shape({
       user_status: PropTypes.string,
       user_id: PropTypes.number,
