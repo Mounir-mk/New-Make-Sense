@@ -3,18 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const router = require("./router");
-const database = require("../db");
 
 const app = express();
-
-database
-  .getConnection()
-  .then(() => {
-    console.warn("connected to database");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
 
 // use some application-level middlewares
 app.use(

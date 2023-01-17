@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
@@ -56,15 +55,9 @@ export default function Decision() {
   } else if (durationPercentage >= 20) {
     statusStep = 2;
   }
-  console.warn(statusStep);
   // i divide the totalDuration by 4 to get the duration of each status
   const statusDuration = totalDuration / 4;
   // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
-  const currentStatusDuration =
-    publishDate.getTime() + statusDuration * statusStep;
-
-  const statusDate = new Date(currentStatusDuration);
-  console.warn(statusDate);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
@@ -304,16 +297,3 @@ export default function Decision() {
     </div>
   );
 }
-
-Decision.propTypes = {
-  createDecision: PropTypes.shape({
-    title: PropTypes.string,
-    date: PropTypes.string,
-    description: PropTypes.string,
-    impacted: PropTypes.arrayOf(PropTypes.string),
-    experts: PropTypes.arrayOf(PropTypes.string),
-    impacts: PropTypes.string,
-    advantages: PropTypes.string,
-    risks: PropTypes.string,
-  }).isRequired,
-};

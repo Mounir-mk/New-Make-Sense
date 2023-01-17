@@ -67,8 +67,7 @@ function Register() {
       };
       await axios
         .post("http://localhost:5000/users", formData, config)
-        .then((response) => {
-          console.warn(response);
+        .then(() => {
           navigate("/login");
         })
         .catch((error) => {
