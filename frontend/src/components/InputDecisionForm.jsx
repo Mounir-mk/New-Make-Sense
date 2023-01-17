@@ -95,13 +95,17 @@ InputDecisionForm.propTypes = {
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
-  redirectButton: PropTypes.bool.isRequired,
+  redirectButton: PropTypes.bool,
   usersConcerned: PropTypes.arrayOf(
     PropTypes.shape({
       user_status: PropTypes.string,
       user_id: PropTypes.number,
     })
   ).isRequired,
+};
+
+InputDecisionForm.defaultProps = {
+  redirectButton: undefined,
 };
 
 export default InputDecisionForm;

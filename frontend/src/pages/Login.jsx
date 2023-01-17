@@ -65,6 +65,7 @@ function Login() {
               </label>
               <input
                 type="email"
+                autoComplete="username"
                 name="email"
                 id="email"
                 className="border-2 border-black rounded-lg p-2"
@@ -76,6 +77,7 @@ function Login() {
               </label>
               <input
                 type="password"
+                autoComplete="current-password"
                 name="password"
                 id="password"
                 className="border-2 border-black rounded-lg p-2"
