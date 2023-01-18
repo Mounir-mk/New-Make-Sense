@@ -53,7 +53,6 @@ export default function Decision() {
         setContent(data);
       });
   }, [id]);
-  console.log(content);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
