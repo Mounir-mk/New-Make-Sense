@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
@@ -302,16 +301,3 @@ export default function Decision() {
     </div>
   );
 }
-
-Decision.propTypes = {
-  createDecision: PropTypes.shape({
-    title: PropTypes.string,
-    date: PropTypes.string,
-    description: PropTypes.string,
-    impacted: PropTypes.arrayOf(PropTypes.string),
-    experts: PropTypes.arrayOf(PropTypes.string),
-    impacts: PropTypes.string,
-    advantages: PropTypes.string,
-    risks: PropTypes.string,
-  }).isRequired,
-};

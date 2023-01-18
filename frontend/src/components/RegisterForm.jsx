@@ -67,6 +67,7 @@ function RegisterForm({
       </label>
       <input
         type="text"
+        autoComplete="username"
         name="email"
         id="email"
         className={`border-2 rounded-lg p-2 ${
@@ -85,6 +86,7 @@ function RegisterForm({
       <div className="relative w-full">
         <input
           type={isPasswordVisible.password ? "text" : "password"}
+          autoComplete="new-password"
           name="password"
           id="password"
           className={`border-2 rounded-lg p-2 w-full ${
@@ -119,6 +121,7 @@ function RegisterForm({
       <div className="relative w-full">
         <input
           type={isPasswordVisible.passwordConfirm ? "text" : "password"}
+          autoComplete="new-password"
           name="passwordConfirm"
           id="passwordConfirm"
           className="border-2 border-black rounded-lg p-2 w-full"

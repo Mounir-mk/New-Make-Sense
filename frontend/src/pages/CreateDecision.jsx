@@ -16,7 +16,7 @@ function CreateDecision() {
   });
   const [inputImpacted, setInputImpacted] = useState("");
   const [inputExpert, setInputExpert] = useState("");
-
+  const [usersConcerned, setUsersConcerned] = useState([]);
   const [step, setStep] = useState(1);
   return (
     <main className="w-full flex justify-evenly items-start h-[calc(100vh_-_64px)]">
@@ -95,6 +95,8 @@ function CreateDecision() {
               createDecision={createDecision}
               setCreateDecision={setCreateDecision}
               setStep={setStep}
+              usersConcerned={usersConcerned}
+              setUsersConcerned={setUsersConcerned}
             />
           )}
           {step === 2 && (
@@ -120,6 +122,7 @@ function CreateDecision() {
               setStep={setStep}
               stepName="risks"
               redirectButton
+              usersConcerned={usersConcerned}
             />
           )}
         </div>

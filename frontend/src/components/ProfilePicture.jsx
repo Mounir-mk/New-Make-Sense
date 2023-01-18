@@ -42,9 +42,17 @@ ProfilePicture.propTypes = {
     name: PropTypes.string,
     size: PropTypes.number,
     type: PropTypes.string,
-  }).isRequired,
-  avatarRef: PropTypes.string.isRequired,
+  }),
+  avatarRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.string }),
+  ]),
   setAvatar: PropTypes.func.isRequired,
+};
+
+ProfilePicture.defaultProps = {
+  avatar: undefined,
+  avatarRef: undefined,
 };
 
 export default ProfilePicture;
