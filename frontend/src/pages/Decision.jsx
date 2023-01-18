@@ -79,7 +79,7 @@ export default function Decision() {
   // console.warn(formatDate(statusDate.toISOString()));
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
-      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
+      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-6 md:pl:0 my-8">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {content.title}
         </h1>
@@ -184,7 +184,7 @@ export default function Decision() {
           ))}
         </section>
       </main>
-      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white ">
+      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white pl-6 md:pl-0 ">
         <div className="flex rotate-180 absolute h-[40%] my-10">
           <Progress.Line
             vertical

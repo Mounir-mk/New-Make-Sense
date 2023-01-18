@@ -16,7 +16,7 @@ function App() {
   const location = useLocation();
   const { auth } = useContext(AuthContext);
   return (
-    <div className="App h-min-screen">
+    <div className="min-h-screen">
       {auth.isAuthenticated &&
         !(location.pathname === "/admin") &&
         !(location.pathname === "/login") &&
