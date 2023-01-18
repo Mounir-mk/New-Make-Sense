@@ -31,7 +31,9 @@ const read = (req, res) => {
       if (rows[0] == null) {
         res.sendStatus(404);
       } else {
-        res.send(rows[0]);
+        const decision = rows[0];
+        decision.concerned = req.concerned;
+        res.send(decision);
       }
     })
     .catch((err) => {
@@ -102,6 +104,19 @@ const addConcerned = (req, res) => {
     });
 };
 
+const getConcernedByDecisionId = (req, res, next) => {
+  models.decision
+    .findConcernedsByDecisionId(req.params.id)
+    .then(([rows]) => {
+      req.concerned = rows;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   browse,
   read,
@@ -109,4 +124,5 @@ module.exports = {
   add,
   destroy,
   addConcerned,
+  getConcernedByDecisionId,
 };

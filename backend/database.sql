@@ -40,5 +40,5 @@ create table concerned (
 
 insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 1, 2),
-("expert", 1, 3),
+("experts", 1, 3),
 ("impacted", 2, 3);

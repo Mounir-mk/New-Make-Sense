@@ -28,6 +28,7 @@ export default function Decision() {
     advantage: "",
     userId: "",
     statusId: "",
+    concerned: [],
   });
   // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
   function toggleMiddleDecisionForm() {
@@ -276,13 +277,26 @@ export default function Decision() {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          {/* this ul will be filled with the impacted people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ul className="flex gap-1 flex-wrap self-start">
+            {content.concerned.map(
+              (concerned) =>
+                concerned.user_status === "impacted" && (
+                  <li>{concerned.firstname}</li>
+                )
+            )}
+          </ul>
         </div>
         <div id="experts">
           <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
           {/* this ul will be filled with the experts people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ul className="flex gap-1 flex-wrap self-start">
+            {content.concerned.map(
+              (concerned) =>
+                concerned.user_status === "experts" && (
+                  <li>{concerned.firstname}</li>
+                )
+            )}
+          </ul>
         </div>
         {middleDecisionIsCreated === false && statusStep >= 2 && (
           <button

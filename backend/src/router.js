@@ -22,7 +22,11 @@ router.post(
 router.use(verifyToken);
 
 router.get("/decisions", decisionControllers.browse);
-router.get("/decisions/:id", decisionControllers.read);
+router.get(
+  "/decisions/:id",
+  decisionControllers.getConcernedByDecisionId,
+  decisionControllers.read
+);
 router.put("/decisions/:id", decisionControllers.edit);
 router.post(
   "/decisions",
