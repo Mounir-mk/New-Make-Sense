@@ -89,7 +89,7 @@ function Header() {
                 className="h-8 w-8 rounded-full object-cover"
               />
               {isMenuOpen && (
-                <div className="absolute top-full w-32">
+                <div className="absolute top-full w-32 z-20">
                   <ul className="bg-white border border-solid border-gray-300 rounded-md shadow-md">
                     <li className="p-2 hover:bg-gray-200 text-blue-dianne text-left border-b-2 text-sm font-bold">
                       <NavLink
