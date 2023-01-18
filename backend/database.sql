@@ -38,6 +38,18 @@ create table concerned (
   constraint concerned_decision foreign key (decision_id) references decision(id)
 ) engine=InnoDB default charset=latin1;
 
+create table comment (
+  content varchar(255) NOT NULL,
+  user_id int(11) unsigned NOT NULL,
+  decision_id int(11) unsigned NOT NULL,
+  constraint comment_user foreign key (user_id) references user(id),
+  constraint decision_comment foreign key (decision_id) references decision(id)
+) engine=InnoDB default charset=latin1;
+
+insert into comment (content, user_id, decision_id) values
+("premier commentaire test", 1, 1),
+("deuxième commentaire test", 1, 2);
+
 insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 1, 2),
 ("expert", 1, 3),

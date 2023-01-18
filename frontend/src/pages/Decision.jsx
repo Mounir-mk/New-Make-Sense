@@ -31,6 +31,7 @@ export default function Decision() {
     advantage: "",
     userId: "",
     statusId: "",
+    comment: [],
   });
   const { statusStep, statusDuration, durationPercentage, publishDate } =
     getDate(content.publish_date, content.deadline);
@@ -52,6 +53,7 @@ export default function Decision() {
         setContent(data);
       });
   }, [id]);
+  console.log(content);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
@@ -174,8 +176,8 @@ export default function Decision() {
         nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
         nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
           />
-          {comments.map((comment) => (
-            <Comment key={comment} icon={cat} comment={comment} />
+          {content.comment.map((comment) => (
+            <Comment key={comment} icon={cat} comment={comment.content} />
           ))}
         </section>
       </main>

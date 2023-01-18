@@ -22,7 +22,11 @@ router.post(
 router.use(verifyToken);
 
 router.get("/decisions", decisionControllers.browse);
-router.get("/decisions/:id", decisionControllers.read);
+router.get(
+  "/decisions/:id",
+  decisionControllers.getComments,
+  decisionControllers.read
+);
 router.put("/decisions/:id", decisionControllers.edit);
 router.post(
   "/decisions",
@@ -37,5 +41,4 @@ router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
 router.put("/users/:id", userControllers.edit);
 router.delete("/users/:id", userControllers.destroy);
-
 module.exports = router;
