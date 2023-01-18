@@ -6,6 +6,7 @@ import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails
 import Comment from "../components/Comment";
 import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
+import ConcernedUsers from "../components/ConcernedUsers";
 
 export default function Decision() {
   const inputDecisionTitle = useRef("");
@@ -277,44 +278,11 @@ export default function Decision() {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          <ul className="flex gap-1 flex-wrap self-start">
-            {content.concerned.map(
-              (concerned) =>
-                concerned.user_status === "impacted" && (
-                  <li>
-                    <img
-                      className="w-12 h-12 rounded-full"
-                      src={
-                        concerned.image_url ||
-                        "https://sutter.dr-veterinaire.com/media/original/lil-bub-2013-crop-for-thumb-78296.jpg"
-                      }
-                      alt="tab"
-                    />
-                  </li>
-                )
-            )}
-          </ul>
+          <ConcernedUsers status="impacted" concerned={content.concerned} />
         </div>
         <div id="experts">
           <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
-          {/* this ul will be filled with the experts people */}
-          <ul className="flex gap-1 flex-wrap self-start">
-            {content.concerned.map(
-              (concerned) =>
-                concerned.user_status === "experts" && (
-                  <li>
-                    <img
-                      className="w-12 h-12 rounded-full"
-                      src={
-                        concerned.image_url ||
-                        "https://sutter.dr-veterinaire.com/media/original/lil-bub-2013-crop-for-thumb-78296.jpg"
-                      }
-                      alt="tab"
-                    />
-                  </li>
-                )
-            )}
-          </ul>
+          <ConcernedUsers status="experts" concerned={content.concerned} />
         </div>
         {middleDecisionIsCreated === false && statusStep >= 2 && (
           <button
