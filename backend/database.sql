@@ -2,14 +2,16 @@ create table user (
   id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
   firstname varchar(50) NOT NULL,
   lastname varchar(50) NOT NULL,
+  image_url varchar(255),
+  role varchar(15) NOT NULL DEFAULT 'visitor',
   email varchar(50) NOT NULL UNIQUE,
   hashed_password varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO user (firstname, lastname, email, hashed_password) VALUES 
-('John','Doe','john.doe@gmail.com','password'),
-('William','Grant','william.grant@gmail.com','password'),
-('Hélene','Dupert','helene.dupert@gmail.com','password');
+INSERT INTO user (firstname, lastname, role, email, hashed_password) VALUES 
+('John','Doe','visitor','visitor@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI'),
+('Jane','Doe','employee','employee@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI'),
+('Jack','Doe','admin','admin@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI');
 
 create table decision (
   id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,

@@ -2,8 +2,8 @@ POST http://localhost:5000/users/login
 Content-type: application/json
 
 {
-  "email": "johndoe1@email.com",
-  "password" : "password4"
+  "email": "visitor@mail.com",
+  "password" : "password123"
 }
 
 ###
@@ -14,7 +14,7 @@ Content-type: application/json
   "firstname": "John",
   "lastname": "Doe",
   "email": "johndoe1@email.com",
-  "password": "password4"
+  "password": "password123"
 }
 
 ###
