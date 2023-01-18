@@ -7,16 +7,19 @@ import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails
 import Comment from "../components/Comment";
 import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
+import { getDate, convertToFr } from "../services/dateFunctions";
 
 export default function Decision() {
-  const inputDecisionTitle = useRef("");
-  const contentDecisionTitle = useRef("");
+  const contentDecision = useRef("");
+  const contentFinalDecision = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
+  const [finalDecisionForm, setFinalDecisionForm] = useState(false);
+  const [finalDecisionIsCreated, setFinalDecisionIsCreated] = useState(false);
   const [content, setContent] = useState({
     title: "",
     publish_date: "",
@@ -30,42 +33,15 @@ export default function Decision() {
     userId: "",
     statusId: "",
   });
+  const { statusStep, statusDuration, durationPercentage, publishDate } =
+    getDate(content.publish_date, content.deadline);
   // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
   function toggleMiddleDecisionForm() {
     setMiddleDecisionForm(!middleDecisionForm);
   }
-  let statusStep = 1;
-  // Reformatting dates received from DB and also putting the current date
-  const publishDate = new Date(content.publish_date);
-  const deadlineDate = new Date(content.deadline);
-  const currentDate = new Date();
-
-  // calculating to have the durationPercentage of time from publishDate to deadlineDate
-  const totalDuration = deadlineDate.getTime() - publishDate.getTime();
-  const elapsedDuration = currentDate.getTime() - publishDate.getTime();
-
-  // calculating to get a durationPercentage of this
-  const durationPercentage = (elapsedDuration / totalDuration) * 100;
-  // this condition defines which step of the status are we in. if above 50%, step 2, if above 75%, step 3
-  if (durationPercentage >= 80) {
-    statusStep = 5;
-  } else if (durationPercentage >= 60) {
-    statusStep = 4;
-  } else if (durationPercentage >= 40) {
-    statusStep = 3;
-  } else if (durationPercentage >= 20) {
-    statusStep = 2;
+  function toggleFinalDecisionForm() {
+    setFinalDecisionForm(!finalDecisionForm);
   }
-  console.warn(statusStep);
-  // i divide the totalDuration by 4 to get the duration of each status
-  const statusDuration = totalDuration / 4;
-  // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
-  const currentStatusDuration =
-    publishDate.getTime() + statusDuration * statusStep;
-
-  const statusDate = new Date(currentStatusDuration);
-  console.warn(statusDate);
-
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
       headers: {
@@ -77,13 +53,6 @@ export default function Decision() {
         setContent(data);
       });
   }, [id]);
-
-  // return only the first 10 characters of the date  ( mettre au début : {formatDate(content.publish_date)}
-  //  et à la fin {formatDate(content.deadline)} à la place des dates
-  const formatDate = (date) => {
-    return date.slice(0, 10);
-  };
-  // console.warn(formatDate(statusDate.toISOString()));
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
@@ -116,25 +85,13 @@ export default function Decision() {
         {middleDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Title of new decision
-              <br />
-              <input
-                type="text"
-                name="middleDecisionTitle"
-                ref={inputDecisionTitle}
-                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
-              />
-              <br />
-            </label>
-            <br />
-            <label className="font-bold text-center">
               Content
               <br />
-              <input
+              <textarea
                 type="text"
                 name="contentDecisionTitle"
                 className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
-                ref={contentDecisionTitle}
+                ref={contentDecision}
               />
             </label>
             <br />
@@ -153,8 +110,40 @@ export default function Decision() {
         )}
         {middleDecisionIsCreated && (
           <DescriptionDecisionDetails
-            title={inputDecisionTitle.current.value}
-            content={contentDecisionTitle.current.value}
+            title="Decision intermédiaire"
+            content={contentDecision.current.value}
+          />
+        )}
+        {finalDecisionForm && (
+          <form>
+            <label className="font-bold text-center">
+              Content
+              <br />
+              <textarea
+                type="text"
+                name="contentFinalDecision"
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                ref={contentFinalDecision}
+              />
+            </label>
+            <br />
+            <button
+              type="submit"
+              className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleFinalDecisionForm();
+                setFinalDecisionIsCreated(true);
+              }}
+            >
+              Submit
+            </button>
+          </form>
+        )}
+        {finalDecisionIsCreated && (
+          <DescriptionDecisionDetails
+            title="Décision finale"
+            content={contentFinalDecision.current.value}
           />
         )}
         <section id="comments" className="flex flex-col md:my-20">
@@ -207,7 +196,7 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
-                  {formatDate(content.publish_date)}
+                  {convertToFr(content.publish_date)}
                 </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -220,7 +209,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration
                       ).toISOString()
@@ -237,7 +226,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration * 2
                       ).toISOString()
@@ -254,7 +243,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration * 3
                       ).toISOString()
@@ -270,7 +259,7 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
-                  {formatDate(content.deadline)}
+                  {convertToFr(content.deadline)}
                 </p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
@@ -298,6 +287,15 @@ export default function Decision() {
             onClick={toggleMiddleDecisionForm}
           >
             Create middle decision
+          </button>
+        )}
+        {finalDecisionIsCreated === false && statusStep >= 5 && (
+          <button
+            type="button"
+            className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
+            onClick={toggleFinalDecisionForm}
+          >
+            Create final decision
           </button>
         )}
       </aside>
