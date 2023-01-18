@@ -281,7 +281,16 @@ export default function Decision() {
             {content.concerned.map(
               (concerned) =>
                 concerned.user_status === "impacted" && (
-                  <li>{concerned.firstname}</li>
+                  <li>
+                    <img
+                      className="w-12 h-12 rounded-full"
+                      src={
+                        concerned.image_url ||
+                        "https://sutter.dr-veterinaire.com/media/original/lil-bub-2013-crop-for-thumb-78296.jpg"
+                      }
+                      alt="tab"
+                    />
+                  </li>
                 )
             )}
           </ul>
@@ -293,7 +302,16 @@ export default function Decision() {
             {content.concerned.map(
               (concerned) =>
                 concerned.user_status === "experts" && (
-                  <li>{concerned.firstname}</li>
+                  <li>
+                    <img
+                      className="w-12 h-12 rounded-full"
+                      src={
+                        concerned.image_url ||
+                        "https://sutter.dr-veterinaire.com/media/original/lil-bub-2013-crop-for-thumb-78296.jpg"
+                      }
+                      alt="tab"
+                    />
+                  </li>
                 )
             )}
           </ul>
