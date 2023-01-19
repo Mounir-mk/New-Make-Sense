@@ -82,7 +82,6 @@ export default function Decision() {
           `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
           config
         );
-        console.warn(response.data);
         setContent(response.data);
       } catch (error) {
         console.error(error);

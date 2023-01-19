@@ -10,7 +10,7 @@ create table user (
 
 INSERT INTO user (firstname, lastname, image_url, role, email, hashed_password) VALUES 
 ('John','Doe','https://i.pravatar.cc/150?img=3','visitor','visitor@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI'),
-('Jane','Doe',null,'employee','employee@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI'),
+('Jane','Doe','https://i.pravatar.cc/150?img=20','employee','employee@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI'),
 ('Jack','Doe','https://i.pravatar.cc/150?img=6','admin','admin@mail.com','$argon2id$v=19$m=65536,t=5,p=1$Yx+5bYJ3zsf1RHN92/SlxQ$VmX8cR64b7G3q+AuxSmcDJplhwMiz+QpeKdpN6GGEwI');
 
 create table decision (
@@ -75,7 +75,7 @@ VALUES (
 
 
 create table concerned (
-  user_status varchar(10) NOT NULL,
+  user_status enum('experts', 'impacted') NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,
   constraint concerned_user foreign key (user_id) references user(id),
@@ -84,19 +84,20 @@ create table concerned (
 
 insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 1, 2),
-("expert", 1, 3),
+("experts", 1, 3),
 ("impacted", 2, 3),
-("impacted", 2, 1),
-("expert", 3, 1),
-("expert", 3, 2),
-("impacted", 3, 3),
-("expert", 1, 1),
-("expert", 1, 2),
+("experts", 3, 1),
+("experts", 3, 2),
+("experts", 1, 1),
+("experts", 1, 2),
 ("impacted", 2, 2),
 ("impacted", 2, 3),
-("expert", 3, 3),
+("experts", 3, 3),
 ("impacted", 3, 2),
-("impacted", 3, 3);
+("impacted", 3, 3),
+("impacted", 4, 2),
+("impacted", 4, 3),
+("impacted", 4, 1);
 
 create table comment (
   id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
