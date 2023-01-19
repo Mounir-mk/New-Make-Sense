@@ -55,6 +55,7 @@ insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 2, 1);
 
 create table comment (
+  id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
   content varchar(255) NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,

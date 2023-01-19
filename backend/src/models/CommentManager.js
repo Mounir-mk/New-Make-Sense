@@ -23,8 +23,15 @@ class CommentManager extends AbstractManager {
 
   findCommentsByDecisionId(id) {
     return this.connection.query(
-      `select * from comment where decision_id = ?`,
+      `select c.id, c.content, c.user_id, c.decision_id, u.firstname, u.lastname, u.image_url from comment c join user u on c.user_id = u.id where decision_id = ?`,
       [id]
+    );
+  }
+
+  insert(comment) {
+    return this.connection.query(
+      `insert into ${this.table} (content, user_id, decision_id) values (?, ?, ?)`,
+      [comment.content, comment.user_id, comment.decision_id]
     );
   }
 

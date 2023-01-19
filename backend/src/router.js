@@ -36,9 +36,17 @@ router.post(
 router.post("/decisions/:id/users", decisionControllers.addConcerned);
 router.delete("/decisions/:id", decisionControllers.destroy);
 
+// route concernings users
 router.get("/users/decisions", userControllers.browseAndCountDecisions);
 router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
 router.put("/users/:id", userControllers.edit);
 router.delete("/users/:id", userControllers.destroy);
+
+router.get("/decisions/:decisionId/comments", decisionControllers.getComments);
+router.post(
+  "/decisions/:decisionId/comments",
+  decisionControllers.addCommentToDecision
+);
+
 module.exports = router;
