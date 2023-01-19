@@ -24,6 +24,7 @@ router.use(verifyToken);
 router.get("/decisions", decisionControllers.browse);
 router.get(
   "/decisions/:id",
+  decisionControllers.getConcernedByDecisionId,
   decisionControllers.getComments,
   decisionControllers.read
 );
