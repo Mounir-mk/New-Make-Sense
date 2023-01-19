@@ -25,10 +25,14 @@ function Comment({ icon, content, author, date }) {
 }
 
 Comment.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.string,
   content: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
+};
+
+Comment.defaultProps = {
+  icon: null,
 };
 
 export default Comment;

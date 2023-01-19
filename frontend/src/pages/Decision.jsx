@@ -45,6 +45,7 @@ export default function Decision() {
   function toggleFinalDecisionForm() {
     setFinalDecisionForm(!finalDecisionForm);
   }
+  console.warn(durationPercentage);
   const handleCommentSubmit = () => {
     axios
       .post(
@@ -79,7 +80,6 @@ export default function Decision() {
           `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
           config
         );
-        console.warn(response.data);
         setContent(response.data);
       } catch (error) {
         console.error(error);
@@ -89,7 +89,7 @@ export default function Decision() {
   }, [id, commentAdded]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
-      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-6 md:pl:0 my-8">
+      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-2 md:pl:0 my-8">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {content.title}
         </h1>
