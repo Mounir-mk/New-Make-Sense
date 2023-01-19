@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import AdminPanel from "./pages/AdminPanel";
 import ProtectedRoute from "./_services/ProtectedRoute";
 import AdminRoute from "./_services/AdminRoute";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const location = useLocation();
@@ -54,6 +55,14 @@ function App() {
             <AdminRoute>
               <AdminPanel />
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
           }
         />
       </Routes>
