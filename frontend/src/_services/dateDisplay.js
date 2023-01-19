@@ -1,5 +1,10 @@
 const dateDisplay = (date) => {
   const dateOfTheComment = new Date(date);
+  dateOfTheComment.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   const dateOfNow = new Date();
   const differenceInTime =
     (dateOfNow.getTime() - dateOfTheComment.getTime()) * 0.001;

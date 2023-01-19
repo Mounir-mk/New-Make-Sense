@@ -59,7 +59,7 @@ create table comment (
   content varchar(255) NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,
-  date date NOT NULL DEFAULT (CURRENT_DATE),
+  date date NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   constraint comment_user foreign key (user_id) references user(id),
   constraint decision_comment foreign key (decision_id) references decision(id)
 ) engine=InnoDB default charset=latin1;

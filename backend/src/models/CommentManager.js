@@ -30,8 +30,8 @@ class CommentManager extends AbstractManager {
 
   insert(comment) {
     return this.connection.query(
-      `insert into ${this.table} (content, user_id, decision_id) values (?, ?, ?)`,
-      [comment.content, comment.user_id, comment.decision_id]
+      `insert into ${this.table} (content, user_id, decision_id, date) values (?, ?, ?, ?)`,
+      [comment.content, comment.userId, comment.decisionId, new Date()]
     );
   }
 

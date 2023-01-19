@@ -12,11 +12,11 @@ import { getDate, convertToFr } from "../services/dateFunctions";
 
 export default function Decision() {
   const contentDecision = useRef("");
+  const [commentAdded, setCommentAdded] = useState(false);
   const contentFinalDecision = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
-  const [inputComment, setInputComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const commentRef = useRef();
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [finalDecisionForm, setFinalDecisionForm] = useState(false);
@@ -45,6 +45,28 @@ export default function Decision() {
   function toggleFinalDecisionForm() {
     setFinalDecisionForm(!finalDecisionForm);
   }
+  const handleCommentSubmit = () => {
+    axios
+      .post(
+        `http://localhost:5000/decisions/${id}/comments`,
+        {
+          content: commentRef.current.value,
+          userId: auth.id,
+          decisionId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      )
+      .then(() => {
+        commentRef.current.value = "";
+        setCommentAdded(!commentAdded);
+      })
+      .catch((err) => console.error(err));
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -64,7 +86,7 @@ export default function Decision() {
       }
     };
     getData();
-  }, [id]);
+  }, [id, commentAdded]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-6 md:pl:0 my-8">
@@ -162,24 +184,25 @@ export default function Decision() {
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
           </h2>
-          <div className="flex flex-col">
+          <form
+            className="flex flex-col"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCommentSubmit();
+            }}
+          >
             <textarea
               className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
               placeholder="Ajouter un commentaire"
-              value={inputComment}
-              onChange={(e) => setInputComment(e.target.value)}
+              ref={commentRef}
             />
             <button
-              type="button"
+              type="submit"
               className="bg-slate-400 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
-              onClick={() => {
-                setComments([...comments, inputComment]);
-                setInputComment("");
-              }}
             >
               Ajouter un commentaire
             </button>
-          </div>
+          </form>
           {content.comment.map((oneOfComment) => (
             <Comment
               key={oneOfComment.id}
