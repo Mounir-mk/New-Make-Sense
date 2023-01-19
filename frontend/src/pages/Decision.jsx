@@ -6,6 +6,7 @@ import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails
 import Comment from "../components/Comment";
 import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
+import ConcernedUsers from "../components/ConcernedUsers";
 import { getDate, convertToFr } from "../services/dateFunctions";
 
 export default function Decision() {
@@ -31,6 +32,7 @@ export default function Decision() {
     advantage: "",
     userId: "",
     statusId: "",
+    concerned: [],
     comment: [],
   });
   const { statusStep, statusDuration, durationPercentage, publishDate } =
@@ -272,13 +274,11 @@ export default function Decision() {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          {/* this ul will be filled with the impacted people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ConcernedUsers status="impacted" concerned={content.concerned} />
         </div>
         <div id="experts">
           <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
-          {/* this ul will be filled with the experts people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ConcernedUsers status="experts" concerned={content.concerned} />
         </div>
         {middleDecisionIsCreated === false && statusStep >= 2 && (
           <button

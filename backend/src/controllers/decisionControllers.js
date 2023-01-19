@@ -37,6 +37,7 @@ const read = (req, res) => {
         res.sendStatus(404);
       } else {
         const decision = rows[0];
+        decision.concerned = req.concerned;
         decision.comment = req.comment;
         res.send(decision);
       }
@@ -121,6 +122,19 @@ const getComments = (req, res, next) => {
     });
 };
 
+const getConcernedByDecisionId = (req, res, next) => {
+  models.decision
+    .findConcernedsByDecisionId(req.params.id)
+    .then(([rows]) => {
+      req.concerned = rows;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 const addCommentToDecision = (req, res) => {
   const comment = req.body;
   models.comment
@@ -141,6 +155,7 @@ module.exports = {
   add,
   destroy,
   addConcerned,
+  getConcernedByDecisionId,
   getComments,
   addCommentToDecision,
 };
