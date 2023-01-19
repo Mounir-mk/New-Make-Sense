@@ -5,7 +5,7 @@ import ProfileModal from "../components/ProfileModal";
 
 function ProfilePage() {
   const { auth } = useContext(AuthContext);
-  const [newUser, setNewUser] = useState({});
+  const [modificationDone, setModificationDone] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const config = {
     headers: {
@@ -13,6 +13,19 @@ function ProfilePage() {
     },
   };
   const [user, setUser] = useState({});
+
+  const chnangeRoleName = (role) => {
+    if (role === "admin") {
+      return "Administrateur";
+    }
+    if (role === "visitor") {
+      return "Visiteur";
+    }
+    if (role === "employee") {
+      return "Employé";
+    }
+    return false;
+  };
 
   useEffect(() => {
     axios
@@ -23,7 +36,7 @@ function ProfilePage() {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [modificationDone]);
 
   return (
     <main className="flex items-center justify-center w-full my-6 md:mt-20 ">
@@ -37,7 +50,9 @@ function ProfilePage() {
           </p>
           <p className="text-xl text-slate-900">Nom: {user.lastname}</p>
           <p className="text-xl text-slate-900">Email: {user.email}</p>
-          <p className="text-xl text-slate-900">Role: {user.role}</p>
+          <p className="text-xl text-slate-900">
+            Role: {chnangeRoleName(user.role)}
+          </p>
           <div>
             <button
               type="button"
@@ -63,8 +78,7 @@ function ProfilePage() {
       {openModal && (
         <ProfileModal
           setOpenModal={setOpenModal}
-          newUser={newUser}
-          setNewUser={setNewUser}
+          setModificationDone={setModificationDone}
         />
       )}
     </main>

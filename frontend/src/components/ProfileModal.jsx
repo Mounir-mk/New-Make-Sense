@@ -3,32 +3,35 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { AuthContext } from "../_services/AuthContext";
 
-function ProfileModal({ setOpenModal, newUser, setNewUser }) {
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
+function ProfileModal({ setOpenModal, setModificationDone }) {
+  const firstnameRef = useRef();
+  const lastnameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
 
   const { auth } = useContext(AuthContext);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${auth.token}`,
-    },
-  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setNewUser({
-      firstname: firstNameRef.current.value,
-      lastname: lastNameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    });
-
     axios
-      .put(`http://localhost:5000/users/${auth.id}`, newUser, config)
-      .then((res) => {
-        console.error(res);
+      .put(
+        `http://localhost:5000/users/${auth.id}`,
+        {
+          firstname: firstnameRef.current.value,
+          lastname: lastnameRef.current.value,
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+          id: auth.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      )
+      .then(() => {
         setOpenModal(false);
+        setModificationDone((oldModificationDone) => !oldModificationDone);
       })
       .catch((err) => {
         console.error(err);
@@ -52,7 +55,7 @@ function ProfileModal({ setOpenModal, newUser, setNewUser }) {
             name="firstname"
             id="firstname"
             className="w-64 h-10 rounded shadow-lg border p-2"
-            ref={firstNameRef}
+            ref={firstnameRef}
           />
           <label htmlFor="lastname" className="text-xl text-slate-900">
             Nom
@@ -62,7 +65,7 @@ function ProfileModal({ setOpenModal, newUser, setNewUser }) {
             name="lastname"
             id="lastname"
             className="w-64 h-10 rounded shadow-lg border p-2"
-            ref={lastNameRef}
+            ref={lastnameRef}
           />
           <label htmlFor="email" className="text-xl text-slate-900">
             Email
@@ -107,13 +110,7 @@ function ProfileModal({ setOpenModal, newUser, setNewUser }) {
 
 ProfileModal.propTypes = {
   setOpenModal: PropTypes.func.isRequired,
-  newUser: PropTypes.shape({
-    firstname: PropTypes.string.isRequired,
-    lastname: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-  }).isRequired,
-  setNewUser: PropTypes.func.isRequired,
+  setModificationDone: PropTypes.func.isRequired,
 };
 
 export default ProfileModal;
