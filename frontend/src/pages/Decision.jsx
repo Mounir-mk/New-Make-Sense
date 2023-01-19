@@ -31,6 +31,7 @@ export default function Decision() {
     advantage: "",
     userId: "",
     statusId: "",
+    comment: [],
   });
   const { statusStep, statusDuration, durationPercentage, publishDate } =
     getDate(content.publish_date, content.deadline);
@@ -174,8 +175,8 @@ export default function Decision() {
         nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
         nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
           />
-          {comments.map((comment) => (
-            <Comment key={comment} icon={cat} comment={comment} />
+          {content.comment.map((comment) => (
+            <Comment key={comment} icon={cat} comment={comment.content} />
           ))}
         </section>
       </main>

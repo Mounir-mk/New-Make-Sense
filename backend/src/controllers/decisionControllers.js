@@ -31,7 +31,9 @@ const read = (req, res) => {
       if (rows[0] == null) {
         res.sendStatus(404);
       } else {
-        res.send(rows[0]);
+        const decision = rows[0];
+        decision.comment = req.comment;
+        res.send(decision);
       }
     })
     .catch((err) => {
@@ -101,6 +103,18 @@ const addConcerned = (req, res) => {
       res.sendStatus(500);
     });
 };
+const getComments = (req, res, next) => {
+  models.comment
+    .findCommentsByDecisionId(req.params.id)
+    .then(([rows]) => {
+      req.comment = rows;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
 
 module.exports = {
   browse,
@@ -109,4 +123,5 @@ module.exports = {
   add,
   destroy,
   addConcerned,
+  getComments,
 };
