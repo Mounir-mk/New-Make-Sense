@@ -25,6 +25,7 @@ router.get("/decisions", decisionControllers.browse);
 router.get(
   "/decisions/:id",
   decisionControllers.getConcernedByDecisionId,
+  decisionControllers.getComments,
   decisionControllers.read
 );
 router.put("/decisions/:id", decisionControllers.edit);
@@ -41,5 +42,4 @@ router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
 router.put("/users/:id", userControllers.edit);
 router.delete("/users/:id", userControllers.destroy);
-
 module.exports = router;

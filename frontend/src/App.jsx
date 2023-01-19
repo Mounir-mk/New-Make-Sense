@@ -16,8 +16,11 @@ function App() {
   const location = useLocation();
   const { auth } = useContext(AuthContext);
   return (
-    <div className="App">
-      {auth.isAuthenticated && !(location.pathname === "/admin") && <Header />}
+    <div className="min-h-screen">
+      {auth.isAuthenticated &&
+        !(location.pathname === "/admin") &&
+        !(location.pathname === "/login") &&
+        !(location.pathname === "/register") && <Header />}
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
