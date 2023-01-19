@@ -1,9 +1,14 @@
+const jwt = require("jsonwebtoken");
 const models = require("../models");
 
 const browse = (req, res) => {
-  if (req.query.status != null) {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const userRole = decodedToken.role;
+  const userId = decodedToken.id;
+  if (userRole !== "visitor") {
     models.decision
-      .findCurrentDecisions()
+      .findAllDecisions()
       .then(([rows]) => {
         res.send(rows);
       })
@@ -11,9 +16,9 @@ const browse = (req, res) => {
         console.error(err);
         res.sendStatus(500);
       });
-  } else {
+  } else if (userRole === "visitor") {
     models.decision
-      .findAll()
+      .findOnlyDecisionsIfConcernedByIt(userId)
       .then(([rows]) => {
         res.send(rows);
       })

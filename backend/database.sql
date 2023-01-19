@@ -25,8 +25,18 @@ create table decision (
   middle_decision varchar(250),
   final_decision varchar(250),
   user_id int(11) unsigned NOT NULL,
+  status enum('in_progress', 'finished') NOT NULL DEFAULT 'in_progress',
   constraint decision_user foreign key (user_id) references user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Trigger an event that will update the status of the decision when the deadline is reached
+CREATE VIEW decision_status AS
+SELECT id, title, deadline, publish_date, start_content, impact, risk, advantage, middle_decision, final_decision, user_id,
+CASE 
+   WHEN deadline < NOW() THEN 'finished'
+   ELSE 'in_progress'
+END AS status
+FROM decision;
 
 INSERT INTO decision (title, deadline, publish_date, start_content, impact, risk, advantage, user_id) VALUES ('Titre de la décision','2022-12-07','2022-12-31','Lorem ipsum content','Lorem ipsum impact','Lorem ipsum risk','Lorem ipsum advantage', 1), ('Titre de la décision 2','2022-12-08','2022-12-30','Lorem ipsum content2','Lorem ipsum impact2','Lorem ipsum risk2','Lorem ipsum advantage2', 1);
 
@@ -53,4 +63,5 @@ insert into comment (content, user_id, decision_id) values
 insert into concerned (user_status, decision_id, user_id) values
 ("impacted", 1, 2),
 ("expert", 1, 3),
-("impacted", 2, 3);
+("impacted", 2, 3),
+("impacted", 2, 1);

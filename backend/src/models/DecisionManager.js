@@ -32,9 +32,9 @@ class DecisionManager extends AbstractManager {
     ]);
   }
 
-  findCurrentDecisions() {
+  findAllDecisions() {
     return this.connection.query(
-      `select u.firstname, u.lastname, d.title, d.id from user u inner join ${this.table} d on d.user_id = u.id`
+      `select u.firstname, u.lastname, d.title, d.id, d.status from user u inner join decision_status d on d.user_id = u.id`
     );
   }
 
@@ -51,6 +51,14 @@ class DecisionManager extends AbstractManager {
       values.push(users[i].user_status, users[i].user_id, decisionId);
     }
     return this.connection.query(sql, values);
+  }
+
+  findOnlyDecisionsIfConcernedByIt(userId) {
+    return this.connection.query(
+      `select u.firstname, u.lastname, d.title, d.id, d.status
+       from user u inner join decision_status d on d.user_id = u.id inner join concerned c on c.decision_id = d.id where c.user_id = ?`,
+      [userId]
+    );
   }
 }
 
