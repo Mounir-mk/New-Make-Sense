@@ -64,12 +64,18 @@ function Header() {
               </span>
             </NavLink>
           </li>
-          <li className="flex flex-col hover:underline justify-center">
-            <img src={calendarIcon} alt="Calendar" className="max-h-4 w-auto" />
-            <span className="hidden md:inline font-bold text-xs">
-              Mes décisions
-            </span>
-          </li>
+          {auth.role !== "visitor" && (
+            <li className="flex flex-col hover:underline justify-center">
+              <img
+                src={calendarIcon}
+                alt="Calendar"
+                className="max-h-4 w-auto"
+              />
+              <span className="hidden md:inline font-bold text-xs">
+                Mes décisions
+              </span>
+            </li>
+          )}
           <li className="flex flex-col hover:underline justify-center">
             <img src={smileIcon} alt="Smile" className="max-h-4 w-auto" />
             <span className="hidden md:inline font-bold text-xs">
