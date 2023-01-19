@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo_makesense.png";
 import homeIcon from "../assets/home.svg";
 import calendarIcon from "../assets/calendar.svg";
 import smileIcon from "../assets/smile.svg";
 import menuIcon from "../assets/menu.svg";
-import userIcon from "../assets/sampleprofile.png";
 import plusIcon from "../assets/plus.svg";
 import user from "../assets/user.svg";
 import logout from "../assets/log-out.svg";
@@ -13,6 +13,7 @@ import adminLogo from "../assets/admin-panel.png";
 import { AuthContext } from "../_services/AuthContext";
 
 function Header() {
+  const [userProfilePicture, setUserProfilePicture] = useState(null);
   const { auth, setAuth } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const handleLogout = () => {
@@ -22,6 +23,21 @@ function Header() {
       token: null,
     }));
   };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await axios.get(
+        `http://localhost:5000/users/${auth.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      setUserProfilePicture(response.data.image_url);
+    };
+    fetchUser();
+  }, []);
+
   return (
     <header className="w-full flex items-center justify-around border-solid border-b-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
@@ -90,7 +106,7 @@ function Header() {
             >
               <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
               <img
-                src={userIcon}
+                src={userProfilePicture || "https://via.placeholder.com/150"}
                 alt="User"
                 className="h-8 w-8 rounded-full object-cover"
               />
