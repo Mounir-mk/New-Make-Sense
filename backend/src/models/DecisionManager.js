@@ -5,6 +5,13 @@ class DecisionManager extends AbstractManager {
     super({ table: "decision" });
   }
 
+  find(id) {
+    return this.connection.query(
+      `select d.*, u.firstname, u.lastname, u.image_url from decision d join user u on d.user_id = u.id where d.id = ?`,
+      [id]
+    );
+  }
+
   insert(decision) {
     const currentDate = new Date();
     const publishDate = `${currentDate.getFullYear()}-${

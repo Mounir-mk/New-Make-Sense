@@ -5,7 +5,6 @@ import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
-import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
 import ConcernedUsers from "../components/ConcernedUsers";
 import { getDate, convertToFr } from "../services/dateFunctions";
@@ -35,6 +34,10 @@ export default function Decision() {
     statusId: "",
     concerned: [],
     comment: [],
+    firstname: "",
+    lastname: "",
+    user_id: "",
+    image_url: "",
   });
   const { statusStep, statusDuration, durationPercentage, publishDate } =
     getDate(content.publish_date, content.deadline);
@@ -45,7 +48,6 @@ export default function Decision() {
   function toggleFinalDecisionForm() {
     setFinalDecisionForm(!finalDecisionForm);
   }
-  console.warn(durationPercentage);
   const handleCommentSubmit = () => {
     axios
       .post(
@@ -80,6 +82,7 @@ export default function Decision() {
           `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
           config
         );
+        console.warn(response.data);
         setContent(response.data);
       } catch (error) {
         console.error(error);
@@ -94,10 +97,14 @@ export default function Decision() {
           {content.title}
         </h1>
         <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
-          <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
+          <img
+            src={content.image_url || "https://via.placeholder.com/150"}
+            alt="author"
+            className="w-12 h-12 rounded-full"
+          />
           <div className="flex gap-1">
             <p className="text-sm">par</p>
-            <h2 className="text-sm font-bold">Cat</h2>
+            <h2 className="text-sm font-bold">{`${content.firstname} ${content.lastname}`}</h2>
           </div>
         </section>
         <DescriptionDecisionDetails
