@@ -23,7 +23,7 @@ class CommentManager extends AbstractManager {
 
   findCommentsByDecisionId(id) {
     return this.connection.query(
-      `select c.id, c.content, c.user_id, c.decision_id, u.firstname, u.lastname, u.image_url from comment c join user u on c.user_id = u.id where decision_id = ?`,
+      `select c.id, c.content, c.user_id, c.decision_id, c.date, u.firstname, u.lastname, u.image_url from comment c join user u on c.user_id = u.id where decision_id = ?`,
       [id]
     );
   }

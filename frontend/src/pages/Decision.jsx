@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
@@ -45,15 +46,24 @@ export default function Decision() {
     setFinalDecisionForm(!finalDecisionForm);
   }
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${auth.token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setContent(data);
-      });
+    const getData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        };
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
+          config
+        );
+        console.warn(response.data);
+        setContent(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
   }, [id]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
@@ -170,15 +180,14 @@ export default function Decision() {
               Ajouter un commentaire
             </button>
           </div>
-          <Comment
-            icon={cat}
-            comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt,
-        nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl
-        nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
-        nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
-          />
-          {content.comment.map((comment) => (
-            <Comment key={comment} icon={cat} comment={comment.content} />
+          {content.comment.map((oneOfComment) => (
+            <Comment
+              key={oneOfComment.id}
+              icon={oneOfComment.image_url}
+              content={oneOfComment.content}
+              date={oneOfComment.date}
+              author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}
+            />
           ))}
         </section>
       </main>
