@@ -135,6 +135,19 @@ const getConcernedByDecisionId = (req, res, next) => {
     });
 };
 
+const addCommentToDecision = (req, res) => {
+  const comment = req.body;
+  models.comment
+    .insert(comment)
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   browse,
   read,
@@ -144,4 +157,5 @@ module.exports = {
   addConcerned,
   getConcernedByDecisionId,
   getComments,
+  addCommentToDecision,
 };

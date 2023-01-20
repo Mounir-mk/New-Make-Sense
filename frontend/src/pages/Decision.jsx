@@ -1,21 +1,21 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
-import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
 import ConcernedUsers from "../components/ConcernedUsers";
 import { getDate, convertToFr } from "../services/dateFunctions";
 
 export default function Decision() {
   const contentDecision = useRef("");
+  const [commentAdded, setCommentAdded] = useState(false);
   const contentFinalDecision = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
-  const [inputComment, setInputComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const commentRef = useRef();
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [finalDecisionForm, setFinalDecisionForm] = useState(false);
@@ -34,6 +34,10 @@ export default function Decision() {
     statusId: "",
     concerned: [],
     comment: [],
+    firstname: "",
+    lastname: "",
+    user_id: "",
+    image_url: "",
   });
   const { statusStep, statusDuration, durationPercentage, publishDate } =
     getDate(content.publish_date, content.deadline);
@@ -44,28 +48,62 @@ export default function Decision() {
   function toggleFinalDecisionForm() {
     setFinalDecisionForm(!finalDecisionForm);
   }
+  const handleCommentSubmit = () => {
+    axios
+      .post(
+        `http://localhost:5000/decisions/${id}/comments`,
+        {
+          content: commentRef.current.value,
+          userId: auth.id,
+          decisionId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      )
+      .then(() => {
+        commentRef.current.value = "";
+        setCommentAdded(!commentAdded);
+      })
+      .catch((err) => console.error(err));
+  };
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${auth.token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setContent(data);
-      });
-  }, [id]);
+    const getData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        };
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
+          config
+        );
+        setContent(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, [id, commentAdded]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
-      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-6 md:pl:0 my-8">
+      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-2 md:pl:0 my-8">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {content.title}
         </h1>
         <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
-          <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
+          <img
+            src={content.image_url || "https://via.placeholder.com/150"}
+            alt="author"
+            className="w-12 h-12 rounded-full"
+          />
           <div className="flex gap-1">
             <p className="text-sm">par</p>
-            <h2 className="text-sm font-bold">Cat</h2>
+            <h2 className="text-sm font-bold">{`${content.firstname} ${content.lastname}`}</h2>
           </div>
         </section>
         <DescriptionDecisionDetails
@@ -152,33 +190,33 @@ export default function Decision() {
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
           </h2>
-          <div className="flex flex-col">
+          <form
+            className="flex flex-col"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCommentSubmit();
+            }}
+          >
             <textarea
               className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
               placeholder="Ajouter un commentaire"
-              value={inputComment}
-              onChange={(e) => setInputComment(e.target.value)}
+              ref={commentRef}
             />
             <button
-              type="button"
+              type="submit"
               className="bg-slate-400 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
-              onClick={() => {
-                setComments([...comments, inputComment]);
-                setInputComment("");
-              }}
             >
               Ajouter un commentaire
             </button>
-          </div>
-          <Comment
-            icon={cat}
-            comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt,
-        nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl
-        nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
-        nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
-          />
-          {content.comment.map((comment) => (
-            <Comment key={comment} icon={cat} comment={comment.content} />
+          </form>
+          {content.comment.map((oneOfComment) => (
+            <Comment
+              key={oneOfComment.id}
+              icon={oneOfComment.image_url}
+              content={oneOfComment.content}
+              date={oneOfComment.date}
+              author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}
+            />
           ))}
         </section>
       </main>
