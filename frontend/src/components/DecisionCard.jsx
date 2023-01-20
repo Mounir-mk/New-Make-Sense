@@ -20,7 +20,7 @@ function DashboardCard({ decisionTitle, author, id }) {
   };
 
   return (
-    <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-2xl my-4 w-72 h-56">
+    <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-2xl my-4 w-full md:w-72 h-56">
       <h1 className="font-bold text-blue-dianne text-lg">{decisionTitle}</h1>
       <div className="flex flex-col">
         <figure className="flex justify-between mt-4 items-center gap-2">

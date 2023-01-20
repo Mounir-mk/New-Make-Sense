@@ -1,9 +1,14 @@
+const jwt = require("jsonwebtoken");
 const models = require("../models");
 
 const browse = (req, res) => {
-  if (req.query.status != null) {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const userRole = decodedToken.role;
+  const userId = decodedToken.id;
+  if (userRole !== "visitor") {
     models.decision
-      .findCurrentDecisions()
+      .findAllDecisions()
       .then(([rows]) => {
         res.send(rows);
       })
@@ -11,9 +16,9 @@ const browse = (req, res) => {
         console.error(err);
         res.sendStatus(500);
       });
-  } else {
+  } else if (userRole === "visitor") {
     models.decision
-      .findAll()
+      .findOnlyDecisionsIfConcernedByIt(userId)
       .then(([rows]) => {
         res.send(rows);
       })
@@ -31,7 +36,10 @@ const read = (req, res) => {
       if (rows[0] == null) {
         res.sendStatus(404);
       } else {
-        res.send(rows[0]);
+        const decision = rows[0];
+        decision.concerned = req.concerned;
+        decision.comment = req.comment;
+        res.send(decision);
       }
     })
     .catch((err) => {
@@ -101,6 +109,44 @@ const addConcerned = (req, res) => {
       res.sendStatus(500);
     });
 };
+const getComments = (req, res, next) => {
+  models.comment
+    .findCommentsByDecisionId(req.params.id)
+    .then(([rows]) => {
+      req.comment = rows;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const getConcernedByDecisionId = (req, res, next) => {
+  models.decision
+    .findConcernedsByDecisionId(req.params.id)
+    .then(([rows]) => {
+      req.concerned = rows;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const addCommentToDecision = (req, res) => {
+  const comment = req.body;
+  models.comment
+    .insert(comment)
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
 
 module.exports = {
   browse,
@@ -109,4 +155,7 @@ module.exports = {
   add,
   destroy,
   addConcerned,
+  getConcernedByDecisionId,
+  getComments,
+  addCommentToDecision,
 };

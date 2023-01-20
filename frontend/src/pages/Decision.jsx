@@ -1,21 +1,25 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Comment from "../components/Comment";
-import cat from "../images/cat.jpg";
 import { AuthContext } from "../_services/AuthContext";
+import ConcernedUsers from "../components/ConcernedUsers";
+import { getDate, convertToFr } from "../services/dateFunctions";
 
 export default function Decision() {
-  const inputDecisionTitle = useRef("");
-  const contentDecisionTitle = useRef("");
+  const contentDecision = useRef("");
+  const [commentAdded, setCommentAdded] = useState(false);
+  const contentFinalDecision = useRef("");
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
-  const [inputComment, setInputComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const commentRef = useRef();
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
+  const [finalDecisionForm, setFinalDecisionForm] = useState(false);
+  const [finalDecisionIsCreated, setFinalDecisionIsCreated] = useState(false);
   const [content, setContent] = useState({
     title: "",
     publish_date: "",
@@ -28,66 +32,78 @@ export default function Decision() {
     advantage: "",
     userId: "",
     statusId: "",
+    concerned: [],
+    comment: [],
+    firstname: "",
+    lastname: "",
+    user_id: "",
+    image_url: "",
   });
+  const { statusStep, statusDuration, durationPercentage, publishDate } =
+    getDate(content.publish_date, content.deadline);
   // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
   function toggleMiddleDecisionForm() {
     setMiddleDecisionForm(!middleDecisionForm);
   }
-  let statusStep = 1;
-  // Reformatting dates received from DB and also putting the current date
-  const publishDate = new Date(content.publish_date);
-  const deadlineDate = new Date(content.deadline);
-  const currentDate = new Date();
-
-  // calculating to have the durationPercentage of time from publishDate to deadlineDate
-  const totalDuration = deadlineDate.getTime() - publishDate.getTime();
-  const elapsedDuration = currentDate.getTime() - publishDate.getTime();
-
-  // calculating to get a durationPercentage of this
-  const durationPercentage = (elapsedDuration / totalDuration) * 100;
-  // this condition defines which step of the status are we in. if above 50%, step 2, if above 75%, step 3
-  if (durationPercentage >= 80) {
-    statusStep = 5;
-  } else if (durationPercentage >= 60) {
-    statusStep = 4;
-  } else if (durationPercentage >= 40) {
-    statusStep = 3;
-  } else if (durationPercentage >= 20) {
-    statusStep = 2;
+  function toggleFinalDecisionForm() {
+    setFinalDecisionForm(!finalDecisionForm);
   }
-  // i divide the totalDuration by 4 to get the duration of each status
-  const statusDuration = totalDuration / 4;
-  // Adding the statusDuration timestamp to the publishDate "x" times (depends of which status it is)
+  const handleCommentSubmit = () => {
+    axios
+      .post(
+        `http://localhost:5000/decisions/${id}/comments`,
+        {
+          content: commentRef.current.value,
+          userId: auth.id,
+          decisionId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      )
+      .then(() => {
+        commentRef.current.value = "";
+        setCommentAdded(!commentAdded);
+      })
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${auth.token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setContent(data);
-      });
-  }, [id]);
-
-  // return only the first 10 characters of the date  ( mettre au début : {formatDate(content.publish_date)}
-  //  et à la fin {formatDate(content.deadline)} à la place des dates
-  const formatDate = (date) => {
-    return date.slice(0, 10);
-  };
-  // console.warn(formatDate(statusDate.toISOString()));
+    const getData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        };
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
+          config
+        );
+        setContent(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, [id, commentAdded]);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
-      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 my-4">
+      <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-2 md:pl:0 my-8">
         <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
           {content.title}
         </h1>
         <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
-          <img src={cat} alt="cat" className="w-12 h-12 rounded-full" />
+          <img
+            src={content.image_url || "https://via.placeholder.com/150"}
+            alt="author"
+            className="w-12 h-12 rounded-full"
+          />
           <div className="flex gap-1">
             <p className="text-sm">par</p>
-            <h2 className="text-sm font-bold">Cat</h2>
+            <h2 className="text-sm font-bold">{`${content.firstname} ${content.lastname}`}</h2>
           </div>
         </section>
         <DescriptionDecisionDetails
@@ -109,25 +125,13 @@ export default function Decision() {
         {middleDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Title of new decision
-              <br />
-              <input
-                type="text"
-                name="middleDecisionTitle"
-                ref={inputDecisionTitle}
-                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
-              />
-              <br />
-            </label>
-            <br />
-            <label className="font-bold text-center">
               Content
               <br />
-              <input
+              <textarea
                 type="text"
                 name="contentDecisionTitle"
                 className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
-                ref={contentDecisionTitle}
+                ref={contentDecision}
               />
             </label>
             <br />
@@ -146,45 +150,77 @@ export default function Decision() {
         )}
         {middleDecisionIsCreated && (
           <DescriptionDecisionDetails
-            title={inputDecisionTitle.current.value}
-            content={contentDecisionTitle.current.value}
+            title="Decision intermédiaire"
+            content={contentDecision.current.value}
+          />
+        )}
+        {finalDecisionForm && (
+          <form>
+            <label className="font-bold text-center">
+              Content
+              <br />
+              <textarea
+                type="text"
+                name="contentFinalDecision"
+                className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
+                ref={contentFinalDecision}
+              />
+            </label>
+            <br />
+            <button
+              type="submit"
+              className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleFinalDecisionForm();
+                setFinalDecisionIsCreated(true);
+              }}
+            >
+              Submit
+            </button>
+          </form>
+        )}
+        {finalDecisionIsCreated && (
+          <DescriptionDecisionDetails
+            title="Décision finale"
+            content={contentFinalDecision.current.value}
           />
         )}
         <section id="comments" className="flex flex-col md:my-20">
           <h2 className="text-xl font-bold text-[#0C3944] pb-1 border-b-2 w-2/3 my-4 mx-2 md:mx-0">
             Commentaires
           </h2>
-          <div className="flex flex-col">
+          <form
+            className="flex flex-col"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCommentSubmit();
+            }}
+          >
             <textarea
               className="h-24 border-2 border-gray-300 rounded-lg my-4 mr-4 ml-4 md:ml-0 p-2"
               placeholder="Ajouter un commentaire"
-              value={inputComment}
-              onChange={(e) => setInputComment(e.target.value)}
+              ref={commentRef}
             />
             <button
-              type="button"
+              type="submit"
               className="bg-slate-400 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
-              onClick={() => {
-                setComments([...comments, inputComment]);
-                setInputComment("");
-              }}
             >
               Ajouter un commentaire
             </button>
-          </div>
-          <Comment
-            icon={cat}
-            comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt,
-        nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eu aliquam nisl
-        nisl sit amet nisl. Sed tincidunt, nisl eget ultricies tincidunt, nisl
-        nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl."
-          />
-          {comments.map((comment) => (
-            <Comment key={comment} icon={cat} comment={comment} />
+          </form>
+          {content.comment.map((oneOfComment) => (
+            <Comment
+              key={oneOfComment.id}
+              icon={oneOfComment.image_url}
+              content={oneOfComment.content}
+              date={oneOfComment.date}
+              author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}
+            />
           ))}
         </section>
       </main>
-      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white ">
+      <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white pl-6 md:pl-0 ">
         <div className="flex rotate-180 absolute h-[40%] my-10">
           <Progress.Line
             vertical
@@ -200,7 +236,7 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
-                  {formatDate(content.publish_date)}
+                  {convertToFr(content.publish_date)}
                 </p>
               </div>
               <div className="mt-0.5 ml-4 mb-6">
@@ -213,7 +249,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration
                       ).toISOString()
@@ -230,7 +266,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration * 2
                       ).toISOString()
@@ -247,7 +283,7 @@ export default function Decision() {
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
                   {content.publish_date !== "" &&
-                    formatDate(
+                    convertToFr(
                       new Date(
                         publishDate.getTime() + statusDuration * 3
                       ).toISOString()
@@ -263,7 +299,7 @@ export default function Decision() {
             <li>
               <div className="flex flex-start items-center pt-2">
                 <p className="text-gray-500 text-sm">
-                  {formatDate(content.deadline)}
+                  {convertToFr(content.deadline)}
                 </p>
               </div>
               <div className="mt-0.5 ml-4 pb-5">
@@ -276,13 +312,11 @@ export default function Decision() {
         </div>
         <div id="impacted">
           <h1 className="font-bold text-base mb-4">Personnes impactées</h1>
-          {/* this ul will be filled with the impacted people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ConcernedUsers status="impacted" concerned={content.concerned} />
         </div>
         <div id="experts">
           <h1 className="font-bold text-base mb-4">Personnes expertes</h1>
-          {/* this ul will be filled with the experts people */}
-          <ul className="flex gap-1 flex-wrap self-start" />
+          <ConcernedUsers status="experts" concerned={content.concerned} />
         </div>
         {middleDecisionIsCreated === false && statusStep >= 2 && (
           <button
@@ -291,6 +325,15 @@ export default function Decision() {
             onClick={toggleMiddleDecisionForm}
           >
             Create middle decision
+          </button>
+        )}
+        {finalDecisionIsCreated === false && statusStep >= 5 && (
+          <button
+            type="button"
+            className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
+            onClick={toggleFinalDecisionForm}
+          >
+            Create final decision
           </button>
         )}
       </aside>

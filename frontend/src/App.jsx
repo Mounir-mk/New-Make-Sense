@@ -11,13 +11,17 @@ import Login from "./pages/Login";
 import AdminPanel from "./pages/AdminPanel";
 import ProtectedRoute from "./_services/ProtectedRoute";
 import AdminRoute from "./_services/AdminRoute";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const location = useLocation();
   const { auth } = useContext(AuthContext);
   return (
-    <div className="App">
-      {auth.isAuthenticated && !(location.pathname === "/admin") && <Header />}
+    <div className="min-h-screen">
+      {auth.isAuthenticated &&
+        !(location.pathname === "/admin") &&
+        !(location.pathname === "/login") &&
+        !(location.pathname === "/register") && <Header />}
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -51,6 +55,14 @@ function App() {
             <AdminRoute>
               <AdminPanel />
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
           }
         />
       </Routes>
