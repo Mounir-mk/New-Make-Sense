@@ -214,7 +214,14 @@ function DescriptionDecisionForm({
     </>
   );
 }
-
+DescriptionDecisionForm.defaultProps = {
+  setInputExpert: undefined,
+  setInputImpacted: undefined,
+  inputImpacted: undefined,
+  inputExpert: undefined,
+  setUsersConcerned: undefined,
+  usersConcerned: undefined,
+};
 DescriptionDecisionForm.propTypes = {
   createDecision: PropTypes.shape({
     title: PropTypes.string,
@@ -225,17 +232,17 @@ DescriptionDecisionForm.propTypes = {
   }).isRequired,
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
-  setInputExpert: PropTypes.func.isRequired,
-  setInputImpacted: PropTypes.func.isRequired,
-  inputImpacted: PropTypes.string.isRequired,
-  inputExpert: PropTypes.string.isRequired,
-  setUsersConcerned: PropTypes.func.isRequired,
+  setInputExpert: PropTypes.func,
+  setInputImpacted: PropTypes.func,
+  inputImpacted: PropTypes.string,
+  inputExpert: PropTypes.string,
+  setUsersConcerned: PropTypes.func,
   usersConcerned: PropTypes.arrayOf(
     PropTypes.shape({
       user_status: PropTypes.string,
       user_id: PropTypes.number,
     })
-  ).isRequired,
+  ),
 };
 
 export default DescriptionDecisionForm;
