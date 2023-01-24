@@ -26,7 +26,12 @@ const getDate = (publish_date, deadline) => {
 
   // i divide the totalDuration by 4 to get the duration of each status
   const statusDuration = totalDuration / 4;
-  return { statusStep, statusDuration, durationPercentage, publishDate };
+  return {
+    statusStep,
+    statusDuration,
+    durationPercentage,
+    publishDate,
+  };
 };
 function convertToFr(dateToConvert) {
   const [y, m, d] = dateToConvert.slice(0, 10).split("-");
