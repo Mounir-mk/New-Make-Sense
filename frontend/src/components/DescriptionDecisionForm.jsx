@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import plusIcon from "../assets/plus.svg";
 import { AuthContext } from "../_services/AuthContext";
+import { minDate } from "../services/dateFunctions";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -176,6 +177,7 @@ function DescriptionDecisionForm({
               id="deadline"
               className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
               value={createDecision.date}
+              min={minDate}
               onChange={(event) => {
                 setCreateDecision((old) => ({
                   ...old,

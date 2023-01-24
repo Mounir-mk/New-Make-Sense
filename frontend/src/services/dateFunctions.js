@@ -26,10 +26,24 @@ const getDate = (publish_date, deadline) => {
 
   // i divide the totalDuration by 4 to get the duration of each status
   const statusDuration = totalDuration / 4;
-  return { statusStep, statusDuration, durationPercentage, publishDate };
+  return {
+    statusStep,
+    statusDuration,
+    durationPercentage,
+    publishDate,
+    currentDate,
+  };
 };
+
+const date = new Date();
+const year = date.getFullYear();
+const month = date.getMonth() + 1;
+const day = date.getDate();
+
+const minDate = `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`;
+
 function convertToFr(dateToConvert) {
   const [y, m, d] = dateToConvert.slice(0, 10).split("-");
   return `${d}-${m}-${y}`;
 }
-export { getDate, convertToFr };
+export { getDate, convertToFr, minDate };
