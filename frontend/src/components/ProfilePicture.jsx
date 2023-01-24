@@ -36,23 +36,17 @@ function ProfilePicture({ avatar, setAvatar, avatarRef }) {
     </article>
   );
 }
-
-ProfilePicture.propTypes = {
-  avatar: PropTypes.shape({
-    name: PropTypes.string,
-    size: PropTypes.number,
-    type: PropTypes.string,
-  }),
-  avatarRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.string }),
-  ]),
-  setAvatar: PropTypes.func.isRequired,
-};
-
 ProfilePicture.defaultProps = {
   avatar: undefined,
   avatarRef: undefined,
+};
+
+ProfilePicture.propTypes = {
+  avatar: PropTypes.string,
+  avatarRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLInputElement),
+  }),
+  setAvatar: PropTypes.func.isRequired,
 };
 
 export default ProfilePicture;
