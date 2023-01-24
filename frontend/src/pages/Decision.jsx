@@ -125,7 +125,7 @@ export default function Decision() {
         {middleDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -144,7 +144,7 @@ export default function Decision() {
                 setMiddleDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -157,7 +157,7 @@ export default function Decision() {
         {finalDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -176,7 +176,7 @@ export default function Decision() {
                 setFinalDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -334,7 +334,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleMiddleDecisionForm}
           >
-            Create middle decision
+            Créer une décision intermédiaire
           </button>
         )}
         {finalDecisionIsCreated === false && statusStep >= 5 && (
@@ -343,7 +343,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleFinalDecisionForm}
           >
-            Create final decision
+            Créer une décision finale
           </button>
         )}
       </aside>

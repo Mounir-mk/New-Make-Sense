@@ -96,8 +96,8 @@ function HandleUsers() {
                   onChange={(event) => handleRoleChange(event, user)}
                 >
                   <option value="admin">Admin</option>
-                  <option value="visitor">Visitor</option>
-                  <option value="employee">Employee</option>
+                  <option value="visitor">Visiteur</option>
+                  <option value="employee">Employé</option>
                 </select>
               </td>
               <td className="border-2 border-black px-4 py-2">
