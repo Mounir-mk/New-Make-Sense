@@ -18,6 +18,7 @@ function DescriptionDecisionForm({
 }) {
   const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     axios
@@ -207,11 +208,27 @@ function DescriptionDecisionForm({
           className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
           onClick={(e) => {
             e.preventDefault();
-            setStep((old) => old + 1);
+            if (createDecision.impacted.length < 1) {
+              setMessage("impacté manquant");
+            } else if (createDecision.experts.length < 1) {
+              setMessage("expert manquant");
+            } else if (createDecision.title.length < 1) {
+              setMessage("titre non défini");
+            } else if (createDecision.date.length < 1) {
+              setMessage("date non défini");
+            } else if (createDecision.description.length < 1) {
+              setMessage("description non défini");
+            } else {
+              setMessage("");
+              setStep((old) => old + 1);
+            }
           }}
         >
           Suivant
         </button>
+        {message.length > 0 && (
+          <p className="text-lg text-red-600 text-center">{message}</p>
+        )}
       </form>
     </>
   );
