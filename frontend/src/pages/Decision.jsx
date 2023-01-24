@@ -125,7 +125,7 @@ export default function Decision() {
         {middleDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -144,7 +144,7 @@ export default function Decision() {
                 setMiddleDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -157,7 +157,7 @@ export default function Decision() {
         {finalDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -176,7 +176,7 @@ export default function Decision() {
                 setFinalDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -258,7 +258,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 1
+                  Titre de section 1
                 </h4>
               </div>
             </li>
@@ -275,7 +275,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 2
+                  Titre de section 2
                 </h4>
               </div>
             </li>
@@ -292,7 +292,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 3
+                  Titre de section 3
                 </h4>
               </div>
             </li>
@@ -304,7 +304,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 pb-5">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Deadline
+                  Date limite
                 </h4>
               </div>
             </li>
@@ -324,7 +324,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleMiddleDecisionForm}
           >
-            Create middle decision
+            Créer une décision intermédiaire
           </button>
         )}
         {finalDecisionIsCreated === false && statusStep >= 5 && (
@@ -333,7 +333,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleFinalDecisionForm}
           >
-            Create final decision
+            Créer une décision finale
           </button>
         )}
       </aside>
