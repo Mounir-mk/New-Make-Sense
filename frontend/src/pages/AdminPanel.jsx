@@ -14,6 +14,7 @@ function AdminPanel() {
         {tabs.map((tab) => (
           <button
             type="button"
+            key={tab}
             onClick={() => setActiveTab(tab)}
             className={`block text-left w-full capitalize px-4 py-3 text-base font-semibold text-indigo-800 hover:bg-indigo-100 focus:outline-none focus:bg-indigo-100  ${
               activeTab === tab ? "bg-indigo-100" : ""
