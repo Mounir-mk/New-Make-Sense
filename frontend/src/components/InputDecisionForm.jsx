@@ -118,11 +118,12 @@ InputDecisionForm.propTypes = {
       user_status: PropTypes.string,
       user_id: PropTypes.number,
     })
-  ).isRequired,
+  ),
 };
 
 InputDecisionForm.defaultProps = {
   redirectButton: undefined,
+  usersConcerned: undefined,
 };
 
 export default InputDecisionForm;
