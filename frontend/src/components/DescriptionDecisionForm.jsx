@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import plusIcon from "../assets/plus.svg";
 import { AuthContext } from "../_services/AuthContext";
+import { minDate } from "../services/dateFunctions";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -17,6 +18,7 @@ function DescriptionDecisionForm({
 }) {
   const { auth } = useContext(AuthContext);
   const [myUsers, setMyUsers] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     axios
@@ -30,6 +32,58 @@ function DescriptionDecisionForm({
       });
   }, []);
 
+  function checkUsers(username, concerned) {
+    const [firstname, lastname] = username.split(" ");
+    const userFound = myUsers.find(
+      (user) => user.firstname === firstname && user.lastname === lastname
+    );
+    if (userFound && concerned === "impacted") {
+      if (createDecision.impacted.includes(username)) {
+        setMessage(`${username} est dejà dans les impactés`);
+      } else {
+        setCreateDecision({
+          ...createDecision,
+          impacted: [...createDecision.impacted, inputImpacted],
+        });
+        setUsersConcerned([
+          ...usersConcerned,
+          {
+            user_status: "impacted",
+            user_id: userFound.id,
+            decision_id: 1,
+          },
+        ]);
+        setInputImpacted("");
+        setMessage("");
+      }
+    } else if (userFound && concerned === "expert") {
+      if (createDecision.experts.includes(username)) {
+        setMessage(`${username} est dejà dans les experts`);
+      } else {
+        setCreateDecision({
+          ...createDecision,
+          experts: [...createDecision.experts, inputExpert],
+        });
+        setUsersConcerned([
+          ...usersConcerned,
+          {
+            user_status: "experts",
+            user_id: userFound.id,
+            decision_id: 1,
+          },
+        ]);
+        setInputExpert("");
+        setMessage("");
+      }
+    } else {
+      setInputExpert("");
+      if (username.length > 0) {
+        setMessage(`${username} n'existe pas !`);
+      } else {
+        setMessage(`Veuillez choisir une personne dans la liste !`);
+      }
+    }
+  }
   return (
     <>
       <section className="flex gap-2 w-full justify-evenly">
@@ -49,19 +103,7 @@ function DescriptionDecisionForm({
               className="absolute right-0 h-full"
               type="button"
               onClick={() => {
-                setCreateDecision({
-                  ...createDecision,
-                  impacted: [...createDecision.impacted, inputImpacted],
-                });
-                setUsersConcerned([
-                  ...usersConcerned,
-                  {
-                    user_status: "impacted",
-                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
-                    decision_id: 1,
-                  },
-                ]);
-                setInputImpacted("");
+                checkUsers(inputImpacted, "impacted");
               }}
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
@@ -71,7 +113,7 @@ function DescriptionDecisionForm({
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${id} ${firstname} ${lastname}`}
+                  value={`${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
@@ -105,19 +147,7 @@ function DescriptionDecisionForm({
               className="absolute right-0 h-full"
               type="button"
               onClick={() => {
-                setCreateDecision({
-                  ...createDecision,
-                  experts: [...createDecision.experts, inputExpert],
-                });
-                setUsersConcerned([
-                  ...usersConcerned,
-                  {
-                    user_status: "experts",
-                    user_id: +inputExpert.replace(/[^0-9]/g, ""),
-                    decision_id: 1,
-                  },
-                ]);
-                setInputExpert("");
+                checkUsers(inputExpert, "expert");
               }}
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
@@ -127,7 +157,7 @@ function DescriptionDecisionForm({
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${id} ${firstname} ${lastname}`}
+                  value={`${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
@@ -176,6 +206,7 @@ function DescriptionDecisionForm({
               id="deadline"
               className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2"
               value={createDecision.date}
+              min={minDate}
               onChange={(event) => {
                 setCreateDecision((old) => ({
                   ...old,
@@ -205,11 +236,27 @@ function DescriptionDecisionForm({
           className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
           onClick={(e) => {
             e.preventDefault();
-            setStep((old) => old + 1);
+            if (createDecision.impacted.length < 1) {
+              setMessage("Veuillez ajouter au moins une personne impacté");
+            } else if (createDecision.experts.length < 1) {
+              setMessage("Veuillez ajouter au moins une personne experte");
+            } else if (createDecision.title.length < 1) {
+              setMessage("Veuillez ajouter un titre");
+            } else if (createDecision.date.length < 1) {
+              setMessage("Veuillez définir une date limite");
+            } else if (createDecision.description.length < 1) {
+              setMessage("Veuillez ajouter une déscription pour la décision");
+            } else {
+              setMessage("");
+              setStep((old) => old + 1);
+            }
           }}
         >
           Suivant
         </button>
+        {message.length > 0 && (
+          <p className="text-lg text-red-600 text-center">{message}</p>
+        )}
       </form>
     </>
   );

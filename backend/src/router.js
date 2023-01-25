@@ -6,8 +6,6 @@ const decisionControllers = require("./controllers/decisionControllers");
 const userControllers = require("./controllers/userControllers");
 const { hashPassword, verifyPassword, verifyToken } = require("./service/auth");
 
-router.use(verifyToken);
-
 router.post(
   "/users/login",
   userControllers.getUserByEmailWithPasswordAndPassToNext,
@@ -20,6 +18,8 @@ router.post(
   hashPassword,
   userControllers.add
 );
+
+router.use(verifyToken);
 
 router.get("/decisions", decisionControllers.browse);
 router.get(

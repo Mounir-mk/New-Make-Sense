@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +14,7 @@ function InputDecisionForm({
 }) {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   const postDecision = async () => {
     const decision = {
@@ -46,7 +47,22 @@ function InputDecisionForm({
     }
     return stepName;
   };
-
+  function handleClick(step, decision, redirect) {
+    if (step === "impacts" && decision.impacts.length < 1) {
+      setMessage("Veuillez définir les impacts de la décision");
+    } else if (step === "risks" && decision.risks.length < 1) {
+      setMessage("Veuillez définir les risques de la décision");
+    } else if (step === "advantages" && decision.advantages.length < 1) {
+      setMessage("Veuillez définir les bénéfices de la décision");
+    } else {
+      setMessage("");
+      if (redirect) {
+        postDecision();
+      } else {
+        setStep((old) => old + 1);
+      }
+    }
+  }
   return (
     <div className="flex flex-col gap-4">
       <h2 className="font-bold text-xl capitalize">{changeStepName()}</h2>
@@ -70,12 +86,13 @@ function InputDecisionForm({
         <button
           type="submit"
           className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
-          onClick={
-            redirectButton ? postDecision : () => setStep((old) => old + 1)
-          }
+          onClick={() => handleClick(stepName, createDecision, redirectButton)}
         >
           {redirectButton ? "Créer la décision" : "Suivant"}
         </button>
+        {message.length > 0 && (
+          <p className="text-lg text-red-600 text-center">{message}</p>
+        )}
       </div>
     </div>
   );
