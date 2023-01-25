@@ -32,6 +32,58 @@ function DescriptionDecisionForm({
       });
   }, []);
 
+  function checkUsers(username, concerned) {
+    const [firstname, lastname] = username.split(" ");
+    const userFound = myUsers.find(
+      (user) => user.firstname === firstname && user.lastname === lastname
+    );
+    if (userFound && concerned === "impacted") {
+      if (createDecision.impacted.includes(username)) {
+        setMessage(`${username} est dejà dans les impactés`);
+      } else {
+        setCreateDecision({
+          ...createDecision,
+          impacted: [...createDecision.impacted, inputImpacted],
+        });
+        setUsersConcerned([
+          ...usersConcerned,
+          {
+            user_status: "impacted",
+            user_id: userFound.id,
+            decision_id: 1,
+          },
+        ]);
+        setInputImpacted("");
+        setMessage("");
+      }
+    } else if (userFound && concerned === "expert") {
+      if (createDecision.experts.includes(username)) {
+        setMessage(`${username} est dejà dans les experts`);
+      } else {
+        setCreateDecision({
+          ...createDecision,
+          experts: [...createDecision.experts, inputExpert],
+        });
+        setUsersConcerned([
+          ...usersConcerned,
+          {
+            user_status: "experts",
+            user_id: userFound.id,
+            decision_id: 1,
+          },
+        ]);
+        setInputExpert("");
+        setMessage("");
+      }
+    } else {
+      setInputExpert("");
+      if (username.length > 0) {
+        setMessage(`${username} n'existe pas !`);
+      } else {
+        setMessage(`Veuillez choisir une personne dans la liste !`);
+      }
+    }
+  }
   return (
     <>
       <section className="flex gap-2 w-full justify-evenly">
@@ -51,19 +103,7 @@ function DescriptionDecisionForm({
               className="absolute right-0 h-full"
               type="button"
               onClick={() => {
-                setCreateDecision({
-                  ...createDecision,
-                  impacted: [...createDecision.impacted, inputImpacted],
-                });
-                setUsersConcerned([
-                  ...usersConcerned,
-                  {
-                    user_status: "impacted",
-                    user_id: +inputImpacted.replace(/[^0-9]/g, ""),
-                    decision_id: 1,
-                  },
-                ]);
-                setInputImpacted("");
+                checkUsers(inputImpacted, "impacted");
               }}
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
@@ -73,7 +113,7 @@ function DescriptionDecisionForm({
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${id} ${firstname} ${lastname}`}
+                  value={`${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
@@ -107,19 +147,7 @@ function DescriptionDecisionForm({
               className="absolute right-0 h-full"
               type="button"
               onClick={() => {
-                setCreateDecision({
-                  ...createDecision,
-                  experts: [...createDecision.experts, inputExpert],
-                });
-                setUsersConcerned([
-                  ...usersConcerned,
-                  {
-                    user_status: "experts",
-                    user_id: +inputExpert.replace(/[^0-9]/g, ""),
-                    decision_id: 1,
-                  },
-                ]);
-                setInputExpert("");
+                checkUsers(inputExpert, "expert");
               }}
             >
               <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
@@ -129,7 +157,7 @@ function DescriptionDecisionForm({
                 <option
                   aria-label="User possibility"
                   key={id}
-                  value={`${id} ${firstname} ${lastname}`}
+                  value={`${firstname} ${lastname}`}
                 />
               ))}
             </datalist>
@@ -209,15 +237,15 @@ function DescriptionDecisionForm({
           onClick={(e) => {
             e.preventDefault();
             if (createDecision.impacted.length < 1) {
-              setMessage("impacté manquant");
+              setMessage("Veuillez ajouter au moins une personne impacté");
             } else if (createDecision.experts.length < 1) {
-              setMessage("expert manquant");
+              setMessage("Veuillez ajouter au moins une personne experte");
             } else if (createDecision.title.length < 1) {
-              setMessage("titre non défini");
+              setMessage("Veuillez ajouter un titre");
             } else if (createDecision.date.length < 1) {
-              setMessage("date non défini");
+              setMessage("Veuillez définir une date limite");
             } else if (createDecision.description.length < 1) {
-              setMessage("description non défini");
+              setMessage("Veuillez ajouter une déscription pour la décision");
             } else {
               setMessage("");
               setStep((old) => old + 1);

@@ -49,11 +49,11 @@ function InputDecisionForm({
   };
   function handleClick(step, decision, redirect) {
     if (step === "impacts" && decision.impacts.length < 1) {
-      setMessage("impact manquant");
+      setMessage("Veuillez définir les impacts de la décision");
     } else if (step === "risks" && decision.risks.length < 1) {
-      setMessage("risques manquant");
+      setMessage("Veuillez définir les risques de la décision");
     } else if (step === "advantages" && decision.advantages.length < 1) {
-      setMessage("bénéfices manquant");
+      setMessage("Veuillez définir les bénéfices de la décision");
     } else {
       setMessage("");
       if (redirect) {
