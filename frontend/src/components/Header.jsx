@@ -51,7 +51,7 @@ function Header() {
               >
                 <img src={adminLogo} alt="Plus" className="max-h-4 w-auto" />
                 <p className="hidden absolute top-full group-hover:block text-xs whitespace-nowrap mx-auto bg-slate-600 text-white px-2 rounded-md">
-                  Pannel Admin
+                  Panneau Admin
                 </p>
               </NavLink>
             )}

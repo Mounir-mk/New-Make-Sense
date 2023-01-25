@@ -261,7 +261,6 @@ function DescriptionDecisionForm({
     </>
   );
 }
-
 DescriptionDecisionForm.propTypes = {
   createDecision: PropTypes.shape({
     title: PropTypes.string,

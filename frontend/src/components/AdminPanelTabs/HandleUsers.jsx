@@ -37,15 +37,6 @@ function HandleUsers() {
       });
   };
 
-  const deleteUser = (id) => {
-    axios
-      .delete(`http://localhost:5000/users/${id}`, config)
-      .then(() => {
-        setUsers(users.filter((user) => user.id !== id));
-      })
-      .catch((err) => console.error(err));
-  };
-
   useEffect(() => {
     const getUsersInformations = async () => {
       try {
@@ -92,12 +83,12 @@ function HandleUsers() {
               </td>
               <td className="border-2 border-black px-4 py-2">
                 <select
-                  value={data[user.id] || user.role}
+                  value={data[user.id] || user.id}
                   onChange={(event) => handleRoleChange(event, user)}
                 >
                   <option value="admin">Admin</option>
-                  <option value="visitor">Visitor</option>
-                  <option value="employee">Employee</option>
+                  <option value="visitor">Visiteur</option>
+                  <option value="employee">Employé</option>
                 </select>
               </td>
               <td className="border-2 border-black px-4 py-2">
@@ -107,13 +98,6 @@ function HandleUsers() {
                   onClick={() => handleUpdateClick(user)}
                 >
                   Modifier
-                </button>
-                <button
-                  type="button"
-                  onClick={() => deleteUser(user.id)}
-                  className="px-2 py-1 rounded-full bg-red-500 text-white"
-                >
-                  Supprimer
                 </button>
               </td>
             </tr>

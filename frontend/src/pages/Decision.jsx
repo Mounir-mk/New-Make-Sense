@@ -125,7 +125,7 @@ export default function Decision() {
         {middleDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -144,7 +144,7 @@ export default function Decision() {
                 setMiddleDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -157,7 +157,7 @@ export default function Decision() {
         {finalDecisionForm && (
           <form>
             <label className="font-bold text-center">
-              Content
+              Contenu
               <br />
               <textarea
                 type="text"
@@ -176,7 +176,7 @@ export default function Decision() {
                 setFinalDecisionIsCreated(true);
               }}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -221,14 +221,24 @@ export default function Decision() {
         </section>
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white pl-6 md:pl-0 ">
-        <div className="flex rotate-180 absolute h-[40%] my-10">
-          <Progress.Line
-            vertical
-            percent={durationPercentage}
-            strokeColor="#C1E94E"
-            showInfo={false}
-            status="active"
-          />
+        <div className="flex rotate-180 absolute h-[45%] my-14">
+          {durationPercentage <= 100 ? (
+            <Progress.Line
+              vertical
+              percent={durationPercentage}
+              strokeColor="#C1E94E"
+              showInfo={false}
+              status="active"
+            />
+          ) : (
+            <Progress.Line
+              vertical
+              percent="100"
+              strokeColor="#C1E94E"
+              showInfo={false}
+              status="success"
+            />
+          )}
         </div>
         <div id="timeline" className="flex flex-col">
           <h1 className="font-bold text-base">Dates à retenir</h1>
@@ -241,7 +251,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Date de publication
+                  Décision débutée
                 </h4>
               </div>
             </li>
@@ -258,7 +268,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 1
+                  Première décision prise
                 </h4>
               </div>
             </li>
@@ -275,7 +285,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 2
+                  Conflit sur la décision
                 </h4>
               </div>
             </li>
@@ -292,7 +302,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 mb-6">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Title of section 3
+                  Décision définitive
                 </h4>
               </div>
             </li>
@@ -304,7 +314,7 @@ export default function Decision() {
               </div>
               <div className="mt-0.5 ml-4 pb-5">
                 <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Deadline
+                  Décision terminée
                 </h4>
               </div>
             </li>
@@ -324,7 +334,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleMiddleDecisionForm}
           >
-            Create middle decision
+            Créer une décision intermédiaire
           </button>
         )}
         {finalDecisionIsCreated === false && statusStep >= 5 && (
@@ -333,7 +343,7 @@ export default function Decision() {
             className="bg-emerald-800 text-white rounded-lg px-4 py-2 w-56 ml-auto mr-4 font-bold"
             onClick={toggleFinalDecisionForm}
           >
-            Create final decision
+            Créer une décision finale
           </button>
         )}
       </aside>

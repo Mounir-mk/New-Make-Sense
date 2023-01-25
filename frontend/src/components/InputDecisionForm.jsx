@@ -108,7 +108,7 @@ InputDecisionForm.propTypes = {
     impacts: PropTypes.string,
     advantages: PropTypes.string,
     risks: PropTypes.string,
-  }).isRequired,
+  }),
   setCreateDecision: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
   stepName: PropTypes.string.isRequired,
@@ -124,6 +124,16 @@ InputDecisionForm.propTypes = {
 InputDecisionForm.defaultProps = {
   redirectButton: undefined,
   usersConcerned: undefined,
+  createDecision: PropTypes.shape({
+    title: PropTypes.string,
+    date: PropTypes.string,
+    description: PropTypes.string,
+    impacted: undefined,
+    experts: undefined,
+    impacts: PropTypes.string,
+    advantages: PropTypes.string,
+    risks: PropTypes.string,
+  }),
 };
 
 export default InputDecisionForm;
