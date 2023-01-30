@@ -15,7 +15,7 @@ const handleFile = (req, res, next) => {
       if (err) {
         res.sendStatus(500);
       }
-      req.body.image_url = `http://localhost:5000/${path}`;
+      req.body.image_url = `http://localhost:5000/${modifiedName}`;
       next();
     });
   } else {

@@ -22,7 +22,7 @@ class UserManager extends AbstractManager {
       [
         user.firstname,
         user.lastname,
-        user.profilePicture,
+        user.image_url,
         user.email,
         user.hashedPassword,
       ]
