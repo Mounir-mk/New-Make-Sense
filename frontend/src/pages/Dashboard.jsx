@@ -32,6 +32,7 @@ function Dashboard() {
             .map((decision) => (
               <DashboardCard
                 key={decision.id}
+                avatar={decision.image_url}
                 id={decision.id}
                 decisionTitle={decision.title}
                 author={`${decision.firstname} ${decision.lastname}`}
@@ -49,6 +50,7 @@ function Dashboard() {
             .map((decision) => (
               <DashboardCard
                 key={decision.id}
+                avatar={decision.image_url}
                 id={decision.id}
                 decisionTitle={decision.title}
                 author={`${decision.firstname} ${decision.lastname}`}

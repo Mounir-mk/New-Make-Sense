@@ -41,7 +41,7 @@ class DecisionManager extends AbstractManager {
 
   findAllDecisions() {
     return this.connection.query(
-      `select u.firstname, u.lastname, d.title, d.id, d.status from user u inner join decision_status d on d.user_id = u.id`
+      `select u.firstname, u.lastname,u.image_url, d.title, d.id, d.status from user u inner join decision_status d on d.user_id = u.id`
     );
   }
 
