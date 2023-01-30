@@ -68,8 +68,8 @@ function ProfilePage() {
             className="w-64 h-64 rounded-full"
             src={
               user.image_url
-                ? user.image_url
-                : "https://via.placeholder.com/300"
+                ? `${import.meta.env.VITE_BACKEND_URL}/${user.image_url}`
+                : `${import.meta.env.VITE_BACKEND_URL}/default.png`
             }
             alt="profile"
           />
