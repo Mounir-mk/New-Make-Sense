@@ -83,7 +83,7 @@ function HandleUsers() {
               </td>
               <td className="border-2 border-black px-4 py-2">
                 <select
-                  value={data[user.id] || user.id}
+                  value={data[user.id] || user.role}
                   onChange={(event) => handleRoleChange(event, user)}
                 >
                   <option value="admin">Admin</option>
