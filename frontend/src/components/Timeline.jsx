@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import { getDate, convertToFr } from "../services/dateFunctions";
+import { getDate } from "../services/dateFunctions";
+import { timelineTitles, timelineDates } from "../services/infosTimeline";
 import TimelineSection from "./TimelineSection";
 
 function Timeline({ startDate, endDate }) {
@@ -7,30 +8,7 @@ function Timeline({ startDate, endDate }) {
     startDate,
     endDate
   );
-  const titles = [
-    "Décision débutée",
-    "Deadline pour donner son avis",
-    "Première décision prise",
-    "Deadline pour rentrer en conflit",
-    "Décision définitive",
-  ];
-
-  const dates = [
-    convertToFr(startDate),
-    startDate !== "" &&
-      convertToFr(
-        new Date(publishDate.getTime() + statusDuration).toISOString()
-      ),
-    startDate !== "" &&
-      convertToFr(
-        new Date(publishDate.getTime() + statusDuration * 2).toISOString()
-      ),
-    startDate !== "" &&
-      convertToFr(
-        new Date(publishDate.getTime() + statusDuration * 3).toISOString()
-      ),
-    convertToFr(endDate),
-  ];
+  const dates = timelineDates(startDate, endDate, publishDate, statusDuration);
   return (
     <>
       <h1 className="font-bold text-base">Dates à retenir</h1>
@@ -48,7 +26,7 @@ function Timeline({ startDate, endDate }) {
 
         <div id="timeline">
           <ol className="flex flex-col justify-between">
-            {titles.map((title, index) => (
+            {timelineTitles.map((title, index) => (
               <TimelineSection key={title} title={title} date={dates[index]} />
             ))}
           </ol>
