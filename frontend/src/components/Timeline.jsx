@@ -8,6 +8,7 @@ function Timeline({ startDate, endDate }) {
     startDate,
     endDate
   );
+
   const dates = timelineDates(startDate, endDate, publishDate, statusDuration);
   return (
     <>
@@ -18,7 +19,9 @@ function Timeline({ startDate, endDate }) {
             className="relative w-full rounded-xl bg-green-500 z-50"
             style={{
               height: `${
-                durationPercentage <= 100 ? durationPercentage : 100
+                durationPercentage >= 0 && durationPercentage <= 100
+                  ? durationPercentage
+                  : 100
               }%`,
             }}
           />

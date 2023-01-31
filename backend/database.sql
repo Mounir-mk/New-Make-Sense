@@ -91,7 +91,6 @@ insert into concerned (user_status, decision_id, user_id) values
 ("experts", 1, 1),
 ("experts", 1, 2),
 ("impacted", 2, 2),
-("impacted", 2, 3),
 ("experts", 3, 3),
 ("impacted", 3, 2),
 ("impacted", 3, 3),
