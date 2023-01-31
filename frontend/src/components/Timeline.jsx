@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { getDate, convertToFr } from "../services/dateFunctions";
+import TimelineSection from "./TimelineSection";
 
 function Timeline({ startDate, endDate }) {
   const { statusDuration, publishDate, durationPercentage } = getDate(
@@ -23,81 +24,48 @@ function Timeline({ startDate, endDate }) {
             />
           )}
         </div>
+
         <div id="timeline">
           <ol className="flex flex-col justify-between">
-            <li>
-              <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">
-                  {convertToFr(startDate)}
-                </p>
-              </div>
-              <div className="mt-0.5 ml-4 mb-6">
-                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Décision débutée
-                </h4>
-              </div>
-            </li>
-            <li>
-              <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">
-                  {startDate !== "" &&
-                    convertToFr(
-                      new Date(
-                        publishDate.getTime() + statusDuration
-                      ).toISOString()
-                    )}
-                </p>
-              </div>
-              <div className="mt-0.5 ml-4 mb-6">
-                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Deadline pour donner son avis
-                </h4>
-              </div>
-            </li>
-            <li>
-              <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">
-                  {startDate !== "" &&
-                    convertToFr(
-                      new Date(
-                        publishDate.getTime() + statusDuration * 2
-                      ).toISOString()
-                    )}
-                </p>
-              </div>
-              <div className="mt-0.5 ml-4 mb-6">
-                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Première décision prise
-                </h4>
-              </div>
-            </li>
-            <li>
-              <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">
-                  {startDate !== "" &&
-                    convertToFr(
-                      new Date(
-                        publishDate.getTime() + statusDuration * 3
-                      ).toISOString()
-                    )}
-                </p>
-              </div>
-              <div className="mt-0.5 ml-4 mb-6">
-                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Deadline pour rentrer en conflit
-                </h4>
-              </div>
-            </li>
-            <li>
-              <div className="flex flex-start items-center pt-2">
-                <p className="text-gray-500 text-sm">{convertToFr(endDate)}</p>
-              </div>
-              <div className="mt-0.5 ml-4 pb-5">
-                <h4 className="text-gray-800 font-semibold text-sm mb-1.5">
-                  Décision définitive
-                </h4>
-              </div>
-            </li>
+            <TimelineSection
+              title="Décision débutée"
+              date={convertToFr(startDate)}
+            />
+            <TimelineSection
+              title="Deadline pour donner son avis"
+              date={
+                startDate !== "" &&
+                convertToFr(
+                  new Date(publishDate.getTime() + statusDuration).toISOString()
+                )
+              }
+            />
+            <TimelineSection
+              title="Première décision prise"
+              date={
+                startDate !== "" &&
+                convertToFr(
+                  new Date(
+                    publishDate.getTime() + statusDuration * 2
+                  ).toISOString()
+                )
+              }
+            />
+            <TimelineSection
+              title="Deadline pour rentrer en conflit"
+              date={
+                startDate !== "" &&
+                convertToFr(
+                  new Date(
+                    publishDate.getTime() + statusDuration * 3
+                  ).toISOString()
+                )
+              }
+            />
+            <TimelineSection
+              title="Décision définitive"
+              date={convertToFr(endDate)}
+            />
           </ol>
         </div>
       </section>
