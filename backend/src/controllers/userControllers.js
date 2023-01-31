@@ -9,18 +9,15 @@ const uploadFile = upload.single("avatar");
 const handleFile = (req, res, next) => {
   if (req.file) {
     const { filename, originalname } = req.file;
-    fs.rename(
-      `uploads/${filename}`,
-      `uploads/${uuidv4()}-${originalname}`,
-      (err) => {
-        if (err) {
-          res.sendStatus(500);
-        }
-        const path = `uploads/${uuidv4()}-${originalname}`;
-        req.body.profilePicture = path;
-        next();
+    const modifiedName = `${uuidv4()}-${originalname}`;
+    const path = `uploads/${modifiedName}`;
+    fs.rename(`uploads/${filename}`, path, (err) => {
+      if (err) {
+        res.sendStatus(500);
       }
-    );
+      req.body.image_url = modifiedName;
+      next();
+    });
   } else {
     next();
   }

@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import avatar from "../assets/profile_pic_default.svg";
 import { AuthContext } from "../_services/AuthContext";
 
-function DashboardCard({ decisionTitle, author, id }) {
+function DashboardCard({ decisionTitle, author, id, avatar }) {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleClick = async () => {
@@ -49,6 +48,7 @@ DashboardCard.propTypes = {
   decisionTitle: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  avatar: PropTypes.string.isRequired,
 };
 
 export default DashboardCard;
