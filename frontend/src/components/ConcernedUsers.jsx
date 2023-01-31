@@ -10,8 +10,11 @@ function ConcernedUsers({ status, concerned }) {
               <img
                 className="w-12 h-12 rounded-full"
                 src={
-                  oneOfConcerned.image_url ||
-                  "https://sutter.dr-veterinaire.com/media/original/lil-bub-2013-crop-for-thumb-78296.jpg"
+                  oneOfConcerned.image_url
+                    ? `${import.meta.env.VITE_BACKEND_URL}/${
+                        oneOfConcerned.image_url
+                      }`
+                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
                 }
                 alt="tab"
               />

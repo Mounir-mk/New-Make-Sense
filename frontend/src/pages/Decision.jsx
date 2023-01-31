@@ -8,6 +8,7 @@ import Comment from "../components/Comment";
 import { AuthContext } from "../_services/AuthContext";
 import ConcernedUsers from "../components/ConcernedUsers";
 import { getDate } from "../services/dateFunctions";
+import Loader from "../components/Loader";
 
 export default function Decision() {
   const contentDecision = useRef("");
@@ -20,26 +21,9 @@ export default function Decision() {
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [finalDecisionForm, setFinalDecisionForm] = useState(false);
   const [finalDecisionIsCreated, setFinalDecisionIsCreated] = useState(false);
-  const [content, setContent] = useState({
-    title: "",
-    publish_date: "",
-    deadline: "",
-    start_content: "",
-    middle_decision: "",
-    final_decision: "",
-    impact: "",
-    risk: "",
-    advantage: "",
-    userId: "",
-    statusId: "",
-    concerned: [],
-    comment: [],
-    firstname: "",
-    lastname: "",
-    user_id: "",
-    image_url: "",
-  });
-  const { statusStep } = getDate(content.publish_date, content.deadline);
+  const [content, setContent] = useState();
+  const [loading, setLoading] = useState(true);
+
   // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
   function toggleMiddleDecisionForm() {
     setMiddleDecisionForm(!middleDecisionForm);
@@ -82,12 +66,18 @@ export default function Decision() {
           config
         );
         setContent(response.data);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
     getData();
   }, [id, commentAdded]);
+
+  if (loading) {
+    return <Loader />;
+  }
+  const { statusStep } = getDate(content.publish_date, content.deadline);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-2 md:pl:0 my-8">
@@ -96,7 +86,11 @@ export default function Decision() {
         </h1>
         <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
           <img
-            src={content.image_url || "https://via.placeholder.com/150"}
+            src={
+              content.image_url
+                ? `${import.meta.env.VITE_BACKEND_URL}/${content.image_url}`
+                : `${import.meta.env.VITE_BACKEND_URL}/default.png`
+            }
             alt="author"
             className="w-12 h-12 rounded-full"
           />
@@ -211,7 +205,13 @@ export default function Decision() {
           {content.comment.map((oneOfComment) => (
             <Comment
               key={oneOfComment.id}
-              icon={oneOfComment.image_url}
+              icon={
+                oneOfComment.image_url
+                  ? `${import.meta.env.VITE_BACKEND_URL}/${
+                      oneOfComment.image_url
+                    }`
+                  : `${import.meta.env.VITE_BACKEND_URL}/default.png`
+              }
               content={oneOfComment.content}
               date={oneOfComment.date}
               author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}

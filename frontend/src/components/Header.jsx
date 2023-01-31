@@ -11,11 +11,13 @@ import user from "../assets/user.svg";
 import logout from "../assets/log-out.svg";
 import adminLogo from "../assets/admin-panel.png";
 import { AuthContext } from "../_services/AuthContext";
+import Loader from "./Loader";
 
 function Header() {
-  const [userProfilePicture, setUserProfilePicture] = useState(null);
+  const [userProfilePicture, setUserProfilePicture] = useState();
   const { auth, setAuth } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [loading, setLoading] = useState(true);
   const handleLogout = () => {
     setAuth((oldAuth) => ({
       ...oldAuth,
@@ -34,10 +36,14 @@ function Header() {
         }
       );
       setUserProfilePicture(response.data.image_url);
+      setLoading(false);
     };
     fetchUser();
   }, []);
 
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <header className="w-full flex items-center justify-around border-solid border-b-2 h-16 bg-white">
       <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
@@ -106,7 +112,13 @@ function Header() {
             >
               <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
               <img
-                src={userProfilePicture || "https://via.placeholder.com/150"}
+                src={
+                  userProfilePicture
+                    ? `${
+                        import.meta.env.VITE_BACKEND_URL
+                      }/${userProfilePicture}`
+                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
+                }
                 alt="User"
                 className="h-8 w-8 rounded-full object-cover"
               />
