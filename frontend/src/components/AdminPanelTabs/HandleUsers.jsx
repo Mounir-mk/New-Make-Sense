@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useContext, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../../_services/AuthContext";
+import "react-toastify/dist/ReactToastify.css";
 
 function HandleUsers() {
   const [data, setData] = useState({});
   const { auth } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
+  const notify = () => toast("Rôle utilisateur modifié !");
   const config = {
     headers: {
       Authorization: `Bearer ${auth.token}`,
@@ -30,7 +33,7 @@ function HandleUsers() {
         }
       )
       .then(() => {
-        console.warn(data[user.id]);
+        notify();
       })
       .catch((err) => {
         console.error(err);
@@ -99,6 +102,7 @@ function HandleUsers() {
                 >
                   Modifier
                 </button>
+                <ToastContainer />
               </td>
             </tr>
           ))}
