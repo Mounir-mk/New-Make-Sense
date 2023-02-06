@@ -3,12 +3,23 @@ import React, { useEffect, useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../../_services/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
+import "./toast.css";
 
 function HandleUsers() {
   const [data, setData] = useState({});
   const { auth } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
-  const notify = () => toast("Rôle utilisateur modifié !");
+  const notify = () =>
+    toast("Rôle utilisateur modifié !", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      className: "toast-green",
+    });
   const config = {
     headers: {
       Authorization: `Bearer ${auth.token}`,
