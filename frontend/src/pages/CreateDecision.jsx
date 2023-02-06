@@ -19,7 +19,7 @@ function CreateDecision() {
   const [usersConcerned, setUsersConcerned] = useState([]);
   const [step, setStep] = useState(1);
   return (
-    <main className="w-full flex justify-evenly items-start h-full mt-8 md:mt-0 mb-6 px-4">
+    <main className="max-w-screen-lg mx-auto flex justify-evenly items-start h-full mt-8 md:mt-0 mb-6 px-4">
       <div className="h-full flex flex-col gap-2 md:gap-4 justify-around items-start">
         <span>
           <h1 className="font-bold text-2xl md:mt-16">Créer une décision</h1>

@@ -4,6 +4,7 @@ import axios from "axios";
 import plusIcon from "../assets/plus.svg";
 import { AuthContext } from "../_services/AuthContext";
 import { minDate } from "../services/dateFunctions";
+import Editor from "./Editor/Editor";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -176,7 +177,7 @@ function DescriptionDecisionForm({
           </ul>
         </div>
       </section>
-      <form className="flex flex-col gap-2 md:gap-4">
+      <form className="flex flex-col gap-2 md:gap-4 flex-1">
         <div className="flex gap-3">
           <div className="flex flex-col gap-1">
             <label htmlFor="decision">
@@ -219,7 +220,7 @@ function DescriptionDecisionForm({
         <label htmlFor="description">
           <h2 className="font-bold text-center">Description</h2>
         </label>
-        <textarea
+        {/* <textarea
           name="description"
           id="description"
           className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 h-56 md:h-96 w-full"
@@ -228,6 +229,15 @@ function DescriptionDecisionForm({
             setCreateDecision((old) => ({
               ...old,
               description: event.target.value,
+            }))
+          }
+        /> */}
+        <Editor
+          value={createDecision.description}
+          setValue={(value) =>
+            setCreateDecision((old) => ({
+              ...old,
+              description: value,
             }))
           }
         />
