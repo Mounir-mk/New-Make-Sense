@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import Loader from "../Loader";
 import { AuthContext } from "../../_services/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./toast.css";
 
 function HandleUsers() {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
   const { auth } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
@@ -59,64 +61,99 @@ function HandleUsers() {
           config
         );
         console.warn(res.data);
-        setUsers(res.data);
+        setUsers(res.data.map((user) => ({ ...user, isRoleUpdated: false })));
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
     };
     getUsersInformations();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="w-full">
-      <h1 className="text-2xl font-bold pb-8 pt-4">Gestion des utilisateurs</h1>
-      <table className="table-auto w-full text-left border-2 border-black">
+      <h1 className="text-2xl font-bold pb-8 pt-4 text-blue-dianne border-b-2 border-blue-dianne w-96">
+        Gestion des utilisateurs
+      </h1>
+      <table className="table-auto w-full text-left border-2 border-black mt-8">
         <thead>
-          <tr className="bg-gray-300">
-            <th className="px-4 py-2">Id</th>
-            <th className="px-4 py-2">Nom</th>
-            <th className="px-4 py-2">Prénom</th>
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Nbr de décisions</th>
-            <th className="px-4 py-2">Role</th>
+          <tr className="bg-blue-dianne text-slate-200">
+            <th className="px-4 py-2 border-r-2 border-slate-200">Id</th>
+            <th className="px-4 py-2 border-r-2 border-slate-200">Nom</th>
+            <th className="px-4 py-2 border-r-2 border-slate-200">Prénom</th>
+            <th className="px-4 py-2 border-r-2 border-slate-200">Email</th>
+            <th className="px-4 py-2 border-r-2 border-slate-200">
+              Nbr de décisions
+            </th>
+            <th className="px-4 py-2 border-r-2 border-slate-200">Role</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-gray-200">
-              <td className="border-2 border-black px-4 py-2">{user.id}</td>
-              <td className="border-2 border-black px-4 py-2">
-                {user.lastname}
-              </td>
-              <td className="border-2 border-black px-4 py-2">
-                {user.firstname}
-              </td>
-              <td className="border-2 border-black px-4 py-2">{user.email}</td>
-              <td className="border-2 border-black px-4 py-2">
-                {user.nb_decisions}
-              </td>
-              <td className="border-2 border-black px-4 py-2">
-                <select
-                  value={data[user.id] || user.role}
-                  onChange={(event) => handleRoleChange(event, user)}
-                >
-                  <option value="admin">Admin</option>
-                  <option value="visitor">Visiteur</option>
-                  <option value="employee">Employé</option>
-                </select>
-              </td>
-              <td className="border-2 border-black px-4 py-2">
-                <button
-                  type="button"
-                  className="px-2 py-1 rounded-full bg-blue-500 text-white"
-                  onClick={() => handleUpdateClick(user)}
-                >
-                  Modifier
-                </button>
-                <ToastContainer />
-              </td>
-            </tr>
-          ))}
+          {users
+            .filter((user) => user.role !== "admin")
+            .map((user) => (
+              <tr key={user.id} className="hover:bg-gray-200">
+                <td className="border-2 border-black px-4 py-2">{user.id}</td>
+                <td className="border-2 border-black px-4 py-2">
+                  {user.lastname}
+                </td>
+                <td className="border-2 border-black px-4 py-2">
+                  {user.firstname}
+                </td>
+                <td className="border-2 border-black px-4 py-2">
+                  {user.email}
+                </td>
+                <td className="border-2 border-black px-4 py-2">
+                  {user.nb_decisions}
+                </td>
+                <td className="border-2 border-black px-4 py-2">
+                  <select
+                    value={data[user.id] || user.role}
+                    onChange={(event) => {
+                      handleRoleChange(event, user);
+                      setUsers((oldState) => {
+                        return oldState.map((u) =>
+                          u.id === user.id ? { ...u, isRoleUpdated: true } : u
+                        );
+                      });
+                    }}
+                    className={`${
+                      user.isRoleUpdated ? "bg-green-200" : "bg-white"
+                    } border-2 border-black px-4 py-2 rounded-lg`}
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="visitor">Visiteur</option>
+                    <option value="employee">Employé</option>
+                  </select>
+                </td>
+                <td className="border-2 border-black px-4 py-2">
+                  <button
+                    type="button"
+                    className={`${
+                      user.isRoleUpdated
+                        ? "bg-green-200 text-slate-900"
+                        : "bg-blue-dianne text-slate-200"
+                    } border-2 border-black px-4 py-2 rounded-lg`}
+                    onClick={() => {
+                      handleUpdateClick(user);
+                      setUsers((oldState) => {
+                        return oldState.map((u) =>
+                          u.id === user.id ? { ...u, isRoleUpdated: false } : u
+                        );
+                      });
+                    }}
+                  >
+                    Modifier
+                  </button>
+                  <ToastContainer />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
