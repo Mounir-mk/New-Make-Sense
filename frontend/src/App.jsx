@@ -17,7 +17,7 @@ function App() {
   const location = useLocation();
   const { auth } = useContext(AuthContext);
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       {auth.isAuthenticated &&
         !(location.pathname === "/admin") &&
         !(location.pathname === "/login") &&

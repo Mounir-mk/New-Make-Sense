@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../_services/AuthContext";
+import Editor from "./Editor/Editor";
 
 function InputDecisionForm({
   createDecision,
@@ -64,28 +65,24 @@ function InputDecisionForm({
     }
   }
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 flex-1 w-full">
       <h2 className="font-bold text-xl capitalize">{changeStepName()}</h2>
-      <div className="flex flex-col gap-2">
+      <div className="flex-1 flex flex-col gap-2">
         <label htmlFor="impacts" className="font-bold">
           {`Quels sont les ${changeStepName()} de cette décision ?`}
         </label>
-        <textarea
-          id="impacts"
-          name="impacts"
-          rows="4"
-          className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 h-56 md:h-96 w-full mx-auto"
-          value={createDecision[stepName]}
-          onChange={(e) =>
+        <Editor
+          setValue={(value) =>
             setCreateDecision((old) => ({
               ...old,
-              [stepName]: e.target.value,
+              [stepName]: value,
             }))
           }
+          value={createDecision[stepName]}
         />
         <button
           type="submit"
-          className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white"
+          className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white ml-auto mt-4"
           onClick={() => handleClick(stepName, createDecision, redirectButton)}
         >
           {redirectButton ? "Créer la décision" : "Suivant"}
