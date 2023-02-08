@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import logo from "../assets/logo_makesense.png";
 import homeIcon from "../assets/home.svg";
 import calendarIcon from "../assets/calendar.svg";
-import smileIcon from "../assets/smile.svg";
 import menuIcon from "../assets/menu.svg";
 import plusIcon from "../assets/plus.svg";
 import user from "../assets/user.svg";
@@ -88,22 +87,21 @@ function Header() {
           </li>
           {auth.role !== "visitor" && (
             <li className="flex flex-col hover:underline justify-center">
-              <img
-                src={calendarIcon}
-                alt="Calendar"
-                className="max-h-4 w-auto"
-              />
-              <span className="hidden md:inline font-bold text-xs">
-                Mes décisions
-              </span>
+              <NavLink
+                to="/mydecisions"
+                className="flex flex-col hover:underline justify-center"
+              >
+                <img
+                  src={calendarIcon}
+                  alt="Calendar"
+                  className="max-h-4 w-auto"
+                />
+                <span className="hidden md:inline font-bold text-xs">
+                  Mes décisions
+                </span>
+              </NavLink>
             </li>
           )}
-          <li className="flex flex-col hover:underline justify-center">
-            <img src={smileIcon} alt="Smile" className="max-h-4 w-auto" />
-            <span className="hidden md:inline font-bold text-xs">
-              Notifications
-            </span>
-          </li>
           <li>
             <button
               type="button"
