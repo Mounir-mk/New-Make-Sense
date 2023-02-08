@@ -81,10 +81,13 @@ export default function Decision() {
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
       <main className="flex flex-col md:my-16 w-full md:w-2/3 border-r-2 pl-2 md:pl:0 my-8">
-        <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944]">
-          {content.title}
+        <h1 className="text-2xl md:text-5xl font-bold text-[#0C3944] mb-6">
+          {`${content.title.charAt(0).toUpperCase()}${content.title.slice(1)}`}
         </h1>
-        <section id="author" className="flex items-center gap-2 mx-2 md:mx-0">
+        <section
+          id="author"
+          className="flex items-center gap-2 mx-2 md:mx-0 mb-4"
+        >
           <img
             src={
               content.image_url
@@ -202,21 +205,25 @@ export default function Decision() {
               Ajouter un commentaire
             </button>
           </form>
-          {content.comment.map((oneOfComment) => (
-            <Comment
-              key={oneOfComment.id}
-              icon={
-                oneOfComment.image_url
-                  ? `${import.meta.env.VITE_BACKEND_URL}/${
-                      oneOfComment.image_url
-                    }`
-                  : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-              }
-              content={oneOfComment.content}
-              date={oneOfComment.date}
-              author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}
-            />
-          ))}
+          {content.comment
+            .sort((a, b) => {
+              return new Date(b.date) - new Date(a.date);
+            })
+            .map((oneOfComment) => (
+              <Comment
+                key={oneOfComment.id}
+                icon={
+                  oneOfComment.image_url
+                    ? `${import.meta.env.VITE_BACKEND_URL}/${
+                        oneOfComment.image_url
+                      }`
+                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
+                }
+                content={oneOfComment.content}
+                date={oneOfComment.date}
+                author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}
+              />
+            ))}
         </section>
       </main>
       <aside className="md:my-16 flex flex-col ml-2 gap-3 bg-white pl-6 md:pl-0 ">

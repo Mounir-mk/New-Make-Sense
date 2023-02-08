@@ -45,7 +45,9 @@ function Header() {
   }
   return (
     <header className="w-full flex items-center justify-around border-solid border-b-2 h-16 bg-white">
-      <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
+      <NavLink to="/">
+        <img src={logo} alt="MakeSense" className="max-h-4 md:max-h-8 w-auto" />
+      </NavLink>
       <nav>
         <ul className="flex gap-4">
           <li>
