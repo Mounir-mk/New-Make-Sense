@@ -34,14 +34,14 @@ class DecisionManager extends AbstractManager {
 
   update(decision) {
     return this.connection.query(`update ${this.table} set ? where id = ?`, [
-      decision.body,
+      decision,
       decision.id,
     ]);
   }
 
   findAllDecisions() {
     return this.connection.query(
-      `select u.firstname, u.lastname, u.image_url, d.title, d.id, d.status from user u inner join decision_status d on d.user_id = u.id`
+      `select u.firstname, u.lastname, u.image_url, d.title, d.id, d.publish_date , d.deadline, d.status from user u inner join decision_status d on d.user_id = u.id`
     );
   }
 

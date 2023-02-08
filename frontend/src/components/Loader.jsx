@@ -1,6 +1,6 @@
 function Loader() {
   return (
-    <main className="h-screen w-screen flex flex-col items-center justify-center">
+    <main className="fixed top-0 left-0 z-50 h-screen w-screen flex flex-col items-center justify-center">
       <div role="status">
         <svg
           aria-hidden="true"
