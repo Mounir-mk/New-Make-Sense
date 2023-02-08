@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import HandleUsers from "../components/AdminPanelTabs/HandleUsers";
+import HandleDecisions from "../components/AdminPanelTabs/HandleDecisions";
 import StatsTab from "../components/AdminPanelTabs/StatsTab";
 
 function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
-  const tabs = ["Utilisateurs", "Statistiques"];
+  const tabs = ["Utilisateurs", "Décisions", "Statistiques"];
 
   const inactiveClass =
     "pl-4 border-l-2 text-slate-200 border-slate-200 hover:border-l-2 hover:border-cerise-dark hover:text-cerise-dark h-12 flex items-center text-xl font-semibold";
@@ -47,6 +48,7 @@ function AdminPanel() {
       <section className="flex-1 h-full p-4 overflow-y-auto">
         {activeTab === "Utilisateurs" && <HandleUsers />}
         {activeTab === "Statistiques" && <StatsTab />}
+        {activeTab === "Décisions" && <HandleDecisions />}
       </section>
     </main>
   );

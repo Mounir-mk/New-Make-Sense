@@ -86,8 +86,8 @@ create table concerned (
   user_status enum('experts', 'impacted') NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,
-  constraint concerned_user foreign key (user_id) references user(id),
-  constraint concerned_decision foreign key (decision_id) references decision(id)
+  constraint concerned_user foreign key (user_id) references user(id) ON DELETE CASCADE,
+  constraint concerned_decision foreign key (decision_id) references decision(id) ON DELETE CASCADE
 ) engine=InnoDB default charset=latin1;
 
 insert into concerned (user_status, decision_id, user_id) values
@@ -112,8 +112,8 @@ create table comment (
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,
   date datetime NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  constraint comment_user foreign key (user_id) references user(id),
-  constraint decision_comment foreign key (decision_id) references decision(id)
+  constraint comment_user foreign key (user_id) references user(id) ON DELETE CASCADE,
+  constraint decision_comment foreign key (decision_id) references decision(id) ON DELETE CASCADE
 ) engine=InnoDB default charset=latin1;
 
 insert into comment (content, user_id, decision_id) values

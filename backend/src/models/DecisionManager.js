@@ -34,7 +34,7 @@ class DecisionManager extends AbstractManager {
 
   update(decision) {
     return this.connection.query(`update ${this.table} set ? where id = ?`, [
-      decision.body,
+      decision,
       decision.id,
     ]);
   }
