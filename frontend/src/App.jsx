@@ -12,6 +12,7 @@ import AdminPanel from "./pages/AdminPanel";
 import ProtectedRoute from "./_services/ProtectedRoute";
 import AdminRoute from "./_services/AdminRoute";
 import ProfilePage from "./pages/ProfilePage";
+import MyDecisionsPage from "./pages/MyDecisionsPage";
 
 function App() {
   const location = useLocation();
@@ -62,6 +63,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mydecisions"
+          element={
+            <ProtectedRoute>
+              <MyDecisionsPage />
             </ProtectedRoute>
           }
         />
