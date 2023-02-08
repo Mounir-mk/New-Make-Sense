@@ -26,7 +26,7 @@ create table decision (
   final_decision text,
   user_id int(11) unsigned NOT NULL,
   status enum('in_progress', 'finished') NOT NULL DEFAULT 'in_progress',
-  constraint decision_user foreign key (user_id) references user(id)
+  constraint decision_user foreign key (user_id) references user(id) on delete cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Trigger an event that will update the status of the decision when the deadline is reached

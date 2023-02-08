@@ -11,7 +11,7 @@ function HandleUsers() {
   const [data, setData] = useState({});
   const { auth } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
-  const notify = () =>
+  const notifyUpdate = () =>
     toast("Rôle utilisateur modifié !", {
       position: "top-right",
       autoClose: 5000,
@@ -22,10 +22,34 @@ function HandleUsers() {
       progress: undefined,
       className: "toast-green",
     });
+  const notifyDelete = () =>
+    toast.error("Utilisateur supprimé", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   const config = {
     headers: {
       Authorization: `Bearer ${auth.token}`,
     },
+  };
+  const getUsersInformations = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/users/decisions",
+        config
+      );
+      console.warn(res.data);
+      setUsers(res.data.map((user) => ({ ...user, isRoleUpdated: false })));
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleRoleChange = (event, user) => {
@@ -46,7 +70,20 @@ function HandleUsers() {
         }
       )
       .then(() => {
-        notify();
+        notifyUpdate();
+        getUsersInformations();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleDeleteClick = (user) => {
+    axios
+      .delete(`http://localhost:5000/users/${user.id}`, config)
+      .then(() => {
+        notifyDelete();
+        getUsersInformations();
       })
       .catch((err) => {
         console.error(err);
@@ -54,19 +91,6 @@ function HandleUsers() {
   };
 
   useEffect(() => {
-    const getUsersInformations = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/users/decisions",
-          config
-        );
-        console.warn(res.data);
-        setUsers(res.data.map((user) => ({ ...user, isRoleUpdated: false })));
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     getUsersInformations();
   }, []);
 
@@ -132,24 +156,35 @@ function HandleUsers() {
                   </select>
                 </td>
                 <td className="border-2 border-black px-4 py-2">
-                  <button
-                    type="button"
-                    className={`${
-                      user.isRoleUpdated
-                        ? "bg-green-200 text-slate-900"
-                        : "bg-blue-dianne text-slate-200"
-                    } border-2 border-black px-4 py-2 rounded-lg`}
-                    onClick={() => {
-                      handleUpdateClick(user);
-                      setUsers((oldState) => {
-                        return oldState.map((u) =>
-                          u.id === user.id ? { ...u, isRoleUpdated: false } : u
-                        );
-                      });
-                    }}
-                  >
-                    Modifier
-                  </button>
+                  <div className="flex justify-around">
+                    <button
+                      type="button"
+                      className={`${
+                        user.isRoleUpdated
+                          ? "bg-green-200 text-slate-900"
+                          : "bg-blue-dianne text-slate-200"
+                      } border-2 border-black px-4 py-2 rounded-lg`}
+                      onClick={() => {
+                        handleUpdateClick(user);
+                        setUsers((oldState) => {
+                          return oldState.map((u) =>
+                            u.id === user.id
+                              ? { ...u, isRoleUpdated: false }
+                              : u
+                          );
+                        });
+                      }}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-blue-dianne text-slate-200 px-4 py-2 rounded-md"
+                      onClick={() => handleDeleteClick(user)}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                   <ToastContainer />
                 </td>
               </tr>
