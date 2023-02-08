@@ -9,3 +9,7 @@
   margin: 0;
   font-family: "Raleway", sans-serif;
 }
+
+#concerned::-webkit-calendar-picker-indicator {
+  display: none !important;
+}

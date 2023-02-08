@@ -19,8 +19,10 @@ function DashboardCard({ decisionTitle, author, id, avatar }) {
   };
 
   return (
-    <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-2xl my-4 w-full md:w-72 h-56">
-      <h1 className="font-bold text-blue-dianne text-lg">{decisionTitle}</h1>
+    <section className="bg-white rounded-xl p-4 flex flex-col justify-evenly shadow-slate-300 shadow-lg my-4 w-full md:w-72 h-56">
+      <h1 className="font-bold text-blue-dianne text-lg">{`${decisionTitle
+        .charAt(0)
+        .toUpperCase()}${decisionTitle.slice(1)}`}</h1>
       <div className="flex flex-col">
         <figure className="flex justify-between mt-4 items-center gap-2">
           <img

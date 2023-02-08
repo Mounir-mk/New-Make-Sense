@@ -135,6 +135,7 @@ function DescriptionDecisionForm({
             <h2 className="font-bold">Impactés</h2>
             <div className="relative">
               <input
+                id="concerned"
                 type="text"
                 placeholder="@Impactés"
                 name="impacted"
@@ -142,6 +143,11 @@ function DescriptionDecisionForm({
                 className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
                 value={inputImpacted}
                 onChange={(event) => setInputImpacted(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    checkUsers(inputImpacted, "impacted");
+                  }
+                }}
               />
               <button
                 className="absolute right-0 h-full"
@@ -180,6 +186,7 @@ function DescriptionDecisionForm({
             <h2 className="font-bold">Experts</h2>
             <div className="relative">
               <input
+                id="concerned"
                 type="text"
                 placeholder="@Experts"
                 name="expert"
@@ -187,6 +194,11 @@ function DescriptionDecisionForm({
                 className="border-2 border-slate-500 rounded-xl px-2 md:px-4 py-1 md:py-2 w-full"
                 value={inputExpert}
                 onChange={(event) => setInputExpert(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    checkUsers(inputExpert, "expert");
+                  }
+                }}
               />
               <button
                 className="absolute right-0 h-full"
