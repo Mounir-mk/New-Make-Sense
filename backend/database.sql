@@ -83,6 +83,7 @@ VALUES (
 
 
 create table concerned (
+  id int(11) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,  
   user_status enum('experts', 'impacted') NOT NULL,
   user_id int(11) unsigned NOT NULL,
   decision_id int(11) unsigned NOT NULL,

@@ -1,7 +1,9 @@
 const fs = require("fs");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const models = require("../models");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
 
 const upload = multer({ dest: "uploads/" });
 
@@ -23,119 +25,112 @@ const handleFile = (req, res, next) => {
   }
 };
 
-const browse = (req, res) => {
-  models.user
-    .findAll()
-    .then(([rows]) => {
-      res.send(rows);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+const browse = async (req, res) => {
+  const users = await prisma.user.findMany();
+  if (users) {
+    Object.keys(users).forEach((key) => {
+      delete users[key].hashed_password;
     });
+    res.status(200).json(users);
+  } else {
+    res.status(404).json({ message: "Users not found" });
+  }
 };
 
-const read = (req, res) => {
-  models.user
-    .find(req.params.id)
-    .then(([rows]) => {
-      if (rows[0] == null) {
-        res.sendStatus(404);
-      } else {
-        res.send(rows[0]);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const read = async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+  });
+  if (user) {
+    delete user.hashed_password;
+    res.status(200).json(user);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
 };
 
-const browseAndCountDecisions = (req, res) => {
-  models.user
-    .findAllAndCountDecisions()
-    .then(([rows]) => {
-      if (rows[0] == null) {
-        res.sendStatus(404);
-      }
-      res.send(rows);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+const browseAndCountDecisions = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        decision: true,
+      },
     });
+    Object.keys(users).forEach((key) => {
+      delete users[key].hashed_password;
+    });
+    users.forEach((user) => {
+      const userMutated = user;
+      userMutated.nb_decisions = userMutated.decision.length;
+      delete userMutated.decision;
+    });
+    res.send(users);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 };
 
-const edit = (req, res) => {
-  const user = req.body;
-  // TODO validations (length, format...)
-
-  user.id = parseInt(req.params.id, 10);
-
-  models.user
-    .update(user)
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.sendStatus(404);
-      } else {
-        res.sendStatus(204);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const edit = async (req, res) => {
+  const dataToUpdate = req.body;
+  const user = await prisma.user.update({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+    data: dataToUpdate,
+  });
+  if (user) {
+    res.status(204).json({ message: "User updated" });
+  } else {
+    res.status(404).json({ message: "User not updated" });
+  }
 };
 
-const add = (req, res) => {
-  const user = req.body;
-
-  // TODO validations (length, format...)
-
-  models.user
-    .insert(user)
-    .then(([result]) => {
-      res.location(`/users/${result.insertId}`).sendStatus(201);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const add = async (req, res) => {
+  const user = await prisma.user.create({
+    data: {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      hashed_password: req.body.hashedPassword,
+      image_url: req.body.image_url || "default.png",
+    },
+  });
+  if (user) {
+    delete user.hashed_password;
+    res.status(201).json({ message: "User created", user });
+  } else {
+    res.json({ message: "User not created" });
+  }
 };
 
-const destroy = (req, res) => {
-  models.user
-    .delete(req.params.id)
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.sendStatus(404);
-      } else {
-        res.sendStatus(204);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const destroy = async (req, res) => {
+  const user = await prisma.user.delete({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+  });
+  if (user) {
+    res.status(204).json({ message: "User deleted" });
+  } else {
+    res.status(404).json({ message: "User not deleted" });
+  }
 };
 
-const getUserByEmailWithPasswordAndPassToNext = (req, res, next) => {
-  const { email } = req.body;
-
-  models.user
-    .findUserInfoByEmail(email)
-    .then(([rows]) => {
-      if (rows[0] == null) {
-        res.sendStatus(404);
-      } else {
-        [req.user] = rows;
-        next();
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const getUserByEmailWithPasswordAndPassToNext = async (req, res, next) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: req.body.email,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  req.user = user;
+  next();
+  return null;
 };
 
 module.exports = {

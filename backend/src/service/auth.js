@@ -1,5 +1,6 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const hashPassword = (req, res, next) => {
   const hashOptions = {
