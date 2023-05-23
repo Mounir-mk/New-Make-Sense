@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
-const models = require("../models");
 
 const prisma = new PrismaClient();
 
@@ -145,22 +144,19 @@ const read = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-  const decision = req.body;
-  decision.id = parseInt(req.params.id, 10);
+  const data = req.body;
+  data.id = parseInt(req.params.id, 10);
 
-  models.decision
-    .update(decision)
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.sendStatus(404);
-      } else {
-        res.sendStatus(204);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+  const decision = await prisma.decision.update({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+    data: {
+      data,
+    },
+  });
+
+  res.status(204).json("Decision updated", decision);
 };
 
 const add = async (req, res) => {

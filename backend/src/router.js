@@ -4,7 +4,11 @@ const router = express.Router();
 
 const decisionControllers = require("./controllers/decisionControllers");
 const userControllers = require("./controllers/userControllers");
-const { hashPassword, verifyPassword, verifyToken } = require("./service/auth");
+const {
+  hashPassword,
+  verifyPassword,
+  verifyToken,
+} = require("./services/auth");
 
 router.post(
   "/users/login",
