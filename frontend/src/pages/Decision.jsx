@@ -1,10 +1,10 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useAuthUser } from "react-auth-kit";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Timeline from "../components/Timeline";
 import Comment from "../components/Comment";
-import { AuthContext } from "../services/AuthContext";
 import ConcernedUsers from "../components/ConcernedUsers";
 import { getDate } from "../utils/dateFunctions";
 import Loader from "../components/Loader";
@@ -13,7 +13,7 @@ import useFetch from "../hooks/useFetch";
 export default function Decision() {
   const contentDecision = useRef("");
   const contentFinalDecision = useRef("");
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const { id } = useParams();
   const commentRef = useRef();
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
@@ -40,7 +40,7 @@ export default function Decision() {
   const handleCommentSubmit = () => {
     fetch({
       content: commentRef.current.value,
-      userId: auth.id,
+      userId: auth().user.id,
       decisionId: id,
     });
     commentRef.current.value = "";
@@ -63,11 +63,7 @@ export default function Decision() {
           className="flex items-center gap-2 mx-2 md:mx-0 mb-4"
         >
           <img
-            src={
-              content.image_url
-                ? `${import.meta.env.VITE_BACKEND_URL}/${content.image_url}`
-                : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-            }
+            src={`${import.meta.env.VITE_BACKEND_URL}/${content.image_url}`}
             alt="author"
             className="w-12 h-12 rounded-full"
           />

@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { AuthContext } from "../services/AuthContext";
+import { useAuthHeader } from "react-auth-kit";
 
 /**
  * Custom Hook for making HTTP requests.
@@ -33,8 +33,7 @@ const useFetch = (
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [invalidateCounter, setInvalidateCounter] = useState(0);
-  const { auth } = useContext(AuthContext);
-  const authHeader = `Bearer ${auth.token}`;
+  const authHeader = useCallback(useAuthHeader(), []);
 
   const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -67,18 +66,16 @@ const useFetch = (
 
         // Si l'autorisation est nécessaire, ajoutez l'en-tête d'autorisation
         if (requiresAuth) {
-          config.headers.Authorization = authHeader;
+          config.headers.Authorization = authHeader();
         }
 
         const res = await axios(config);
         setResponse(res);
         setData(res.data);
-
-        console.warn(res);
-
         return res;
       } catch (err) {
         setError(err.message);
+        console.error(err);
         return err.message;
       } finally {
         setLoading(false);

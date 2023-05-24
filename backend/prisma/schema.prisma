@@ -53,16 +53,24 @@ model decision {
 }
 
 model user {
-  id              Int         @id @default(autoincrement()) @db.UnsignedInt
-  firstname       String      @db.VarChar(50)
-  lastname        String      @db.VarChar(50)
-  image_url       String?     @db.VarChar(255)
-  role            String      @default("visitor") @db.VarChar(15)
-  email           String      @unique(map: "email") @db.VarChar(50)
-  hashed_password String      @db.VarChar(255)
+  id              Int           @id @default(autoincrement()) @db.UnsignedInt
+  firstname       String        @db.VarChar(50)
+  lastname        String        @db.VarChar(50)
+  image_url       String?       @db.VarChar(255)
+  role            String        @default("visitor") @db.VarChar(15)
+  email           String        @unique(map: "email") @db.VarChar(50)
+  hashed_password String        @db.VarChar(255)
   comment         comment[]
   concerned       concerned[]
   decision        decision[]
+  RefreshToken    RefreshToken?
+}
+
+model RefreshToken {
+  id     Int    @id @default(autoincrement())
+  token  String @unique @db.VarChar(500)
+  user   user   @relation(fields: [userId], references: [id])
+  userId Int    @unique @db.UnsignedInt
 }
 
 enum concerned_user_status {

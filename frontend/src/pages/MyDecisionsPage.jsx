@@ -1,11 +1,10 @@
-import { useContext } from "react";
+import { useAuthUser } from "react-auth-kit";
 import useFetch from "../hooks/useFetch";
-import { AuthContext } from "../services/AuthContext";
 import DashboardCard from "../components/DecisionCard";
 import Loader from "../components/Loader";
 
 function MyDecisionsPage() {
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const { data: decisions, loading } = useFetch("decisions", "GET", true, true);
 
   if (loading) {
@@ -20,7 +19,7 @@ function MyDecisionsPage() {
         </h1>
         <div className="flex flex-col md:flex-row gap-4 flex-wrap">
           {decisions
-            .filter((decision) => decision.id === auth.id)
+            .filter((decision) => decision.id === auth().user.id)
             .map((decision) => (
               <DashboardCard
                 key={decision.id}

@@ -1,28 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../../services/AuthContext";
+import useFetch from "../../hooks/useFetch";
 import Loader from "../Loader";
 
 function StatsTab() {
-  const { auth } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-  const [decisions, setDecisions] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/decisions`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((response) => {
-        setDecisions(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  const { data: decisions, loading } = useFetch("decisions", "GET", true, true);
 
   if (loading) {
     return <Loader />;

@@ -1,9 +1,7 @@
-import { useContext } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { AuthContext } from "./services/AuthContext";
+import { Route, Routes } from "react-router-dom";
+import { RenderHeader } from "./components/Header";
 import CreateDecision from "./pages/CreateDecision";
 import Decision from "./pages/Decision";
-import Header from "./components/Header";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
@@ -11,21 +9,32 @@ import Login from "./pages/Login";
 import AdminPanel from "./pages/AdminPanel";
 import ProtectedRoute from "./services/ProtectedRoute";
 import AdminRoute from "./services/AdminRoute";
+import UnprotectedRoute from "./services/UnprotectedRoute";
 import ProfilePage from "./pages/ProfilePage";
 import MyDecisionsPage from "./pages/MyDecisionsPage";
 
 function App() {
-  const location = useLocation();
-  const { auth } = useContext(AuthContext);
   return (
     <div className="min-h-screen flex flex-col">
-      {auth.isAuthenticated &&
-        !(location.pathname === "/admin") &&
-        !(location.pathname === "/login") &&
-        !(location.pathname === "/register") && <Header />}
+      <RenderHeader />
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/register"
+          element={
+            <UnprotectedRoute>
+              <Register />
+            </UnprotectedRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <UnprotectedRoute>
+              <Login />
+            </UnprotectedRoute>
+          }
+        />
         <Route
           path="/"
           element={

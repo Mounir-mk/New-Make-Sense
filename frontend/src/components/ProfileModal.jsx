@@ -1,6 +1,6 @@
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
-import { AuthContext } from "../services/AuthContext";
+import { useAuthUser } from "react-auth-kit";
 import useFetch from "../hooks/useFetch";
 
 function ProfileModal({ setOpenModal, invalidate, user }) {
@@ -9,8 +9,13 @@ function ProfileModal({ setOpenModal, invalidate, user }) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const { auth } = useContext(AuthContext);
-  const { fetch, error } = useFetch(`users/${auth.id}`, "PUT", false, true);
+  const auth = useAuthUser();
+  const { fetch, error } = useFetch(
+    `users/${auth().user.id}`,
+    "PUT",
+    false,
+    true
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +24,7 @@ function ProfileModal({ setOpenModal, invalidate, user }) {
       lastname: lastnameRef.current.value || user.lastname,
       email: emailRef.current.value || user.email,
       password: passwordRef.current.value || null,
-      id: auth.id,
+      id: auth().user.id,
     });
     console.error(error);
     if (res) {

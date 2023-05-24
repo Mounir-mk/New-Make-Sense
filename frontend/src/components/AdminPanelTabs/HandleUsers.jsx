@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuthUser } from "react-auth-kit";
 import Loader from "../Loader";
-import { AuthContext } from "../../services/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./toast.css";
 import useFetch from "../../hooks/useFetch";
@@ -30,7 +30,7 @@ function HandleUsers() {
       theme: "dark",
     });
 
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const [users, setUsers] = useState([]);
   const [data, setData] = useState({});
 
@@ -109,7 +109,7 @@ function HandleUsers() {
         </thead>
         <tbody>
           {users
-            .filter((user) => user.id !== auth.id)
+            .filter((user) => user.id !== auth().user.id)
             .map((user) => (
               <tr key={user.id} className="hover:bg-gray-200">
                 <td className="border-2 border-black px-4 py-2">{user.id}</td>

@@ -1,16 +1,28 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useContext } from "react";
-import { AuthContext } from "./AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useIsAuthenticated } from "react-auth-kit";
+import PropTypes from "prop-types";
 
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
+  const location = useLocation();
+  const isAuthenticated = useIsAuthenticated();
+
   useEffect(() => {
-    if (!auth.isAuthenticated) {
-      navigate("/login");
+    if (!isAuthenticated()) {
+      navigate("/login", { state: { from: location } });
     }
-  }, [auth.isAuthenticated, navigate]);
+  }, [isAuthenticated(), navigate, location]);
+
+  if (!isAuthenticated()) {
+    return null;
+  }
+
   return children;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default ProtectedRoute;

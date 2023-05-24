@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
+import useLogout from "../hooks/useLogout";
 import logo from "../assets/logo_makesense.png";
 import homeIcon from "../assets/home.svg";
 import calendarIcon from "../assets/calendar.svg";
@@ -9,40 +10,32 @@ import plusIcon from "../assets/plus.svg";
 import user from "../assets/user.svg";
 import logout from "../assets/log-out.svg";
 import adminLogo from "../assets/admin-panel.png";
-import { AuthContext } from "../services/AuthContext";
 import Loader from "./Loader";
+import useFetch from "../hooks/useFetch";
 
 function Header() {
-  const [userProfilePicture, setUserProfilePicture] = useState();
-  const { auth, setAuth } = useContext(AuthContext);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [loading, setLoading] = useState(true);
-  const handleLogout = () => {
-    setAuth((oldAuth) => ({
-      ...oldAuth,
-      isAuthenticated: false,
-      token: null,
-    }));
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const auth = useAuthUser();
+  const { data: userData, loading } = useFetch(
+    `users/${auth().user.id}`,
+    "GET",
+    true,
+    true
+  );
+  const userProfilePicture = userData?.image_url;
+
+  const { logout: logoutFn } = useLogout();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logoutFn();
   };
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await axios.get(
-        `http://localhost:5000/users/${auth.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      );
-      setUserProfilePicture(response.data.image_url);
-      setLoading(false);
-    };
-    fetchUser();
-  }, []);
 
   if (loading) {
     return <Loader />;
   }
+
   return (
     <header className="w-full flex items-center justify-around border-solid border-b-2 h-16 bg-white">
       <NavLink to="/">
@@ -51,7 +44,7 @@ function Header() {
       <nav>
         <ul className="flex gap-4">
           <li>
-            {auth.role === "admin" && (
+            {auth().user.role === "admin" && (
               <NavLink
                 to="admin"
                 className="group border rounded-full h-8 w-8 hidden md:flex items-center justify-center relative"
@@ -64,7 +57,7 @@ function Header() {
             )}
           </li>
           <li>
-            {auth.role !== "visitor" && (
+            {auth().user.role !== "visitor" && (
               <NavLink
                 to="/decisions/create"
                 className="group border rounded-full h-8 w-8 flex items-center justify-center relative"
@@ -87,7 +80,7 @@ function Header() {
               </span>
             </NavLink>
           </li>
-          {auth.role !== "visitor" && (
+          {auth().user.role !== "visitor" && (
             <li className="flex flex-col hover:underline justify-center">
               <NavLink
                 to="/mydecisions"
@@ -112,13 +105,9 @@ function Header() {
             >
               <img src={menuIcon} alt="Menu" className="max-h-4 w-auto" />
               <img
-                src={
-                  userProfilePicture
-                    ? `${
-                        import.meta.env.VITE_BACKEND_URL
-                      }/${userProfilePicture}`
-                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-                }
+                src={`${
+                  import.meta.env.VITE_BACKEND_URL
+                }/${userProfilePicture}`}
                 alt="User"
                 className="h-8 w-8 rounded-full object-cover"
               />
@@ -163,4 +152,19 @@ function Header() {
   );
 }
 
-export default Header;
+function RenderHeader() {
+  const location = useLocation();
+  const isAuthenticated = useIsAuthenticated();
+  const headerDisplay =
+    isAuthenticated() &&
+    !(location.pathname === "/admin") &&
+    !(location.pathname === "/login") &&
+    !(location.pathname === "/register");
+
+  if (!headerDisplay) {
+    return null;
+  }
+  return <Header />;
+}
+
+export { RenderHeader, Header };

@@ -1,18 +1,18 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../services/AuthContext";
+import React, { useState } from "react";
+import { useAuthUser } from "react-auth-kit";
 import ProfileModal from "../components/ProfileModal";
 import Loader from "../components/Loader";
 import useFetch from "../hooks/useFetch";
 
 function ProfilePage() {
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const [openModal, setOpenModal] = useState(false);
 
   const {
     data: user,
     loading,
     invalidate,
-  } = useFetch(`users/${auth.id}`, "GET", true, true);
+  } = useFetch(`users/${auth().user.id}`, "GET", true, true);
 
   const changeRoleName = (role) => {
     if (role === "admin") {

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../services/AuthContext";
+import { useAuthUser } from "react-auth-kit";
 import Editor from "./Editor/Editor";
 import useFetch from "../hooks/useFetch";
 
@@ -13,7 +13,7 @@ function InputDecisionForm({
   redirectButton,
   usersConcerned,
 }) {
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
@@ -27,7 +27,7 @@ function InputDecisionForm({
       impact: createDecision.impacts,
       risk: createDecision.risks,
       advantage: createDecision.advantages,
-      userId: auth.id,
+      userId: auth().user.id,
       users: usersConcerned,
     });
     navigate(`/decision/${res.data}`);

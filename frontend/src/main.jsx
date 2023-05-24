@@ -1,18 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContextProvider } from "./services/AuthContext";
-
+import { AuthProvider } from "react-auth-kit";
+import refreshApi from "./services/refreshApi";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthContextProvider>
+    <AuthProvider
+      authType="cookie"
+      authName="_auth"
+      cookieDomain={window.location.hostname}
+      refresh={refreshApi}
+    >
+      <BrowserRouter>
         <App />
-      </AuthContextProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );

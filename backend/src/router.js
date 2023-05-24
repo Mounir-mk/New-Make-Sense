@@ -7,7 +7,9 @@ const userControllers = require("./controllers/userControllers");
 const {
   hashPassword,
   verifyPassword,
+  refreshTokens,
   verifyToken,
+  logout,
 } = require("./services/auth");
 
 router.post(
@@ -15,6 +17,7 @@ router.post(
   userControllers.getUserByEmailWithPasswordAndPassToNext,
   verifyPassword
 );
+router.post("/users/logout", logout);
 router.post(
   "/users",
   userControllers.uploadFile,
@@ -22,6 +25,8 @@ router.post(
   hashPassword,
   userControllers.add
 );
+
+router.post("/token", refreshTokens);
 
 router.use(verifyToken);
 

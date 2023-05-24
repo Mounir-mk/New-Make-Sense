@@ -1,18 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useContext } from "react";
-import { AuthContext } from "./AuthContext";
+import { useEffect } from "react";
+import { useIsAuthenticated, useAuthUser } from "react-auth-kit";
+import PropTypes from "prop-types";
 
 function AdminRoute({ children }) {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
+  const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthUser();
+  const isAdmin = auth().user.role === "admin";
   useEffect(() => {
-    if (!auth.isAuthenticated) {
+    if (!isAuthenticated()) {
       navigate("/login");
-    } else if (auth.role !== "admin") {
+    } else if (!isAdmin) {
       navigate("/");
     }
-  }, [auth.isAuthenticated, auth.role, navigate]);
+  }, [isAuthenticated(), navigate, auth()]);
+
+  if (!isAuthenticated() || !isAdmin) {
+    return null;
+  }
+
   return children;
 }
+
+AdminRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default AdminRoute;
