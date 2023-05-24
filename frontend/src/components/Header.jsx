@@ -9,7 +9,7 @@ import plusIcon from "../assets/plus.svg";
 import user from "../assets/user.svg";
 import logout from "../assets/log-out.svg";
 import adminLogo from "../assets/admin-panel.png";
-import { AuthContext } from "../_services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 import Loader from "./Loader";
 
 function Header() {

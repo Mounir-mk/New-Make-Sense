@@ -74,17 +74,37 @@ const browseAndCountDecisions = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-  const dataToUpdate = req.body;
-  const user = await prisma.user.update({
-    where: {
-      id: parseInt(req.params.id, 10),
-    },
-    data: dataToUpdate,
-  });
-  if (user) {
-    res.status(204).json({ message: "User updated" });
-  } else {
-    res.status(404).json({ message: "User not updated" });
+  try {
+    const data = {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+    };
+
+    if (!req.body.hashedPassword) {
+      const oldHashedPassword = await prisma.user.findUnique({
+        where: {
+          id: parseInt(req.params.id, 10),
+        },
+        select: {
+          hashed_password: true,
+        },
+      });
+      data.hashed_password = oldHashedPassword.hashed_password;
+    } else {
+      data.hashed_password = req.body.hashedPassword;
+    }
+
+    const user = await prisma.user.update({
+      where: {
+        id: parseInt(req.params.id, 10),
+      },
+      data,
+    });
+
+    res.status(204).json({ message: "User updated", user });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred" });
   }
 };
 

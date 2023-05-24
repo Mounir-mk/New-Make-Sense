@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../_services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 import loginImage from "../assets/login_image.jpg";
 
 function Login() {

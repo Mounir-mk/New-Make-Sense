@@ -2,24 +2,30 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const hashPassword = (req, res, next) => {
-  const hashOptions = {
-    type: argon2.argon2id,
-    memoryCost: 2 ** 16,
-    parallelism: 1,
-    timeCost: 5,
-  };
-  argon2
-    .hash(req.body.password, hashOptions)
-    .then((hashedPassword) => {
-      req.body.hashedPassword = hashedPassword;
-      delete req.body.password;
-      next();
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ message: "Internal server error" });
-    });
+const hashPassword = async (req, res, next) => {
+  try {
+    if (!req.body.password) {
+      return next();
+    }
+
+    const hashOptions = {
+      type: argon2.argon2id,
+      memoryCost: 2 ** 16,
+      parallelism: 1,
+      timeCost: 5,
+    };
+
+    const hashedPassword = await argon2.hash(req.body.password, hashOptions);
+    req.body.hashedPassword = hashedPassword;
+    delete req.body.password;
+
+    return next(); // Utilisation de `return` pour terminer l'exécution du middleware et passer au middleware ou au contrôleur suivant
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+
+  return null;
 };
 
 const verifyPassword = (req, res) => {

@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../_services/AuthContext";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../services/AuthContext";
 import ProfileModal from "../components/ProfileModal";
+import Loader from "../components/Loader";
+import useFetch from "../hooks/useFetch";
 
 function ProfilePage() {
   const { auth } = useContext(AuthContext);
-  const [modificationDone, setModificationDone] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${auth.token}`,
-    },
-  };
-  const [user, setUser] = useState({});
 
-  const chnangeRoleName = (role) => {
+  const {
+    data: user,
+    loading,
+    invalidate,
+  } = useFetch(`users/${auth.id}`, "GET", true, true);
+
+  const changeRoleName = (role) => {
     if (role === "admin") {
       return "Administrateur";
     }
@@ -27,16 +27,9 @@ function ProfilePage() {
     return false;
   };
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/users/${auth.id}`, config)
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [modificationDone]);
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <main className="flex items-center justify-center w-full my-6 md:mt-20 ">
@@ -51,7 +44,7 @@ function ProfilePage() {
           <p className="text-xl text-slate-900">Nom: {user.lastname}</p>
           <p className="text-xl text-slate-900">Email: {user.email}</p>
           <p className="text-xl text-slate-900">
-            Role: {chnangeRoleName(user.role)}
+            Role: {changeRoleName(user.role)}
           </p>
           <div>
             <button
@@ -66,11 +59,7 @@ function ProfilePage() {
         <div>
           <img
             className="w-64 h-64 rounded-full"
-            src={
-              user.image_url
-                ? `${import.meta.env.VITE_BACKEND_URL}/${user.image_url}`
-                : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-            }
+            src={`${import.meta.env.VITE_BACKEND_URL}/${user.image_url}`}
             alt="profile"
           />
         </div>
@@ -78,7 +67,8 @@ function ProfilePage() {
       {openModal && (
         <ProfileModal
           setOpenModal={setOpenModal}
-          setModificationDone={setModificationDone}
+          invalidate={invalidate}
+          user={user}
         />
       )}
     </main>

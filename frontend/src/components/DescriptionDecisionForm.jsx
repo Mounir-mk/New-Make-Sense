@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
 import plusIcon from "../assets/plus.svg";
-import { AuthContext } from "../_services/AuthContext";
-import { minDate } from "../services/dateFunctions";
+import { minDate } from "../utils/dateFunctions";
 import Editor from "./Editor/Editor";
+import useFetch from "../hooks/useFetch";
+import Loader from "./Loader";
+import checkUsers from "../utils/checkUsers";
 
 function DescriptionDecisionForm({
   createDecision,
@@ -17,74 +18,27 @@ function DescriptionDecisionForm({
   setUsersConcerned,
   usersConcerned,
 }) {
-  const { auth } = useContext(AuthContext);
-  const [myUsers, setMyUsers] = useState([]);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/users`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((res) => {
-        setMyUsers(res.data);
-      });
-  }, []);
+  const { data: myUsers, loading } = useFetch(`users`, "GET", true, true);
 
-  function checkUsers(username, concerned) {
-    const [firstname, lastname] = username.split(" ");
-    const userFound = myUsers.find(
-      (user) => user.firstname === firstname && user.lastname === lastname
-    );
-    if (userFound && concerned === "impacted") {
-      if (createDecision.impacted.includes(username)) {
-        setMessage(`${username} est dejà dans les impactés`);
-      } else {
-        setCreateDecision({
-          ...createDecision,
-          impacted: [...createDecision.impacted, inputImpacted],
-        });
-        setUsersConcerned([
-          ...usersConcerned,
-          {
-            user_status: "impacted",
-            user_id: userFound.id,
-            decision_id: 1,
-          },
-        ]);
-        setInputImpacted("");
-        setMessage("");
-      }
-    } else if (userFound && concerned === "expert") {
-      if (createDecision.experts.includes(username)) {
-        setMessage(`${username} est dejà dans les experts`);
-      } else {
-        setCreateDecision({
-          ...createDecision,
-          experts: [...createDecision.experts, inputExpert],
-        });
-        setUsersConcerned([
-          ...usersConcerned,
-          {
-            user_status: "experts",
-            user_id: userFound.id,
-            decision_id: 1,
-          },
-        ]);
-        setInputExpert("");
-        setMessage("");
-      }
-    } else {
-      setInputExpert("");
-      if (username.length > 0) {
-        setMessage(`${username} n'existe pas !`);
-      } else {
-        setMessage(`Veuillez choisir une personne dans la liste !`);
-      }
-    }
+  if (loading) {
+    return <Loader />;
   }
+
+  const checkUsersArgs = {
+    myUsers,
+    createDecision,
+    setCreateDecision,
+    usersConcerned,
+    setUsersConcerned,
+    inputImpacted,
+    setInputImpacted,
+    inputExpert,
+    setInputExpert,
+    setMessage,
+  };
+
   return (
     <section className="w-full flex-1 flex gap-4 flex-col md:flex-row">
       <div id="container" className="flex flex-col px-4">
@@ -145,7 +99,7 @@ function DescriptionDecisionForm({
                 onChange={(event) => setInputImpacted(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
-                    checkUsers(inputImpacted, "impacted");
+                    checkUsers(inputImpacted, "impacted", checkUsersArgs);
                   }
                 }}
               />
@@ -153,7 +107,7 @@ function DescriptionDecisionForm({
                 className="absolute right-0 h-full"
                 type="button"
                 onClick={() => {
-                  checkUsers(inputImpacted, "impacted");
+                  checkUsers(inputImpacted, "impacted", checkUsersArgs);
                 }}
               >
                 <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />
@@ -196,7 +150,7 @@ function DescriptionDecisionForm({
                 onChange={(event) => setInputExpert(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
-                    checkUsers(inputExpert, "expert");
+                    checkUsers(inputExpert, "expert", checkUsersArgs);
                   }
                 }}
               />
@@ -204,7 +158,7 @@ function DescriptionDecisionForm({
                 className="absolute right-0 h-full"
                 type="button"
                 onClick={() => {
-                  checkUsers(inputExpert, "expert");
+                  checkUsers(inputExpert, "expert", checkUsersArgs);
                 }}
               >
                 <img src={plusIcon} alt="Plus" className="max-h-6 w-auto" />

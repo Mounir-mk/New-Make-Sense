@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../../_services/AuthContext";
+import { AuthContext } from "../../services/AuthContext";
 import Loader from "../Loader";
 
 function StatsTab() {
@@ -10,7 +10,7 @@ function StatsTab() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/decisions", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/decisions`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },

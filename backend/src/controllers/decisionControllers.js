@@ -8,17 +8,42 @@ const browse = async (req, res) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   const userRole = decodedToken.role;
   const userId = decodedToken.id;
-  const mutateDecisions = (decisions) => {
-    decisions.map((decision) => {
-      const decisionToMutate = decision;
-      decisionToMutate.firstname = decision.user.firstname;
-      decisionToMutate.lastname = decision.user.lastname;
-      decisionToMutate.image_url = decision.user.image_url;
-      delete decisionToMutate.user;
-      return null;
-    });
-    return decisions;
+
+  const checkDecisionStatus = (decisions) => {
+    return Promise.all(
+      decisions.map(async (decision) => {
+        const decisionCopy = { ...decision };
+        if (decisionCopy.status === "in_progress") {
+          const today = new Date();
+          const deadline = new Date(decisionCopy.deadline);
+          if (today > deadline) {
+            const newDecision = await prisma.decision.update({
+              where: {
+                id: decisionCopy.id,
+              },
+              data: {
+                status: "finished",
+              },
+            });
+            decisionCopy.status = newDecision.status;
+          }
+        }
+        return decisionCopy;
+      })
+    );
   };
+
+  const mutateDecisions = (decisions) => {
+    return decisions.map((decision) => {
+      const decisionCopy = { ...decision };
+      decisionCopy.firstname = decisionCopy.user.firstname;
+      decisionCopy.lastname = decisionCopy.user.lastname;
+      decisionCopy.image_url = decisionCopy.user.image_url;
+      delete decisionCopy.user;
+      return decisionCopy;
+    });
+  };
+
   const options = {
     select: {
       id: true,
@@ -36,26 +61,30 @@ const browse = async (req, res) => {
       },
     },
   };
-  if (userRole !== "visitor") {
-    const decisions = await prisma.decision.findMany({
-      ...options,
-    });
-    mutateDecisions(decisions);
-    res.send(decisions);
-  } else if (userRole === "visitor") {
-    const decisions = await prisma.decision.findMany({
-      ...options,
-      where: {
-        concerned: {
-          some: {
-            user_id: userId,
+
+  const findDecisions = async (role, opts, id) => {
+    if (role !== "visitor") {
+      return prisma.decision.findMany(opts);
+    }
+    if (role === "visitor") {
+      return prisma.decision.findMany({
+        ...opts,
+        where: {
+          concerned: {
+            some: {
+              user_id: id,
+            },
           },
         },
-      },
-    });
-    mutateDecisions(decisions);
-    res.send(decisions);
-  }
+      });
+    }
+    return Promise.resolve();
+  };
+
+  const decisions = await findDecisions(userRole, options, userId);
+  const decisionsWithStatus = await checkDecisionStatus(decisions);
+  const decisionsMutated = mutateDecisions(decisionsWithStatus);
+  res.status(200).json(decisionsMutated);
 };
 
 const read = async (req, res) => {
@@ -151,12 +180,10 @@ const edit = async (req, res) => {
     where: {
       id: parseInt(req.params.id, 10),
     },
-    data: {
-      data,
-    },
+    data,
   });
 
-  res.status(204).json("Decision updated", decision);
+  res.status(204).json({ message: "Decision updated", decision });
 };
 
 const add = async (req, res) => {

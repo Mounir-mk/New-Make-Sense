@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { AuthContext } from "./_services/AuthContext";
+import { AuthContext } from "./services/AuthContext";
 import CreateDecision from "./pages/CreateDecision";
 import Decision from "./pages/Decision";
 import Header from "./components/Header";
@@ -9,8 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AdminPanel from "./pages/AdminPanel";
-import ProtectedRoute from "./_services/ProtectedRoute";
-import AdminRoute from "./_services/AdminRoute";
+import ProtectedRoute from "./services/ProtectedRoute";
+import AdminRoute from "./services/AdminRoute";
 import ProfilePage from "./pages/ProfilePage";
 import MyDecisionsPage from "./pages/MyDecisionsPage";
 

@@ -41,7 +41,7 @@ router.post(
 router.get("/users/decisions", userControllers.browseAndCountDecisions);
 router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
-router.put("/users/:id", userControllers.edit);
+router.put("/users/:id", hashPassword, userControllers.edit);
 router.delete("/users/:id", userControllers.destroy);
 
 module.exports = router;
