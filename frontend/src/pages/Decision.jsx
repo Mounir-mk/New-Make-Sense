@@ -1,28 +1,25 @@
-import { useState, useEffect, useContext, useRef } from "react";
-import axios from "axios";
+import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useAuthUser } from "react-auth-kit";
 import "rsuite/dist/rsuite.min.css";
 import DescriptionDecisionDetails from "../components/DescriptionDecisionDetails";
 import Timeline from "../components/Timeline";
 import Comment from "../components/Comment";
-import { AuthContext } from "../_services/AuthContext";
 import ConcernedUsers from "../components/ConcernedUsers";
-import { getDate } from "../services/dateFunctions";
+import { getDate } from "../utils/dateFunctions";
 import Loader from "../components/Loader";
+import useFetch from "../hooks/useFetch";
 
 export default function Decision() {
   const contentDecision = useRef("");
-  const [commentAdded, setCommentAdded] = useState(false);
   const contentFinalDecision = useRef("");
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const { id } = useParams();
   const commentRef = useRef();
   const [middleDecisionForm, setMiddleDecisionForm] = useState(false);
   const [middleDecisionIsCreated, setMiddleDecisionIsCreated] = useState(false);
   const [finalDecisionForm, setFinalDecisionForm] = useState(false);
   const [finalDecisionIsCreated, setFinalDecisionIsCreated] = useState(false);
-  const [content, setContent] = useState();
-  const [loading, setLoading] = useState(true);
 
   // this function will toggle or not the middle decision form when activated. (Used on "create new decision" button)
   function toggleMiddleDecisionForm() {
@@ -31,52 +28,29 @@ export default function Decision() {
   function toggleFinalDecisionForm() {
     setFinalDecisionForm(!finalDecisionForm);
   }
-  const handleCommentSubmit = () => {
-    axios
-      .post(
-        `http://localhost:5000/decisions/${id}/comments`,
-        {
-          content: commentRef.current.value,
-          userId: auth.id,
-          decisionId: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      )
-      .then(() => {
-        commentRef.current.value = "";
-        setCommentAdded(!commentAdded);
-      })
-      .catch((err) => console.error(err));
-  };
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        };
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/decisions/${id}`,
-          config
-        );
-        setContent(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getData();
-  }, [id, commentAdded]);
+  const {
+    data: content,
+    loading,
+    invalidate: invalidateContent,
+  } = useFetch(`decisions/${parseInt(id, 10)}`, "GET", true, true);
+
+  const { fetch } = useFetch(`decisions/${id}/comments`, "POST", false, true);
+
+  const handleCommentSubmit = () => {
+    fetch({
+      content: commentRef.current.value,
+      userId: auth().user.id,
+      decisionId: id,
+    });
+    commentRef.current.value = "";
+    invalidateContent();
+  };
 
   if (loading) {
     return <Loader />;
   }
+
   const { statusStep } = getDate(content.publish_date, content.deadline);
   return (
     <div className="flex flex-col md:flex-row md:w-2/3 mx-auto w-full">
@@ -89,11 +63,7 @@ export default function Decision() {
           className="flex items-center gap-2 mx-2 md:mx-0 mb-4"
         >
           <img
-            src={
-              content.image_url
-                ? `${import.meta.env.VITE_BACKEND_URL}/${content.image_url}`
-                : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-            }
+            src={`${import.meta.env.VITE_BACKEND_URL}/${content.image_url}`}
             alt="author"
             className="w-12 h-12 rounded-full"
           />
@@ -212,13 +182,9 @@ export default function Decision() {
             .map((oneOfComment) => (
               <Comment
                 key={oneOfComment.id}
-                icon={
+                icon={`${import.meta.env.VITE_BACKEND_URL}/${
                   oneOfComment.image_url
-                    ? `${import.meta.env.VITE_BACKEND_URL}/${
-                        oneOfComment.image_url
-                      }`
-                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-                }
+                }`}
                 content={oneOfComment.content}
                 date={oneOfComment.date}
                 author={`${oneOfComment.firstname} ${oneOfComment.lastname}`}

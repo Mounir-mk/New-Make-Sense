@@ -1,35 +1,13 @@
-import axios from "axios";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../Loader";
-import { AuthContext } from "../../_services/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./toast.css";
+import useFetch from "../../hooks/useFetch";
 
 function HandleDecisions() {
-  const [loading, setLoading] = useState(true);
-  //   const [data, setData] = useState({});
-  const { auth } = useContext(AuthContext);
-  const [decisions, setDecisions] = useState([]);
   const [data, setData] = useState({});
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${auth.token}`,
-    },
-  };
-
-  const getDecisions = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/decisions", config);
-      setDecisions(
-        res.data.map((decision) => ({ ...decision, isStatusUpdated: false }))
-      );
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [decisions, setDecisions] = useState([]);
 
   const notifyUpdate = () =>
     toast("Statut de la décision modifié !", {
@@ -60,42 +38,48 @@ function HandleDecisions() {
     setData({ ...data, [decision.id]: event.target.value });
   };
 
-  const handleUpdateClick = (decision) => {
-    // Envoyer une requête axios pour mettre à jour le rôle de l'utilisateur dans la base de données
-    axios
-      .put(
-        `http://localhost:5000/decisions/${decision.id}`,
-        { status: data[decision.id] },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      )
-      .then(() => {
-        notifyUpdate();
-        getDecisions();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const handleDeleteClick = (decision) => {
-    axios
-      .delete(`http://localhost:5000/decisions/${decision.id}`, config)
-      .then(() => {
-        notifyDelete();
-        getDecisions();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  // Utilisez le hook useFetch pour obtenir les décisions.
+  const {
+    data: decisionsData,
+    loading,
+    fetch: fetchDecisions,
+  } = useFetch("decisions", "GET", true, true);
 
   useEffect(() => {
-    getDecisions();
-  }, []);
+    if (decisionsData) {
+      setDecisions(
+        decisionsData.map((decision) => ({
+          ...decision,
+          isStatusUpdated: false,
+        }))
+      );
+    }
+  }, [decisionsData]);
+
+  // Utilisez le hook useFetch pour mettre à jour une décision.
+  const { fetch: updateDecision } = useFetch("", "PUT", false, true);
+
+  const handleUpdateClick = (decision) => {
+    updateDecision(
+      {
+        status: data[decision.id],
+      },
+      `decisions/${decision.id}`
+    ).then(() => {
+      notifyUpdate();
+      fetchDecisions();
+    });
+  };
+
+  // Utilisez le hook useFetch pour supprimer une décision.
+  const { fetch: deleteDecision } = useFetch("", "DELETE", false, true);
+
+  const handleDeleteClick = (decision) => {
+    deleteDecision(null, `decisions/${decision.id}`).then(() => {
+      notifyDelete();
+      fetchDecisions();
+    });
+  };
 
   if (loading) {
     return <Loader />;
@@ -148,7 +132,9 @@ function HandleDecisions() {
                     }
                   }}
                   className={`${
-                    decision.isStatusUpdated ? "bg-green-200" : "bg-white"
+                    decision.isStatusUpdated || decision.status === "finished"
+                      ? "bg-green-200"
+                      : "bg-white"
                   } border-2 border-black px-4 py-2 rounded-lg`}
                 >
                   <option value="in_progress">En cours</option>

@@ -4,13 +4,20 @@ const router = express.Router();
 
 const decisionControllers = require("./controllers/decisionControllers");
 const userControllers = require("./controllers/userControllers");
-const { hashPassword, verifyPassword, verifyToken } = require("./service/auth");
+const {
+  hashPassword,
+  verifyPassword,
+  refreshTokens,
+  verifyToken,
+  logout,
+} = require("./services/auth");
 
 router.post(
   "/users/login",
   userControllers.getUserByEmailWithPasswordAndPassToNext,
   verifyPassword
 );
+router.post("/users/logout", logout);
 router.post(
   "/users",
   userControllers.uploadFile,
@@ -19,35 +26,27 @@ router.post(
   userControllers.add
 );
 
+router.post("/token", refreshTokens);
+
 router.use(verifyToken);
 
+// route concernings decisions
+
 router.get("/decisions", decisionControllers.browse);
-router.get(
-  "/decisions/:id",
-  decisionControllers.getConcernedByDecisionId,
-  decisionControllers.getComments,
-  decisionControllers.read
-);
+router.get("/decisions/:id", decisionControllers.read);
 router.put("/decisions/:id", decisionControllers.edit);
-router.post(
-  "/decisions",
-  decisionControllers.add,
-  decisionControllers.addConcerned
-);
-router.post("/decisions/:id/users", decisionControllers.addConcerned);
+router.post("/decisions", decisionControllers.add);
 router.delete("/decisions/:id", decisionControllers.destroy);
+router.post(
+  "/decisions/:decisionId/comments",
+  decisionControllers.addCommentToDecision
+);
 
 // route concernings users
 router.get("/users/decisions", userControllers.browseAndCountDecisions);
 router.get("/users", userControllers.browse);
 router.get("/users/:id", userControllers.read);
-router.put("/users/:id", userControllers.edit);
+router.put("/users/:id", hashPassword, userControllers.edit);
 router.delete("/users/:id", userControllers.destroy);
-
-router.get("/decisions/:decisionId/comments", decisionControllers.getComments);
-router.post(
-  "/decisions/:decisionId/comments",
-  decisionControllers.addCommentToDecision
-);
 
 module.exports = router;

@@ -1,16 +1,12 @@
-import axios from "axios";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuthUser } from "react-auth-kit";
 import Loader from "../Loader";
-import { AuthContext } from "../../_services/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./toast.css";
+import useFetch from "../../hooks/useFetch";
 
 function HandleUsers() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
-  const { auth } = useContext(AuthContext);
-  const [users, setUsers] = useState([]);
   const notifyUpdate = () =>
     toast("Rôle utilisateur modifié !", {
       position: "top-right",
@@ -33,66 +29,60 @@ function HandleUsers() {
       progress: undefined,
       theme: "dark",
     });
-  const config = {
-    headers: {
-      Authorization: `Bearer ${auth.token}`,
-    },
-  };
-  const getUsersInformations = async () => {
-    try {
-      const res = await axios.get(
-        "http://localhost:5000/users/decisions",
-        config
-      );
-      console.warn(res.data);
-      setUsers(res.data.map((user) => ({ ...user, isRoleUpdated: false })));
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
+
+  const auth = useAuthUser();
+  const [users, setUsers] = useState([]);
+  const [data, setData] = useState({});
+
+  const {
+    data: usersData,
+    loading,
+    fetch: fetchUsers,
+  } = useFetch("users/decisions", "GET", true, true);
+
+  const { error: updateError, fetch: fetchUpdateUser } = useFetch(
+    "",
+    "PUT",
+    false,
+    true
+  );
+
+  const { error: deleteError, fetch: fetchDeleteUser } = useFetch(
+    "",
+    "DELETE",
+    false,
+    true
+  );
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(usersData.map((user) => ({ ...user, isRoleUpdated: false })));
     }
-  };
+  }, [usersData]);
 
   const handleRoleChange = (event, user) => {
-    // Mettre à jour l'état local de la balise select
     setData({ ...data, [user.id]: event.target.value });
   };
 
-  const handleUpdateClick = (user) => {
-    // Envoyer une requête axios pour mettre à jour le rôle de l'utilisateur dans la base de données
-    axios
-      .put(
-        `http://localhost:5000/users/${user.id}`,
-        { role: data[user.id] },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      )
-      .then(() => {
-        notifyUpdate();
-        getUsersInformations();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const handleUpdateClick = async (user) => {
+    const updateUserEndpoint = `users/${user.id}`;
+    await fetchUpdateUser({ role: data[user.id] }, updateUserEndpoint);
+    if (!updateError) {
+      notifyUpdate();
+      await fetchUsers();
+    }
   };
 
-  const handleDeleteClick = (user) => {
-    axios
-      .delete(`http://localhost:5000/users/${user.id}`, config)
-      .then(() => {
-        notifyDelete();
-        getUsersInformations();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const handleDeleteClick = async (user) => {
+    const deleteUserEndpoint = `users/${user.id}`;
+    await fetchDeleteUser(null, deleteUserEndpoint);
+    if (!deleteError) {
+      notifyDelete();
+      await fetchUsers();
+    } else {
+      console.error(deleteError);
+    }
   };
-
-  useEffect(() => {
-    getUsersInformations();
-  }, []);
 
   if (loading) {
     return <Loader />;
@@ -119,7 +109,7 @@ function HandleUsers() {
         </thead>
         <tbody>
           {users
-            .filter((user) => user.role !== "admin")
+            .filter((user) => user.id !== auth().user.id)
             .map((user) => (
               <tr key={user.id} className="hover:bg-gray-200">
                 <td className="border-2 border-black px-4 py-2">{user.id}</td>

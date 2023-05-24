@@ -9,13 +9,9 @@ function ConcernedUsers({ status, concerned }) {
             <li key={oneOfConcerned.id}>
               <img
                 className="w-12 h-12 rounded-full"
-                src={
+                src={`${import.meta.env.VITE_BACKEND_URL}/${
                   oneOfConcerned.image_url
-                    ? `${import.meta.env.VITE_BACKEND_URL}/${
-                        oneOfConcerned.image_url
-                      }`
-                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-                }
+                }`}
                 alt="tab"
               />
             </li>

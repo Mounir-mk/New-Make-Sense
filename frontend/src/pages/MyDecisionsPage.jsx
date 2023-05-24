@@ -1,32 +1,16 @@
-import { useEffect, useState, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../_services/AuthContext";
+import { useAuthUser } from "react-auth-kit";
+import useFetch from "../hooks/useFetch";
 import DashboardCard from "../components/DecisionCard";
 import Loader from "../components/Loader";
 
 function MyDecisionsPage() {
-  const { auth } = useContext(AuthContext);
-  const [decisions, setDecisions] = useState();
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/decisions", {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((response) => {
-        setDecisions(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  const auth = useAuthUser();
+  const { data: decisions, loading } = useFetch("decisions", "GET", true, true);
 
   if (loading) {
     return <Loader />;
   }
+
   return (
     <main className="flex flex-col items-center justify-center">
       <section id="mydecisions" className="w-2/3 mt-24 mb-20">
@@ -35,17 +19,13 @@ function MyDecisionsPage() {
         </h1>
         <div className="flex flex-col md:flex-row gap-4 flex-wrap">
           {decisions
-            .filter((decision) => decision.id === auth.id)
+            .filter((decision) => decision.id === auth().user.id)
             .map((decision) => (
               <DashboardCard
                 key={decision.id}
-                avatar={
+                avatar={`${import.meta.env.VITE_BACKEND_URL}/${
                   decision.image_url
-                    ? `${import.meta.env.VITE_BACKEND_URL}/${
-                        decision.image_url
-                      }`
-                    : `${import.meta.env.VITE_BACKEND_URL}/default.png`
-                }
+                }`}
                 id={decision.id}
                 decisionTitle={decision.title}
                 author={`${decision.firstname} ${decision.lastname}`}

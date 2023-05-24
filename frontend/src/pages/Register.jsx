@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import RegisterForm from "../components/RegisterForm";
 import loginImage from "../assets/login_image.jpg";
 import ProfilePicture from "../components/ProfilePicture";
+import checkRegisterFormErrors from "../utils/checkRegisterFormErrors";
+import useFetch from "../hooks/useFetch";
+import useLogin from "../hooks/useLogin";
 
 function Register() {
-  const navigate = useNavigate();
   const firstnameRef = useRef();
   const lastnameRef = useRef();
   const emailRef = useRef();
@@ -18,61 +18,34 @@ function Register() {
     password: false,
     passwordConfirm: false,
   });
+  const { login } = useLogin();
+  const { fetch: createAccount } = useFetch(
+    "users",
+    "POST",
+    false,
+    false,
+    "multipart/form-data"
+  );
   const [errors, setErrors] = useState({});
   const handleSubmit = async () => {
     const userInformations = {
+      avatar: avatarRef.current.files[0],
       firstname: firstnameRef.current.value,
       lastname: lastnameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
     const newErrors = {};
-    if (!userInformations.firstname) {
-      newErrors.firstname = "Le prénom est obligatoire";
-    } else if (userInformations.firstname.length < 2) {
-      newErrors.firstname = "Le prénom doit faire au moins 2 caractères";
-    }
-    if (!userInformations.lastname) {
-      newErrors.lastname = "Le nom est obligatoire";
-    } else if (userInformations.lastname.length < 2) {
-      newErrors.lastname = "Le nom doit faire au moins 2 caractères";
-    }
-    if (!userInformations.email) {
-      newErrors.email = "L'email est obligatoire";
-    } else if (!/\S+@\S+\.\S+/.test(userInformations.email)) {
-      newErrors.email = "Email is invalid";
-    }
-    if (!userInformations.password.length) {
-      newErrors.password = "Le mot de passe est obligatoire";
-    } else if (userInformations.password.length < 8) {
-      newErrors.password = "Le mot de passe doit faire au moins 8 caractères";
-    }
-    if (userInformations.password !== passwordConfirmRef.current.value) {
-      newErrors.passwordConfirm = "Les mots de passe ne correspondent pas";
-    }
+    checkRegisterFormErrors(userInformations, newErrors);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      // Make a POST request to the server to register the user
       const formData = new FormData();
-      formData.append("avatar", avatarRef.current.files[0]);
-      formData.append("firstname", firstnameRef.current.value);
-      formData.append("lastname", lastnameRef.current.value);
-      formData.append("email", emailRef.current.value);
-      formData.append("password", passwordRef.current.value);
-
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      await axios
-        .post("http://localhost:5000/users", formData, config)
-        .then(() => {
-          navigate("/login");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const fields = ["avatar", "firstname", "lastname", "email", "password"];
+      fields.forEach((field) => {
+        formData.append(field, userInformations[field]);
+      });
+      await createAccount(formData);
+      await login(userInformations.email, userInformations.password);
     }
   };
 

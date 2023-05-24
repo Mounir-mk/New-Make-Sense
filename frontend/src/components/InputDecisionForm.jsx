@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { AuthContext } from "../_services/AuthContext";
+import { useAuthUser } from "react-auth-kit";
 import Editor from "./Editor/Editor";
+import useFetch from "../hooks/useFetch";
 
 function InputDecisionForm({
   createDecision,
@@ -13,30 +13,24 @@ function InputDecisionForm({
   redirectButton,
   usersConcerned,
 }) {
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
+  const { fetch } = useFetch("decisions", "POST", false, true);
+
   const postDecision = async () => {
-    const decision = {
+    const res = await fetch({
       title: createDecision.title,
       deadline: createDecision.date,
       start_content: createDecision.description,
       impact: createDecision.impacts,
       risk: createDecision.risks,
       advantage: createDecision.advantages,
-      userId: auth.id,
+      userId: auth().user.id,
       users: usersConcerned,
-    };
-    axios
-      .post("http://localhost:5000/decisions", decision, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      })
-      .then((res) => {
-        navigate(`/decision/${res.data}`);
-      });
+    });
+    navigate(`/decision/${res.data}`);
   };
 
   const changeStepName = () => {
@@ -48,7 +42,8 @@ function InputDecisionForm({
     }
     return stepName;
   };
-  function handleClick(step, decision, redirect) {
+  function handleClick(step, decision, redirect, e) {
+    e.preventDefault();
     if (step === "impacts" && decision.impacts.length < 1) {
       setMessage("Veuillez définir les impacts de la décision");
     } else if (step === "risks" && decision.risks.length < 1) {
@@ -83,7 +78,9 @@ function InputDecisionForm({
         <button
           type="submit"
           className="font-bold text-sm rounded-full px-3 py-1 md:text-xl whitespace-nowrap bg-[#9B084F] text-white ml-auto mt-4"
-          onClick={() => handleClick(stepName, createDecision, redirectButton)}
+          onClick={(e) =>
+            handleClick(stepName, createDecision, redirectButton, e)
+          }
         >
           {redirectButton ? "Créer la décision" : "Suivant"}
         </button>

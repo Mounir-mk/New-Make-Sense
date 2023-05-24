@@ -1,151 +1,245 @@
 const jwt = require("jsonwebtoken");
-const models = require("../models");
+const { PrismaClient } = require("@prisma/client");
 
-const browse = (req, res) => {
+const prisma = new PrismaClient();
+
+const browse = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   const userRole = decodedToken.role;
   const userId = decodedToken.id;
-  if (userRole !== "visitor") {
-    models.decision
-      .findAllDecisions()
-      .then(([rows]) => {
-        res.send(rows);
+
+  const checkDecisionStatus = (decisions) => {
+    return Promise.all(
+      decisions.map(async (decision) => {
+        const decisionCopy = { ...decision };
+        if (decisionCopy.status === "in_progress") {
+          const today = new Date();
+          const deadline = new Date(decisionCopy.deadline);
+          if (today > deadline) {
+            const newDecision = await prisma.decision.update({
+              where: {
+                id: decisionCopy.id,
+              },
+              data: {
+                status: "finished",
+              },
+            });
+            decisionCopy.status = newDecision.status;
+          }
+        }
+        return decisionCopy;
       })
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
+    );
+  };
+
+  const mutateDecisions = (decisions) => {
+    return decisions.map((decision) => {
+      const decisionCopy = { ...decision };
+      decisionCopy.firstname = decisionCopy.user.firstname;
+      decisionCopy.lastname = decisionCopy.user.lastname;
+      decisionCopy.image_url = decisionCopy.user.image_url;
+      delete decisionCopy.user;
+      return decisionCopy;
+    });
+  };
+
+  const options = {
+    select: {
+      id: true,
+      title: true,
+      publish_date: true,
+      deadline: true,
+      status: true,
+      user: {
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          image_url: true,
+        },
+      },
+    },
+  };
+
+  const findDecisions = async (role, opts, id) => {
+    if (role !== "visitor") {
+      return prisma.decision.findMany(opts);
+    }
+    if (role === "visitor") {
+      return prisma.decision.findMany({
+        ...opts,
+        where: {
+          concerned: {
+            some: {
+              user_id: id,
+            },
+          },
+        },
       });
-  } else if (userRole === "visitor") {
-    models.decision
-      .findOnlyDecisionsIfConcernedByIt(userId)
-      .then(([rows]) => {
-        res.send(rows);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-      });
-  }
+    }
+    return Promise.resolve();
+  };
+
+  const decisions = await findDecisions(userRole, options, userId);
+  const decisionsWithStatus = await checkDecisionStatus(decisions);
+  const decisionsMutated = mutateDecisions(decisionsWithStatus);
+  res.status(200).json(decisionsMutated);
 };
 
-const read = (req, res) => {
-  models.decision
-    .find(req.params.id)
-    .then(([rows]) => {
-      if (rows[0] == null) {
-        res.sendStatus(404);
-      } else {
-        const decision = rows[0];
-        decision.concerned = req.concerned;
-        decision.comment = req.comment;
-        res.send(decision);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const read = async (req, res) => {
+  const decision = await prisma.decision.findUnique({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+    select: {
+      id: true,
+      title: true,
+      publish_date: true,
+      deadline: true,
+      status: true,
+      start_content: true,
+      impact: true,
+      risk: true,
+      advantage: true,
+      middle_decision: true,
+      final_decision: true,
+      user: {
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          image_url: true,
+        },
+      },
+      concerned: {
+        select: {
+          user_status: true,
+          user: {
+            select: {
+              id: true,
+              firstname: true,
+              lastname: true,
+              image_url: true,
+            },
+          },
+        },
+      },
+      comment: {
+        select: {
+          id: true,
+          content: true,
+          user_id: true,
+          decision_id: true,
+          date: true,
+          user: {
+            select: {
+              id: true,
+              firstname: true,
+              lastname: true,
+              image_url: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  const decisionToMutate = { ...decision };
+  decisionToMutate.user_id = decision.user.id;
+  decisionToMutate.firstname = decision.user.firstname;
+  decisionToMutate.lastname = decision.user.lastname;
+  decisionToMutate.image_url = decision.user.image_url;
+  delete decisionToMutate.user;
+  decisionToMutate.concerned.map((concerned) => {
+    const concernedToMutate = concerned;
+    concernedToMutate.id = concerned.user.id;
+    concernedToMutate.firstname = concerned.user.firstname;
+    concernedToMutate.lastname = concerned.user.lastname;
+    concernedToMutate.image_url = concerned.user.image_url;
+    delete concernedToMutate.user;
+    return null;
+  });
+  decisionToMutate.comment.map((comment) => {
+    const commentToMutate = comment;
+    commentToMutate.user_id = comment.user.id;
+    commentToMutate.firstname = comment.user.firstname;
+    commentToMutate.lastname = comment.user.lastname;
+    commentToMutate.image_url = comment.user.image_url;
+    delete commentToMutate.user;
+    return null;
+  });
+
+  res.send(decisionToMutate);
 };
 
-const edit = (req, res) => {
-  const decision = req.body;
-  decision.id = parseInt(req.params.id, 10);
+const edit = async (req, res) => {
+  const data = req.body;
+  data.id = parseInt(req.params.id, 10);
 
-  models.decision
-    .update(decision)
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.sendStatus(404);
-      } else {
-        res.sendStatus(204);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+  const decision = await prisma.decision.update({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+    data,
+  });
+
+  res.status(204).json({ message: "Decision updated", decision });
 };
 
-const add = (req, res, next) => {
-  const decision = req.body;
-  models.decision
-    .insert(decision)
-    .then(([result]) => {
-      req.body.decisionId = result.insertId;
-      next();
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const add = async (req, res) => {
+  const {
+    title,
+    deadline,
+    // eslint-disable-next-line camelcase
+    start_content,
+    impact,
+    risk,
+    advantage,
+    userId,
+    users,
+  } = req.body;
+
+  const decision = await prisma.decision.create({
+    data: {
+      title,
+      deadline: new Date(deadline),
+      // eslint-disable-next-line camelcase
+      start_content,
+      impact,
+      risk,
+      advantage,
+      user_id: userId,
+      concerned: {
+        create: users.map((user) => ({
+          user_id: user.user_id,
+          user_status: user.user_status,
+        })),
+      },
+    },
+  });
+
+  res.status(201).json(decision.id);
 };
 
-const destroy = (req, res) => {
-  models.decision
-    .delete(req.params.id)
-    .then(([result]) => {
-      if (result.affectedRows === 0) {
-        res.sendStatus(404);
-      } else {
-        res.sendStatus(204);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const destroy = async (req, res) => {
+  await prisma.decision.delete({
+    where: {
+      id: parseInt(req.params.id, 10),
+    },
+  });
+  res.status(204).json("Decision deleted");
 };
 
-const addConcerned = (req, res) => {
-  const { users, decisionId } = req.body;
-  models.decision
-    .insertConcerned(users, decisionId)
-    .then(() => {
-      res.status(201).json(decisionId);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-};
-const getComments = (req, res, next) => {
-  models.comment
-    .findCommentsByDecisionId(req.params.id)
-    .then(([rows]) => {
-      req.comment = rows;
-      next();
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-};
-
-const getConcernedByDecisionId = (req, res, next) => {
-  models.decision
-    .findConcernedsByDecisionId(req.params.id)
-    .then(([rows]) => {
-      req.concerned = rows;
-      next();
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-};
-
-const addCommentToDecision = (req, res) => {
-  const comment = req.body;
-  models.comment
-    .insert(comment)
-    .then(() => {
-      res.sendStatus(201);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const addCommentToDecision = async (req, res) => {
+  const { content, userId, decisionId } = req.body;
+  const comment = await prisma.comment.create({
+    data: {
+      content,
+      user_id: parseInt(userId, 10),
+      decision_id: parseInt(decisionId, 10),
+    },
+  });
+  res.status(201).json(comment.id);
 };
 
 module.exports = {
@@ -154,8 +248,5 @@ module.exports = {
   edit,
   add,
   destroy,
-  addConcerned,
-  getConcernedByDecisionId,
-  getComments,
   addCommentToDecision,
 };

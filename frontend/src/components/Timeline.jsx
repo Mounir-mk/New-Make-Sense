@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import { getDate } from "../services/dateFunctions";
-import { timelineTitles, timelineDates } from "../services/infosTimeline";
+import { getDate } from "../utils/dateFunctions";
+import { timelineTitles, timelineDates } from "../utils/infosTimeline";
 import TimelineSection from "./TimelineSection";
 
 function Timeline({ startDate, endDate }) {

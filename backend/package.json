@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "dev": "nodemon index.js",
-    "migrate": "node migrate.js",
+    "seed": "npx prisma db seed",
+    "migrate": "npx prisma db push --force-reset",
+    "studio": "npx prisma studio",
     "start": "node index.js",
     "lint": "echo '----- Checking Backend...' && npx prettier --debug-check . && eslint --ext .js . && echo '----- Done!'",
     "fix": "prettier --write . && eslint --fix --ext .js ."
@@ -14,13 +19,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.14.1",
     "argon2": "^0.30.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^2.3.3",
     "template-fullstack": "file:..",
     "uuid": "^9.0.0"
   },
@@ -42,6 +47,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.15",
-    "prettier": "2.5.1"
+    "prettier": "2.5.1",
+    "prisma": "^4.14.1"
   }
 }

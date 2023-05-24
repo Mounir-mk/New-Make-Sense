@@ -1,42 +1,38 @@
-import React, { useContext, useRef } from "react";
-import axios from "axios";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
-import { AuthContext } from "../_services/AuthContext";
+import { useAuthUser } from "react-auth-kit";
+import useFetch from "../hooks/useFetch";
 
-function ProfileModal({ setOpenModal, setModificationDone }) {
+function ProfileModal({ setOpenModal, invalidate, user }) {
   const firstnameRef = useRef();
   const lastnameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthUser();
+  const { fetch, error } = useFetch(
+    `users/${auth().user.id}`,
+    "PUT",
+    false,
+    true
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .put(
-        `http://localhost:5000/users/${auth.id}`,
-        {
-          firstname: firstnameRef.current.value,
-          lastname: lastnameRef.current.value,
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-          id: auth.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      )
-      .then(() => {
-        setOpenModal(false);
-        setModificationDone((oldModificationDone) => !oldModificationDone);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const res = fetch({
+      firstname: firstnameRef.current.value || user.firstname,
+      lastname: lastnameRef.current.value || user.lastname,
+      email: emailRef.current.value || user.email,
+      password: passwordRef.current.value || null,
+      id: auth().user.id,
+    });
+    console.error(error);
+    if (res) {
+      setOpenModal(false);
+      invalidate();
+    }
   };
+
   return (
     <div className="absolute top-0 left-0 w-full h-full bg-slate-600 bg-opacity-60 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow flex flex-col items-center justify-center p-4">
@@ -51,6 +47,7 @@ function ProfileModal({ setOpenModal, setModificationDone }) {
             Prénom
           </label>
           <input
+            placeholder={user.firstname}
             type="text"
             name="firstname"
             id="firstname"
@@ -61,6 +58,7 @@ function ProfileModal({ setOpenModal, setModificationDone }) {
             Nom
           </label>
           <input
+            placeholder={user.lastname}
             type="text"
             name="lastname"
             id="lastname"
@@ -71,6 +69,7 @@ function ProfileModal({ setOpenModal, setModificationDone }) {
             Email
           </label>
           <input
+            placeholder={user.email}
             type="text"
             name="email"
             id="email"
@@ -81,6 +80,7 @@ function ProfileModal({ setOpenModal, setModificationDone }) {
             Mot de passe
           </label>
           <input
+            placeholder="********"
             type="password"
             name="password"
             id="password"
@@ -110,7 +110,13 @@ function ProfileModal({ setOpenModal, setModificationDone }) {
 
 ProfileModal.propTypes = {
   setOpenModal: PropTypes.func.isRequired,
-  setModificationDone: PropTypes.func.isRequired,
+  invalidate: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ProfileModal;

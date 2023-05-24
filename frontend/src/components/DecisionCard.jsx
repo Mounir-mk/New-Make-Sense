@@ -1,21 +1,19 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { AuthContext } from "../_services/AuthContext";
+import useFetch from "../hooks/useFetch";
 
 function DashboardCard({ decisionTitle, author, id, avatar }) {
-  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const { fetch: getDecision } = useFetch(
+    `decisions/${id}`,
+    "GET",
+    false,
+    true
+  );
   const handleClick = async () => {
-    await fetch(`http://localhost:5000/decisions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${auth.token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        navigate(`/decision/${data.id}`);
-      });
+    const res = await getDecision();
+    navigate(`/decision/${res.data.id}`);
   };
 
   return (

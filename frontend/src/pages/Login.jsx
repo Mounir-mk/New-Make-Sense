@@ -1,39 +1,24 @@
-import React, { useRef, useState, useContext } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../_services/AuthContext";
+import React, { useRef, useState } from "react";
 import loginImage from "../assets/login_image.jpg";
+import useLogin from "../hooks/useLogin";
 
 function Login() {
-  const { setAuth } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [errorInput, setErrorInput] = useState(false);
+
   const emailRef = useRef();
   const passwordRef = useRef();
-  const [errorInput, setErrorInput] = useState(false);
-  const handleLogin = () => {
-    axios
-      .post("http://localhost:5000/users/login", {
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((res) => {
-        const { token, id, role } = res.data;
-        if (token) {
-          setAuth((oldAuth) => ({
-            ...oldAuth,
-            isAuthenticated: true,
-            token,
-            id,
-            role,
-          }));
-          navigate("/");
-        } else {
-          setErrorInput(true);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+
+  const { login } = useLogin();
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+
+    const res = login(email, password);
+    if (!res.status === 200) {
+      setErrorInput(true);
+    }
   };
 
   return (

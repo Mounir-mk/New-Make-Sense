@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import dateDisplay from "../_services/dateDisplay";
+import dateDisplay from "../utils/dateDisplay";
 
 function Comment({ icon, content, author, date }) {
   return (
