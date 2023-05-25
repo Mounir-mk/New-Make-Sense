@@ -13,4 +13,6 @@ COPY ./backend .
 # Run database migration and seeding command
 RUN npm run migrate-seed
 
+EXPOSE 5000
+
 CMD [ "npm", "start" ]
