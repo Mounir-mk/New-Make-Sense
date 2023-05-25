@@ -10,9 +10,16 @@ RUN npm install
 # Copy the rest of your code
 COPY ./backend .
 
-# # Run database migration and seeding command
-# RUN npm run migrate-seed
+# Generate Prisma client
+RUN npx prisma generate
+
+# Migrate database
+RUN npx prisma db push --force-reset
+
+# Seed database
+RUN npx prisma db seed
+
 
 EXPOSE 5000
 
-CMD [ "npm", "start-prod" ]
+CMD [ "npm", "start" ]
