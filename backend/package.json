@@ -10,6 +10,7 @@
     "dev": "nodemon index.js",
     "seed": "npx prisma db seed",
     "migrate": "npx prisma db push --force-reset",
+    "migrate-seed": "npm run migrate && npm run seed",
     "studio": "npx prisma studio",
     "start": "node index.js",
     "lint": "echo '----- Checking Backend...' && npx prettier --debug-check . && eslint --ext .js . && echo '----- Done!'",
