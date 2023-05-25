@@ -14,7 +14,8 @@
     "studio": "npx prisma studio",
     "start": "node index.js",
     "lint": "echo '----- Checking Backend...' && npx prettier --debug-check . && eslint --ext .js . && echo '----- Done!'",
-    "fix": "prettier --write . && eslint --fix --ext .js ."
+    "fix": "prettier --write . && eslint --fix --ext .js .",
+    "start-prod": "npx prisma generate && node index.js"
   },
   "keywords": [],
   "author": "",

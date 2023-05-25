@@ -10,9 +10,9 @@ RUN npm install
 # Copy the rest of your code
 COPY ./backend .
 
-# Run database migration and seeding command
-RUN npm run migrate-seed
+# # Run database migration and seeding command
+# RUN npm run migrate-seed
 
 EXPOSE 5000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "start-prod" ]
