@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const cors = require("cors");
 const router = require("./router");
 
@@ -16,7 +15,6 @@ app.use(
 app.use(express.json());
 
 // Serve the uploads folder for uploaded resources
-app.use(express.static(path.join(__dirname, "../uploads")));
 
 // API routes
 app.use(router);

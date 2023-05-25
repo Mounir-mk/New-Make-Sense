@@ -1,6 +1,13 @@
 const express = require("express");
+const path = require("path");
 
 const router = express.Router();
+
+// serve the uploads folder for uploaded resources
+router.use(express.static(path.join(__dirname, "../uploads")));
+
+// prefix all routes with /api
+router.use("/api", router);
 
 const decisionControllers = require("./controllers/decisionControllers");
 const userControllers = require("./controllers/userControllers");
