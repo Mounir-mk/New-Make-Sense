@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import loginImage from "../assets/login_image.jpg";
 import useLogin from "../hooks/useLogin";
 
@@ -7,6 +8,7 @@ function Login() {
 
   const emailRef = useRef();
   const passwordRef = useRef();
+  const rememberMeRef = useRef();
 
   const { login } = useLogin();
 
@@ -14,8 +16,9 @@ function Login() {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    const rememberMe = rememberMeRef.current.checked;
 
-    const res = login(email, password);
+    const res = login(email, password, rememberMe);
     if (!res.status === 200) {
       setErrorInput(true);
     }
@@ -83,15 +86,28 @@ function Login() {
                   Email ou mot de passe incorrect
                 </p>
               )}
+              {/* rember me div */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    className="border-2 border-black rounded-lg p-2"
+                    ref={rememberMeRef}
+                  />
+                  <label htmlFor="remember">Se souvenir de moi</label>
+                </div>
+              </div>
             </form>
             <div className="flex flex-col gap-2">
               <p className="text-sm text-center">Vous n'avez pas de compte ?</p>
-              <a
-                href="/register"
+              <NavLink
+                to="/register"
                 className="text-sm text-center text-[#9B084F] font-bold"
               >
                 Créer un compte
-              </a>
+              </NavLink>
             </div>
           </article>
         </section>

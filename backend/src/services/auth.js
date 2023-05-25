@@ -5,6 +5,10 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+const dayExpiryToSeconds = (days) => {
+  return parseInt(days.split("d")[0], 10) * 24 * 60 * 60;
+};
+
 const hashPassword = async (req, res, next) => {
   try {
     if (!req.body.password) {
@@ -33,6 +37,10 @@ const hashPassword = async (req, res, next) => {
 
 const verifyPassword = async (req, res) => {
   const { user } = req;
+  const rememberMe = req.body.rememberMe || false;
+
+  const accessTokenExpiresIn = rememberMe ? dayExpiryToSeconds("7d") : 3600;
+  const refreshTokenExpiresIn = rememberMe ? dayExpiryToSeconds("30d") : 18000;
   try {
     const match = await argon2.verify(user.hashed_password, req.body.password);
     if (match) {
@@ -49,13 +57,13 @@ const verifyPassword = async (req, res) => {
         type: "refresh",
       };
       const accessToken = jwt.sign(accessTokenPayload, process.env.JWT_SECRET, {
-        expiresIn: 60,
+        expiresIn: accessTokenExpiresIn,
       }); // expires in 1 minute
       const refreshToken = jwt.sign(
         refreshTokenPayload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 300,
+          expiresIn: refreshTokenExpiresIn,
         }
       ); // expires in 5 minutes
 
@@ -82,10 +90,14 @@ const verifyPassword = async (req, res) => {
       res.json({
         accessToken,
         refreshToken,
-        expiresIn: 60,
-        authUserState: { id: user.id, email: user.email, role: user.role },
-        refreshTokenExpireIn: 300,
-        role: user.role,
+        expiresIn: accessTokenExpiresIn / 60,
+        authUserState: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          rememberMe,
+        },
+        refreshTokenExpireIn: refreshTokenExpiresIn / 60,
       });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
@@ -97,9 +109,10 @@ const verifyPassword = async (req, res) => {
 };
 
 const refreshTokens = async (req, res) => {
-  const { refreshToken } = req.body;
+  const { refreshToken, rememberMe } = req.body;
   try {
     const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
     const user = await prisma.user.findUnique({
       where: { id: payload.id },
     });
@@ -129,18 +142,26 @@ const refreshTokens = async (req, res) => {
       role: user.role,
       type: "refresh",
     };
+
+    const newAccessTokenExpiresIn = rememberMe
+      ? dayExpiryToSeconds("7d")
+      : 3600;
+    const newRefreshTokenExpiresIn = rememberMe
+      ? dayExpiryToSeconds("30d")
+      : 18000;
+
     const newAccessToken = jwt.sign(
       newAccessTokenPayload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 60,
+        expiresIn: newAccessTokenExpiresIn,
       }
-    ); // expires in 1 minute
+    );
     const newRefreshToken = jwt.sign(
       newRefreshTokenPayload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 300,
+        expiresIn: newRefreshTokenExpiresIn,
       }
     ); // expires in 5 minutes
 
@@ -163,8 +184,8 @@ const refreshTokens = async (req, res) => {
       success: true,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      newAccessTokenExpiresIn: 60,
-      newRefreshTokenExpiresIn: 300,
+      newAccessTokenExpiresIn: newAccessTokenExpiresIn / 60,
+      newRefreshTokenExpiresIn: newRefreshTokenExpiresIn / 60,
     });
   } catch (err) {
     console.error(err);

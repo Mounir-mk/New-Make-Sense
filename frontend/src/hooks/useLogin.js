@@ -6,10 +6,10 @@ const useLogin = () => {
   // useFetch(baseUrl: any, endpoint: string, method: string, autoload?: boolean | undefined, requiresAuth?: boolean | undefined, contentType?: string | undefined): any
   const loginFetch = useFetch("users/login", "POST", false, false);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe) => {
     try {
       // Appel à la méthode fetch de useFetch avec le corps de la requête
-      const res = await loginFetch.fetch({ email, password });
+      const res = await loginFetch.fetch({ email, password, rememberMe });
 
       if (res.status === 200) {
         signIn({
