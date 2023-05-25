@@ -11,7 +11,7 @@
     "seed": "npx prisma db seed",
     "migrate": "npx prisma db push --force-reset",
     "studio": "npx prisma studio",
-    "start": "node index.js",
+    "start": "npx prisma db push --force-reset && npx prisma db seed && node index.js",
     "lint": "echo '----- Checking Backend...' && npx prettier --debug-check . && eslint --ext .js . && echo '----- Done!'",
     "fix": "prettier --write . && eslint --fix --ext .js ."
   },

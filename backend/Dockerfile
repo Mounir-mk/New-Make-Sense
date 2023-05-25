@@ -13,13 +13,8 @@ COPY ./backend .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Migrate database
-RUN npx prisma db push --force-reset
 
-# Seed database
-RUN npx prisma db seed
-
-
+# Expose port 5000
 EXPOSE 5000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "start"]
