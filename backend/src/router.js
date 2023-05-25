@@ -9,6 +9,13 @@ router.use(express.static(path.join(__dirname, "../uploads")));
 // prefix all routes with /api
 router.use("/api", router);
 
+router.get("/", (req, res) => {
+  res.send({
+    message: "Welcome to the API",
+    environment: process.env.NODE_ENV,
+  });
+});
+
 const decisionControllers = require("./controllers/decisionControllers");
 const userControllers = require("./controllers/userControllers");
 const {
