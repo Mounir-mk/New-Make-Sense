@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": [
+  "dockerfileLines": [
     "FROM nginx:alpine",
     "ADD frontend/dist /usr/share/nginx/html",
     "EXPOSE 80"

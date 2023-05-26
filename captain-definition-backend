@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": [
+  "dockerfileLines": [
     "FROM node:16.14",
     "WORKDIR /usr/src/app",
     "ADD backend/ /usr/src/app/backend/",
