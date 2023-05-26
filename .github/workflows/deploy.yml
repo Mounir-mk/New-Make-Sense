@@ -28,7 +28,7 @@ jobs:
           files: |
             ./backend
             captain-definition-backend
-          outPath: backend-deploy.tar
+          outPath: deploy.tar
 
       - name: Deploy Backend App to CapRover
         uses: caprover/deploy-from-github@v1.0.1
@@ -61,7 +61,7 @@ jobs:
           files: |
             ./frontend/dist
             captain-definition-frontend
-          outPath: frontend-deploy.tar
+          outPath: deploy.tar
 
       - name: Deploy Frontend App to CapRover
         uses: caprover/deploy-from-github@v1.0.1
