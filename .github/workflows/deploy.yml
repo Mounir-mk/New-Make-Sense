@@ -24,7 +24,7 @@ jobs:
       - uses: a7ul/tar-action@v1.1.0
         with:
           command: c
-          cwd: "./backend"
+          cwd: "./"
           files: |
             ./backend
             captain-definition-backend
@@ -57,7 +57,7 @@ jobs:
       - uses: a7ul/tar-action@v1.1.0
         with:
           command: c
-          cwd: "./frontend"
+          cwd: "./"
           files: |
             ./frontend/dist
             captain-definition-frontend
