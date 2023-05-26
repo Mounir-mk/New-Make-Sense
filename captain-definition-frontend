@@ -1,7 +1,8 @@
 {
   "schemaVersion": 2,
   "dockerfilePath": [
-    "FROM node:16.14",
-    "RUN echo \"Hello World\""
+    "FROM nginx:alpine",
+    "ADD frontend/dist /usr/share/nginx/html",
+    "EXPOSE 80"
   ]
 }
