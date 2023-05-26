@@ -25,7 +25,9 @@ jobs:
         with:
           command: c
           cwd: "./backend"
-          files: "./"
+          files: |
+            ./backend
+            captain-definition-backend
           outPath: backend-deploy.tar
 
       - name: Deploy Backend App to CapRover
@@ -34,7 +36,6 @@ jobs:
           server: "${{ secrets.CAPROVER_SERVER }}"
           app: "${{ secrets.BACKEND_APP_NAME }}"
           token: "${{ secrets.BACKEND_APP_TOKEN }}"
-          tarFilePath: "backend-deploy.tar"
 
   build-and-deploy-frontend:
     runs-on: ubuntu-latest
@@ -57,7 +58,9 @@ jobs:
         with:
           command: c
           cwd: "./frontend"
-          files: "./"
+          files: |
+            ./frontend/dist
+            captain-definition-frontend
           outPath: frontend-deploy.tar
 
       - name: Deploy Frontend App to CapRover
@@ -66,4 +69,3 @@ jobs:
           server: "${{ secrets.CAPROVER_SERVER }}"
           app: "${{ secrets.FRONTEND_APP_NAME }}"
           token: "${{ secrets.FRONTEND_APP_TOKEN }}"
-          tarFilePath: "frontend-deploy.tar"

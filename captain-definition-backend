@@ -1,4 +1,7 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": "./backend/Dockerfile"
+  "dockerfilePath": [
+    "FROM node:16.14",
+    "RUN echo \"Hello World\""
+  ]
 }
